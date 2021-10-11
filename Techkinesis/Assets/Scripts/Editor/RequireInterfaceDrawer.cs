@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
-// Drawer for the RequireInterface attribute Credit: Patryk Galach (https://bit.ly/3oSjPMU)
+// Drawer for the RequireInterface attribute | Credit: Patryk Galach (https://bit.ly/3oSjPMU)
 
 [CustomPropertyDrawer(typeof(RequireInterfaceAttribute))]
 public class RequireInterfaceDrawer : PropertyDrawer
@@ -48,16 +48,21 @@ public class RequireInterfaceDrawer : PropertyDrawer
     }
 }
 
-// Ok dude I have literally no idea why this happens but for some unknown reason if this isn't here then 'RequireInterfaceAttribute' in this script cannot be found.
-// However, if I then remove the RequireInterfaceAttribute class from its unique script then it cannot be found anywhere else. On top of this,I swear I haven't touched 
-// it and it was working 5 minutes ago. Just Unity things.
+/*
+    Ok dude I have literally no idea why this happens but for some unknown reason if this isn't here then 'RequireInterfaceAttribute' in this script cannot be found.
+    However, if I then remove the RequireInterfaceAttribute class from its unique script then it cannot be found anywhere else. On top of this,I swear I haven't touched 
+    it and it was working 5 minutes ago. Just Unity things.
 
-public class RequireInterfaceAttribute : PropertyAttribute
-{
-    public System.Type RequiredType { get; private set; }
+    Update: Now it works fine again ??? Comment this back in if Unity forgets RequireInterfaceAttribute exists...
 
-    public RequireInterfaceAttribute(System.Type type)
+
+    public class RequireInterfaceAttribute : PropertyAttribute
     {
-        RequiredType = type;
+        public System.Type RequiredType { get; private set; }
+
+        public RequireInterfaceAttribute(System.Type type)
+        {
+           RequiredType = type;
+        }
     }
-}
+*/
