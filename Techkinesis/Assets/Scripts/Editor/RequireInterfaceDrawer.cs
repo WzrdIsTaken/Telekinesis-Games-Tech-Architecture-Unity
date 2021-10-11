@@ -55,7 +55,6 @@ public class RequireInterfaceDrawer : PropertyDrawer
 
     Update: Now it works fine again ??? Comment this back in if Unity forgets RequireInterfaceAttribute exists...
 
-
     public class RequireInterfaceAttribute : PropertyAttribute
     {
         public System.Type RequiredType { get; private set; }
