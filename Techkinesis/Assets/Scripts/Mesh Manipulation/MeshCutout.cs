@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityMeshSimplifier;
 
-// The base for creating a mesh cutout | Credit: Sebastian Lague (https://bit.ly/3v8XATN)
+// The base for creating a mesh cutout
 
 public class MeshCutout : MonoBehaviour
 {
@@ -39,13 +39,10 @@ public class MeshCutout : MonoBehaviour
 
     public void OnShapeSettingsUpdated()
     {
-        if (autoUpdate)
-        {
-            Initialize();
-            GenerateMesh();
-        }
+        if (autoUpdate) GenerateCutout();
     }
 
+    // Step 1 - Create the meshes that will make up the cutout | Credit: Sebastian Lague (https://bit.ly/3v8XATN)
     void Initialize()
     {
         meshCutoutGenerator = new MeshCutoutGenerator(settings);
@@ -71,11 +68,13 @@ public class MeshCutout : MonoBehaviour
         }
     }
 
+    // Step 2 - Apply noise to the mesh faces
     void GenerateMesh()
     {
         foreach (MeshCutoutFace face in meshFaces) face.ConstructMesh();
     }
 
+    // Step 3 - Combine the 6 individual meshes into one 
     void CombineMeshes()
     {
         MeshFilter[] meshFilters = GetComponentsInChildren<MeshFilter>();
@@ -95,6 +94,7 @@ public class MeshCutout : MonoBehaviour
         cutoutFilter.mesh.CombineMeshes(combine);
     }
 
+    // Step 4 - Simplify the mesh to make boolean operations play nice
     void SimplifyMesh()
     {
         MeshFilter meshFilter = GetComponent<MeshFilter>();
@@ -107,6 +107,7 @@ public class MeshCutout : MonoBehaviour
         meshFilter.sharedMesh = meshSimplifier.ToMesh();
     }
 
+    // Step 5 - Add a collider needed for CSG operations
     void GenerateCollider()
     {
         gameObject.AddComponent<MeshCollider>();

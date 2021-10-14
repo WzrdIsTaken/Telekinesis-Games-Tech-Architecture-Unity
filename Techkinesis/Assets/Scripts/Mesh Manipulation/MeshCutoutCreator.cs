@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// Actually creates the meshcutout 5head
+// Manages the creation of mesh cutouts
 
 public class MeshCutoutCreator : MonoBehaviour
 {
