@@ -5,12 +5,13 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MeshCutoutSettings", menuName = "ScriptableObjects/Debugging/MeshCutoutSettings", order = 1)] 
 public class MeshCutoutSettings : ScriptableObject
 {
-    public float meshRadius = 1;
+    public float meshRadius = 1, meshQualityReduction = 0.5f;
     public NoiseLayer[] noiseLayers;
 
-    public MeshCutoutSettings(float _meshRadius, NoiseLayer[] _noiseLayers)
+    public MeshCutoutSettings(float _meshRadius, float _meshQualityReduction, NoiseLayer[] _noiseLayers)
     {
         meshRadius = _meshRadius;
+        meshQualityReduction = _meshQualityReduction;
         noiseLayers = _noiseLayers;
     }
 

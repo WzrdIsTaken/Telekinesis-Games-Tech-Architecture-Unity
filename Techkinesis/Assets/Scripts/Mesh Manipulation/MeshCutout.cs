@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections;
+using UnityMeshSimplifier;
 
 // The base for creating a mesh cutout | Credit: Sebastian Lague (https://bit.ly/3v8XATN)
 
@@ -20,19 +20,21 @@ public class MeshCutout : MonoBehaviour
     MeshFilter[] meshFilters;
     MeshCutoutFace[] meshFaces;
 
-    public void GenerateCutout()
+    public void GenerateCutout()                               // Used in the editor, called from the 'Generate Cutout' button
     {
         Initialize();
         GenerateMesh();
     }
 
-    public void GenerateCutout(MeshCutoutSettings _settings, float lifeTime)
+    public void GenerateCutout(MeshCutoutSettings _settings)   // Used at runtime, called from MeshCutoutCreator
     {
         settings = _settings;
 
         Initialize();
         GenerateMesh();
         CombineMeshes();
+        SimplifyMesh();
+        GenerateCollider();
     }
 
     public void OnShapeSettingsUpdated()
@@ -91,15 +93,22 @@ public class MeshCutout : MonoBehaviour
 
         cutoutFilter.mesh = new Mesh();
         cutoutFilter.mesh.CombineMeshes(combine);
-
-        gameObject.AddComponent<MeshCollider>();
     }
 
-    IEnumerator DestroyCutout(float lifeTime)
+    void SimplifyMesh()
     {
-        // Shrink the mesh's radius before it gets destroyed. The house rebuilds itself.
+        MeshFilter meshFilter = GetComponent<MeshFilter>();
+        Mesh sourceMesh = meshFilter.sharedMesh;
 
-        yield return new WaitForSeconds(lifeTime);
-        Destroy(gameObject);
+        MeshSimplifier meshSimplifier = new MeshSimplifier();
+        meshSimplifier.Initialize(sourceMesh);
+
+        meshSimplifier.SimplifyMesh(settings.meshQualityReduction);
+        meshFilter.sharedMesh = meshSimplifier.ToMesh();
+    }
+
+    void GenerateCollider()
+    {
+        gameObject.AddComponent<MeshCollider>();
     }
 }

@@ -7,7 +7,7 @@ public class MeshCutoutFace
     MeshCutoutGenerator meshCutoutGenerator;
 
     Mesh mesh;
-    int resolution;
+    readonly int resolution;
     Vector3 localUp, axisA, axisB;
 
     public MeshCutoutFace(MeshCutoutGenerator _meshCutoutGenerator, Mesh _mesh, int _resolution, Vector3 _localUp)
