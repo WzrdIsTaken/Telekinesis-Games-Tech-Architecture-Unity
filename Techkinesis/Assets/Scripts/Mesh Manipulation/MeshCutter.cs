@@ -1,6 +1,5 @@
 using UnityEngine;
 using Parabox.CSG;
-using UnityEngine.InputSystem;
 
 // Performs CSG operations a mesh | Credit: karl- (https://bit.ly/30sqtiL)
 
@@ -18,7 +17,7 @@ public class MeshCutter : MonoBehaviour
 
     private void Update()
     {
-        if (Keyboard.current.aKey.wasPressedThisFrame) DoOperation(BoolOp.SubtractLR, one, two);
+        if (Input.GetKeyDown(KeyCode.A)) DoOperation(BoolOp.SubtractLR, one, two);
     }
 
     public void DoOperation(BoolOp operation, GameObject left, GameObject right)

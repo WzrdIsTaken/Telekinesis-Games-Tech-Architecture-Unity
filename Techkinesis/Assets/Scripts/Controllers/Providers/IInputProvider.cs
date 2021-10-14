@@ -12,10 +12,10 @@ public interface IInputProvider
 
 public struct InputState
 {
+    Vector3 movementDirection;
+
     public InputState(Vector3 _movementDirection)
     {
         movementDirection = _movementDirection;
     }
-
-    Vector3 movementDirection;
 }
