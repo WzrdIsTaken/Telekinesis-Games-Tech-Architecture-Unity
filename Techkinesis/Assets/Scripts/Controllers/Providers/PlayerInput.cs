@@ -8,10 +8,20 @@ public class PlayerInput : ScriptableObject, IInputProvider
 {
     public event Action OnJump;
 
+    [Header("Controls")]  // TODO: Allow customisation of movement keys
+    [SerializeField] KeyCode RUN_KEY = KeyCode.LeftShift;
+    [SerializeField] KeyCode JUMP_KEY = KeyCode.Space;  
+
     public InputState GetState()
     {
-        // TODO: Finish setting up user input with the new input system
+        InputState input = new InputState
+        (
+            new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized,   // Movement Direction
+            Input.GetKey(RUN_KEY)                                                                   // Running                         
+        );
 
-        return new InputState(Vector3.zero);
+        if (Input.GetKeyDown(JUMP_KEY)) OnJump();                                                   // Jumping
+
+        return input;
     }
 }
