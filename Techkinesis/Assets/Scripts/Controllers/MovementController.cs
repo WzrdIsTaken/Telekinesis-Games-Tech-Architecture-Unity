@@ -52,6 +52,8 @@ public class MovementController : MonoBehaviour
         velocity = Vector3.up * velocityY;
 
         // if (controller.isGrounded) velocityY = 0f; Interferes with jumping, ngl idk if we even want this because of the levitation mechanic. Will have to think of another solution anyway..
+
+        // Note to self: Using character controller may pose issues. Not 100% sure yet, but you might have to change it.
     }
 
     public virtual void Jump()
