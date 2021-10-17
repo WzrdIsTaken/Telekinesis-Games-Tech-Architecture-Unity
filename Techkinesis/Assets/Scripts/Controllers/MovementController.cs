@@ -6,9 +6,9 @@ public class MovementController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField, RequireInterface(typeof(IInputProvider))] ScriptableObject inputProvider;
-    IInputProvider InputProvider => inputProvider as IInputProvider;
+    protected IInputProvider InputProvider => inputProvider as IInputProvider;
 
-    [SerializeField] Optional<Camera> cam;
+    [SerializeField] protected Optional<Camera> cam;
 
     [Header("Attributes")]
     [SerializeField] protected float mass = -12f;
@@ -26,9 +26,11 @@ public class MovementController : MonoBehaviour
 
     float turnSmoothVelocity;
     
-    void Start()
+    public virtual void Start()
     {
         InputProvider.OnJump += Jump;
+        InputProvider.OnMindControlStart += MindControlStart;
+        InputProvider.OnMindControlEnd += MindControlEnd;
 
         controller = GetComponent<CharacterController>();
         TryGetComponent(out animator);
@@ -57,6 +59,14 @@ public class MovementController : MonoBehaviour
     }
 
     public virtual void Jump()
+    {
+    }
+
+    public virtual void MindControlStart()
+    {
+    }
+
+    public virtual void MindControlEnd()
     {
     }
 
