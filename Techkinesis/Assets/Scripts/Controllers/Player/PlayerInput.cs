@@ -18,6 +18,12 @@ public class PlayerInput : ScriptableObject, IInputProvider
     [SerializeField] KeyCode launch = KeyCode.E;
     [SerializeField] KeyCode shield = KeyCode.Q;
 
+    [Space]
+    [SerializeField, Min(0.1f)] float levitationToggleTime = 0.3f;
+
+    float lastJumpTime;
+    bool isLevitating = false;
+
     public InputState GetState()
     {
         InputState input = new InputState
@@ -28,8 +34,18 @@ public class PlayerInput : ScriptableObject, IInputProvider
 
         if (Input.GetKeyDown(jump))              
         {
-            OnJump();                                                                               // Jumping
-            // Levitation logic
+            float timeSinceLastJump = Time.time - lastJumpTime;
+            
+            if (timeSinceLastJump <= levitationToggleTime)
+            {
+                if (!isLevitating) OnLevitationStart();                                             // Levitation Start
+                else OnLevitationEnd();                                                             // Levitation End
+  
+                isLevitating = !isLevitating;
+            }
+            else OnJump();                                                                          // Jumping
+
+            lastJumpTime = Time.time;
         }
 
         if (Input.GetKeyDown(launch)) OnLaunchStart();                                              // Launch Start
@@ -41,3 +57,5 @@ public class PlayerInput : ScriptableObject, IInputProvider
         return input;
     }
 }
+
+// TODO: Fix bug I have no idea why its happening but wtf levitation issue awdhugdwiahuhiwud

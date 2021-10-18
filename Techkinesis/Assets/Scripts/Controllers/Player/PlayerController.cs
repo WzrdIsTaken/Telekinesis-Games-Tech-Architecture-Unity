@@ -69,7 +69,7 @@ public class PlayerController : MovementController
 
         controller.Move(velocity * Time.deltaTime);
 
-        if (controller.isGrounded) velocityY = 0f;
+        //if (controller.isGrounded) velocityY = 0f;
     }
 
     void HandleAnimation(InputState inputState)
