@@ -17,11 +17,8 @@ public class PlayerInput : ScriptableObject, IInputProvider
     [SerializeField] KeyCode jump = KeyCode.Space;
     [SerializeField] KeyCode launch = KeyCode.E;
     [SerializeField] KeyCode shield = KeyCode.Q;
+    [SerializeField] KeyCode levitate = KeyCode.V;
 
-    [Space]
-    [SerializeField, Min(0.1f)] float levitationToggleTime = 0.3f;
-
-    float lastJumpTime;
     bool isLevitating = false;
 
     public InputState GetState()
@@ -32,20 +29,14 @@ public class PlayerInput : ScriptableObject, IInputProvider
             Input.GetKey(run)                                                                       // Running                         
         );
 
-        if (Input.GetKeyDown(jump))              
-        {
-            float timeSinceLastJump = Time.time - lastJumpTime;
-            
-            if (timeSinceLastJump <= levitationToggleTime)
-            {
-                if (!isLevitating) OnLevitationStart();                                             // Levitation Start
-                else OnLevitationEnd();                                                             // Levitation End
-  
-                isLevitating = !isLevitating;
-            }
-            else OnJump();                                                                          // Jumping
+        if (Input.GetKeyDown(jump)) OnJump();                                                       // Jump
 
-            lastJumpTime = Time.time;
+        if (Input.GetKeyDown(levitate))
+        {
+            if (!isLevitating) OnLevitationStart();                                                 // Levitation Start
+            else OnLevitationEnd();                                                                 // Levitation End
+
+            isLevitating = !isLevitating;
         }
 
         if (Input.GetKeyDown(launch)) OnLaunchStart();                                              // Launch Start
@@ -57,5 +48,3 @@ public class PlayerInput : ScriptableObject, IInputProvider
         return input;
     }
 }
-
-// TODO: Fix bug I have no idea why its happening but wtf levitation issue awdhugdwiahuhiwud
