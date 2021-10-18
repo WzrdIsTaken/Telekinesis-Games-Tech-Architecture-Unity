@@ -1,44 +1,85 @@
 using UnityEngine;
 
+// Controls the player
+
+[RequireComponent(typeof(AbilityController))]
 public class PlayerController : MovementController
 {
-    [SerializeField] float speedSmoothTime = 0.1f;
-    [SerializeField] float walkSpeed = 2, runSpeed = 6, jumpHeight = 1;
+    [Header("References")]
+    [SerializeField] PlayerInput inputProvider;
+    [SerializeField] Camera cam;
 
-    [Header("Abilities")]
-    [SerializeField] LayerMask abilityInteractionMask;
-    [SerializeField] float launchRaycastRange = 10;
-    
-    float speedSmoothVelocity, currentSpeed;
+    [Header("Attributes")]
+    [SerializeField] float mass = -12f;
+    [SerializeField, Range(0, 1)] float airControlPercent = 0.5f;  // 1 = more control, 0 = less control
+
+    [Header("Movement")]
+    [SerializeField] float speedSmoothTime = 0.1f;
+    [SerializeField] float turnSmoothTime = 0.2f;
+
+    [SerializeField] float walkSpeed = 2;
+    [SerializeField] float runSpeed = 6;
+    [SerializeField] float jumpHeight = 1;
+
+    AbilityController abilityController;
+
+    float speedSmoothVelocity;
+    float currentSpeed;
+    float velocityY;
+    float turnSmoothVelocity;
 
     public override void Start()
     {
-        base.Start();
+        base.Start();  // CharacterController and Animator references grabbed here 
 
-        InputProvider.OnAbilityOneStart += LaunchStart;
-        InputProvider.OnAbilityOneEnd += LaunchEnd;
-        InputProvider.OnAbilityTwoStart += ShieldStart;
-        InputProvider.OnAbilityTwoEnd += ShieldEnd;
+        abilityController = GetComponent<AbilityController>();
+
+        inputProvider.OnJump += Jump;
+
+        inputProvider.OnLaunchStart += abilityController.LaunchStart;           inputProvider.OnLaunchEnd += abilityController.LaunchEnd;
+        inputProvider.OnShieldStart += abilityController.ShieldStart;           inputProvider.OnShieldEnd += abilityController.ShieldEnd;
+        inputProvider.OnLevitationStart += abilityController.LevitationStart;   inputProvider.OnLevitationEnd += abilityController.LevitationEnd;
     }
 
-    public override void Update()
+    void Update()
     {
-        base.Update();
+        InputState inputState = inputProvider.GetState();
 
-        // Movement
+        HandleRotation(inputState);
+        HandleMovement(inputState);
+        HandleAnimation(inputState);
+    }
+
+    void HandleRotation(InputState inputState)
+    {
+        if (inputState.movementDirection != Vector2.zero)
+        {
+            float targetRotation = Mathf.Atan2(inputState.movementDirection.x, inputState.movementDirection.y) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
+            transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref turnSmoothVelocity, GetModifiedSmoothTime(turnSmoothTime));
+        }
+    }
+
+    void HandleMovement(InputState inputState)
+    {
         float targetSpeed = (inputState.running ? runSpeed : walkSpeed) * inputState.movementDirection.magnitude;
         currentSpeed = Mathf.SmoothDamp(currentSpeed, targetSpeed, ref speedSmoothVelocity, GetModifiedSmoothTime(speedSmoothTime));
 
-        velocity += transform.forward * currentSpeed;
+        velocityY += mass * Time.deltaTime;
+        Vector3 velocity = transform.forward * currentSpeed + Vector3.up * velocityY;
+
         controller.Move(velocity * Time.deltaTime);
 
-        // Animation
+        if (controller.isGrounded) velocityY = 0f;
+    }
+
+    void HandleAnimation(InputState inputState)
+    {
         float currentControllerSpeed = new Vector2(controller.velocity.x, controller.velocity.z).magnitude;
         float animationSpeedPercent = inputState.running ? currentControllerSpeed / runSpeed : currentControllerSpeed / walkSpeed * 0.5f;
         animator.SetFloat("speedPercent", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
     }
 
-    public override void Jump()
+    void Jump()
     {
         if (!controller.isGrounded) return;
 
@@ -46,37 +87,11 @@ public class PlayerController : MovementController
         velocityY = jumpVelocity;
     }
 
-    void LaunchStart()
+    float GetModifiedSmoothTime(float smoothTime)
     {
-        RaycastHit hit = RaycastSystem.Raycast(cam.Value.transform.position, cam.Value.transform.forward, launchRaycastRange, abilityInteractionMask);
+        if (controller.isGrounded) return smoothTime;
+        if (airControlPercent == 0) return float.MaxValue;
 
-        switch (hit.collider.tag)
-        {
-            default:
-                print("Launch Start");
-                break;
-        }
-    }
-
-    void LaunchEnd()
-    {
-        print("Launch End");
-    }
-
-    void ShieldStart()
-    {
-        print("Sheild Start");
-    }
-
-    void ShieldEnd()
-    {
-        print("Shield End");
-    }
-
-    public override void MindControlStart()
-    {
-        base.MindControlStart();
-
-        // Take over control from an NPC
+        return smoothTime / airControlPercent;
     }
 }

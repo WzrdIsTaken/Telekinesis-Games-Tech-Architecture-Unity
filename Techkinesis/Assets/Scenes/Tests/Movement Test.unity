@@ -844,20 +844,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputProvider: {fileID: 11400000, guid: 9813155af66caba4cab179d075da0cb7, type: 2}
-  cam:
-    enabled: 1
-    value: {fileID: 307774672}
+  cam: {fileID: 307774672}
   mass: -12
   airControlPercent: 0.5
-  turnSmoothTime: 0.2
   speedSmoothTime: 0.1
+  turnSmoothTime: 0.2
   walkSpeed: 2
   runSpeed: 6
   jumpHeight: 1
-  abilityInteractionMask:
-    serializedVersion: 2
-    m_Bits: 55
-  launchRaycastRange: 10
 --- !u!143 &2018693936
 CharacterController:
   m_ObjectHideFlags: 0

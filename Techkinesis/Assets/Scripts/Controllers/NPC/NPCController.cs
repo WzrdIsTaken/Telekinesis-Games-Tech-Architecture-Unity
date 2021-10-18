@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Allows for NPCs to be controlled, both by 'themselves' and by the player
+// Allows for NPCs to be controlled
 
 public class NPCController : MovementController
 {
@@ -11,23 +11,10 @@ public class NPCController : MovementController
         base.Start();
     }
 
-    public override void Update()
+    void Update()
     {
-        base.Update();
-    }
+        // All these guys need to do is walk around a bit and shoot
 
-    public bool TryMindControl()
-    {
-        // Check if the player can mind control the target. Maybe some sort of 'mind control strength' variable?
-        // Maybe also a variable which controls how much 'energy' it takes to control the NPC per second?
-
-        return false;
-    }
-
-    public override void MindControlEnd()
-    {
-        base.MindControlEnd();
-
-        // Give control back to the players character
+        // (Like overwatch practise range, can just have some super simple types)
     }
 }

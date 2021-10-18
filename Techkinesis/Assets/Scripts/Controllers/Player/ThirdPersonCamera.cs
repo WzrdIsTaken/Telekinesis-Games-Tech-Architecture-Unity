@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class ThirdPersonCamera : MonoBehaviour
 {
-    [SerializeField] float mouseSensitivity = 2.5f, distanceFromTarget = 2, rotationSmoothTime = 0.12f;
+    [SerializeField] float mouseSensitivity = 2.5f; 
+    [SerializeField] float distanceFromTarget = 2;
+    [SerializeField] float rotationSmoothTime = 0.12f;
     [SerializeField] Transform player;
     [SerializeField] Vector2 pitchMinMax = new Vector2(-40, 85);
     [SerializeField] LayerMask collisionMask;
 
-    float yaw, pitch;
-    Vector3 rotationSmoothVelocity, currentRotation;
+    float pitch;
+    float yaw;
+    Vector3 rotationSmoothVelocity;
+    Vector3 currentRotation;
+
     CameraCollisionHandler cameraCollisionHandler;
 
     void Start()
