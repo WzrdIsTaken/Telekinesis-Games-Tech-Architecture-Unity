@@ -31,6 +31,12 @@ public class PlayerInput : ScriptableObject, IInputProvider
 
         if (Input.GetKeyDown(jump)) OnJump();                                                       // Jump
 
+        if (Input.GetKeyDown(launch)) OnLaunchStart();                                              // Launch Start
+        if (Input.GetKeyUp(launch)) OnLaunchEnd();                                                  // Launch End
+
+        if (Input.GetKeyDown(shield)) OnShieldStart();                                              // Shield Start
+        if (Input.GetKeyUp(shield)) OnShieldEnd();                                                  // Shield End
+
         if (Input.GetKeyDown(levitate))
         {
             if (!isLevitating) OnLevitationStart();                                                 // Levitation Start
@@ -38,12 +44,6 @@ public class PlayerInput : ScriptableObject, IInputProvider
 
             isLevitating = !isLevitating;
         }
-
-        if (Input.GetKeyDown(launch)) OnLaunchStart();                                              // Launch Start
-        if (Input.GetKeyUp(launch)) OnLaunchEnd();                                                  // Launch End
-
-        if (Input.GetKeyDown(shield)) OnShieldStart();                                              // Shield Start
-        if (Input.GetKeyUp(shield)) OnShieldEnd();                                                  // Shield End
 
         return input;
     }
