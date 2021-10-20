@@ -1,0 +1,12 @@
+- Make material stay on object
+- Optimise the cutting of mesh
+- Catch stack overflow 
+- Could prevent it on the floor with just a tag check. Floor could be dense concrete / steel and you can't pull it?
+
+- Make object bob / spin slowly when you're holding it (using spring)
+
+- Outline shader under accessability options https://www.youtube.com/watch?v=hEth0drTuyg (shader already imported)
+
+- Tidy up launch code 
+- Sheild
+- Levitate

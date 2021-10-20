@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 // Super cool third person camera that allows the player to be the person but in the third
 
@@ -7,22 +8,27 @@ public class ThirdPersonCamera : MonoBehaviour
     [SerializeField] float mouseSensitivity = 2.5f; 
     [SerializeField] float distanceFromTarget = 2;
     [SerializeField] float rotationSmoothTime = 0.12f;
-    [SerializeField] Transform player;
+    [SerializeField] Transform target;
     [SerializeField] Vector2 pitchMinMax = new Vector2(-40, 85);
     [SerializeField] LayerMask collisionMask;
+    [SerializeField] float cameraSwitchSidesTime;
 
     float pitch;
     float yaw;
     Vector3 rotationSmoothVelocity;
     Vector3 currentRotation;
 
+    float targetStartX;
+
     CameraCollisionHandler cameraCollisionHandler;
 
     void Start()
     {
+        targetStartX = target.localPosition.x;
+
         cameraCollisionHandler = new CameraCollisionHandler(Camera.main, collisionMask);
         cameraCollisionHandler.UpdateCameraClipPoints(transform.position, transform.rotation, ref cameraCollisionHandler.adjustedCameraClipPoints);
-        cameraCollisionHandler.UpdateCameraClipPoints(player.position, transform.rotation, ref cameraCollisionHandler.desiredCameraClipPoints);
+        cameraCollisionHandler.UpdateCameraClipPoints(target.position, transform.rotation, ref cameraCollisionHandler.desiredCameraClipPoints);
     }
 
     void LateUpdate()
@@ -37,10 +43,32 @@ public class ThirdPersonCamera : MonoBehaviour
 
         // Movement
         cameraCollisionHandler.UpdateCameraClipPoints(transform.position, transform.rotation, ref cameraCollisionHandler.adjustedCameraClipPoints);
-        cameraCollisionHandler.UpdateCameraClipPoints(player.position, transform.rotation, ref cameraCollisionHandler.desiredCameraClipPoints);
+        cameraCollisionHandler.UpdateCameraClipPoints(target.position, transform.rotation, ref cameraCollisionHandler.desiredCameraClipPoints);
 
-        Vector3 destination = player.position - transform.forward * (cameraCollisionHandler.CheckColliding(player.position) ? cameraCollisionHandler.GetAdjustedDistanceWithRayFrom(player.position) : distanceFromTarget);
+        Vector3 destination = target.position - transform.forward * (cameraCollisionHandler.CheckColliding(target.position) ? cameraCollisionHandler.GetAdjustedDistanceWithRayFrom(target.position) : distanceFromTarget);
         transform.position = destination;
+    }
+
+    public void SwitchCameraSide()
+    {
+        StopAllCoroutines();
+        StartCoroutine(SwitchCameraSideCo());
+    }
+
+    IEnumerator SwitchCameraSideCo()
+    {
+        Vector3 targetPosition = new Vector3(target.localPosition.x < 0 ? targetStartX : -targetStartX, target.localPosition.y, target.localPosition.z);
+        float time = 0;
+        Vector3 startPosition = target.localPosition;
+
+        while (time < cameraSwitchSidesTime)
+        {
+            target.localPosition = Vector3.Lerp(startPosition, targetPosition, time / cameraSwitchSidesTime);
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        target.localPosition = targetPosition;
     }
 
     // Checks if the camera can see the player - handles collision, occlusion and shearing (or at least it should xD) | Base: Renaissance Coders (https://bit.ly/3lH9FLb)

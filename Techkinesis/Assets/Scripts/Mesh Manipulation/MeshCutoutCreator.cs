@@ -2,26 +2,24 @@ using UnityEngine;
 
 // Manages the creation of mesh cutouts
 
-public class MeshCutoutCreator : MonoBehaviour
+public static class MeshCutoutCreator
 {
-    void Start()
-    {
-        CreateMesh(Vector3.zero, 1);
-    }
-
-    public void CreateMesh(Vector3 position, float force)
+    public static GameObject CreateMesh(Vector3 position, float force)
     {
         MeshCutout mesh = new GameObject("MeshCutout").AddComponent<MeshCutout>();
         mesh.GenerateCutout(CreateMeshSettings(force));
+
+        mesh.transform.position = position;
+        return mesh.gameObject;
     }
 
-    MeshCutoutSettings CreateMeshSettings(float force)
+    static MeshCutoutSettings CreateMeshSettings(float force)
     {
         // The force will influence the size / noise of the shape
         // Maybe can have a more complex settings creation (eg with layers of noise, some sort of loop might be best) in the future
 
         MeshCutoutSettings meshCutoutSettings = ScriptableObject.CreateInstance<MeshCutoutSettings>();
-        meshCutoutSettings.meshRadius = 1;                // Mesh radius
+        meshCutoutSettings.meshRadius = 1 * force;        // Mesh radius
         meshCutoutSettings.meshQualityReduction = 0.5f;   // Mesh quality reduction 
         meshCutoutSettings.noiseLayers = new MeshCutoutSettings.NoiseLayer[]
         {

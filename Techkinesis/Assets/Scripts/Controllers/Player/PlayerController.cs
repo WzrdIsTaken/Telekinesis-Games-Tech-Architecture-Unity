@@ -2,7 +2,6 @@ using UnityEngine;
 
 // Controls the player
 
-[RequireComponent(typeof(AbilityController))]
 public class PlayerController : MovementController
 {
     [Header("References")]
@@ -21,7 +20,9 @@ public class PlayerController : MovementController
     [SerializeField] float runSpeed = 6;
     [SerializeField] float jumpHeight = 1;
 
-    AbilityController abilityController;
+    LaunchAbility launchAbility;
+    ShieldAbility shieldAbility;
+    LevitationAbility levitationAbility;
 
     float speedSmoothVelocity;
     float currentSpeed;
@@ -32,13 +33,18 @@ public class PlayerController : MovementController
     {
         base.Start();  // CharacterController and Animator references grabbed here 
 
-        abilityController = GetComponent<AbilityController>();
+        launchAbility = GetComponent<LaunchAbility>();
+        launchAbility.AssignCamera(cam);
+        shieldAbility = GetComponent<ShieldAbility>();
+        levitationAbility = GetComponent<LevitationAbility>();
 
         inputProvider.OnJump += Jump;
 
-        inputProvider.OnLaunchStart += abilityController.LaunchStart;           inputProvider.OnLaunchEnd += abilityController.LaunchEnd;
-        inputProvider.OnShieldStart += abilityController.ShieldStart;           inputProvider.OnShieldEnd += abilityController.ShieldEnd;
-        inputProvider.OnLevitationStart += abilityController.LevitationStart;   inputProvider.OnLevitationEnd += abilityController.LevitationEnd;
+        inputProvider.OnLaunchStart += launchAbility.LaunchStart;               inputProvider.OnLaunchEnd += launchAbility.LaunchEnd;
+        inputProvider.OnShieldStart += shieldAbility.ShieldStart;               inputProvider.OnShieldEnd += shieldAbility.ShieldEnd;
+        inputProvider.OnLevitationStart += levitationAbility.LevitationStart;   inputProvider.OnLevitationEnd += levitationAbility.LevitationEnd;
+
+        inputProvider.OnSwitchCameraSide += cam.GetComponent<ThirdPersonCamera>().SwitchCameraSide;
     }
 
     void Update()

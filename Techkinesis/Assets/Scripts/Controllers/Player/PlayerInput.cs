@@ -12,12 +12,15 @@ public class PlayerInput : ScriptableObject, IInputProvider
     public event Action OnShieldStart,       OnShieldEnd;
     public event Action OnLevitationStart,   OnLevitationEnd;
 
+    public event Action OnSwitchCameraSide;
+
     [Header("Controls")]  // TODO: Allow customisation of movement keys
     [SerializeField] KeyCode run = KeyCode.LeftShift;
     [SerializeField] KeyCode jump = KeyCode.Space;
     [SerializeField] KeyCode launch = KeyCode.E;
     [SerializeField] KeyCode shield = KeyCode.Q;
     [SerializeField] KeyCode levitate = KeyCode.V;
+    [SerializeField] KeyCode switchCameraSide = KeyCode.R;
 
     bool isLevitating = false;
 
@@ -44,6 +47,8 @@ public class PlayerInput : ScriptableObject, IInputProvider
 
             isLevitating = !isLevitating;
         }
+
+        if (Input.GetKeyDown(switchCameraSide)) OnSwitchCameraSide();                               // Switch Camera Side                       
 
         return input;
     }

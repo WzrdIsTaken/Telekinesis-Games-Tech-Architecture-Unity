@@ -3,24 +3,17 @@ using Parabox.CSG;
 
 // Performs CSG operations a mesh | Credit: karl- (https://bit.ly/30sqtiL)
 
-public class MeshCutter : MonoBehaviour
+public static class MeshCutter
 {
-    [SerializeField] GameObject one, two;
-
     public enum BoolOp
     {
         Union,
         SubtractLR,
         SubtractRL,
         Intersect
-    };
+    }; 
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A)) DoOperation(BoolOp.SubtractLR, one, two);
-    }
-
-    public void DoOperation(BoolOp operation, GameObject left, GameObject right)
+    public static void DoOperation(BoolOp operation, GameObject left, GameObject right)
     {
         Model result;
 
@@ -46,14 +39,15 @@ public class MeshCutter : MonoBehaviour
         GameObject composite = new GameObject();
         composite.AddComponent<MeshFilter>().sharedMesh = result.Mesh;
         composite.AddComponent<MeshRenderer>().sharedMaterials = result.Materials.ToArray();
+        composite.AddComponent<MeshCollider>();
 
         GenerateBarycentric(composite);
 
-        Destroy(left);
-        Destroy(right);
+        Object.Destroy(left);
+        Object.Destroy(right);
     }
 
-    void GenerateBarycentric(GameObject go)
+    static void GenerateBarycentric(GameObject go)
     {
         Mesh m = go.GetComponent<MeshFilter>().sharedMesh;
 

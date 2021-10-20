@@ -116,6 +116,10 @@ public class MeshCutout : MonoBehaviour
     // Step 5 - Add a collider needed for CSG operations
     void GenerateCollider()
     {
-        gameObject.AddComponent<MeshCollider>();
+        gameObject.AddComponent<MeshCollider>().convex = true;
+
+        // I don't know what issues settings convex to be true will cause. 
+        // If its something major, can just create a convex collider for cutting and a non convex one to add the rigidbody to
+        // "Non-convex MeshCollider with non-kinematic Rigidbody is no longer supported since Unity 5."
     }
 }
