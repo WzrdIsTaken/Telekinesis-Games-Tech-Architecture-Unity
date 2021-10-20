@@ -47,7 +47,7 @@ public class LaunchAbility : MonoBehaviour
         RaycastHit hit = RaycastSystem.Raycast(cam.transform.position, cam.transform.forward, launchRaycastRange, launchInteractionMask);
         Rigidbody selectedObject = null;
 
-        if (!hit.collider)                                         // We didn't hit an object https://bit.ly/3m0EXyM
+        if (!hit.collider)                                         // We didn't hit an object
         {
             // TODO: Make a nice sound or something
             print("You didn't hit an object!");

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-// Super cool third person camera that allows the player to be the person but in the third
+// Player Camera
 
 public class ThirdPersonCamera : MonoBehaviour
 {
