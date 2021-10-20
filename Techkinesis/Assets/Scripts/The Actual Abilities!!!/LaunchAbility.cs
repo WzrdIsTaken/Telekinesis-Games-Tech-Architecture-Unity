@@ -59,7 +59,8 @@ public class LaunchAbility : MonoBehaviour
         }
         else                                                       // Hit an object, but not once that can be launched
         {
-            float meshSize = Random.Range(0.1f, 0.25f); // TODO: Have hit.distance play a factor in this? But have a .max cap xD Max size should be like .2/.25
+            float meshSize = 0.11f; //Random.Range(0.1f, 0.25f); 
+            // TODO: Have hit.distance play a factor in this? But have a .max cap xD Max size should be like .2/.25. Smaller numbers seem to work best
 
             selectedObject = MeshCutoutCreator.CreateMesh(hit.point, meshSize).AddComponent<Rigidbody>();
             selectedObject.tag = TagManager.LAUNCHABLE;
