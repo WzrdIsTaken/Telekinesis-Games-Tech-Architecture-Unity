@@ -1,7 +1,13 @@
 using UnityEngine;
 using Parabox.CSG;
 
-// Performs CSG operations a mesh | Credit: karl- (https://bit.ly/30sqtiL)
+// using Unity.Jobs;
+// TODO: Think about some optimisation here
+
+// I can't be asked to actually code any optimisiations but can discuss them. Eg multithreading, 
+// spliting the map up into sections so don't have to cut as big of a mesh, etc
+
+// Performs CSG operations a mesh | Credot: karl- (https://bit.ly/30sqtiL)
 
 public static class MeshCutter
 {
@@ -15,7 +21,7 @@ public static class MeshCutter
 
     public static void DoOperation(BoolOp operation, GameObject left, GameObject right)
     {
-        Model result;
+        Model result = null;
 
         switch (operation)
         {
@@ -38,7 +44,7 @@ public static class MeshCutter
 
         GameObject composite = new GameObject();
         composite.AddComponent<MeshFilter>().sharedMesh = result.Mesh;
-        composite.AddComponent<MeshRenderer>().sharedMaterials = result.Materials.ToArray();
+        composite.AddComponent<MeshRenderer>().sharedMaterials = left.GetComponent<MeshRenderer>().sharedMaterials;  // result.Materials.ToArray();
         composite.AddComponent<MeshCollider>();
 
         GenerateBarycentric(composite);

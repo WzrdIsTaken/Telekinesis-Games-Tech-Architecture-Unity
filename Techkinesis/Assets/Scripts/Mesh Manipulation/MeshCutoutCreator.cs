@@ -4,10 +4,12 @@ using UnityEngine;
 
 public static class MeshCutoutCreator
 {
-    public static GameObject CreateMesh(Vector3 position, float force)
+    public static GameObject CreateMesh(Vector3 position, float force, Material[] materials=null)
     {
         MeshCutout mesh = new GameObject("MeshCutout").AddComponent<MeshCutout>();
         mesh.GenerateCutout(CreateMeshSettings(force));
+
+        if (materials != null) mesh.GetComponent<MeshRenderer>().sharedMaterials = materials;
 
         mesh.transform.position = position;
         return mesh.gameObject;
@@ -20,7 +22,7 @@ public static class MeshCutoutCreator
 
         MeshCutoutSettings meshCutoutSettings = ScriptableObject.CreateInstance<MeshCutoutSettings>();
         meshCutoutSettings.meshRadius = 1 * force;        // Mesh radius
-        meshCutoutSettings.meshQualityReduction = 0.5f;   // Mesh quality reduction 
+        meshCutoutSettings.meshQualityReduction = 0.9f;   // Mesh quality reduction 
         meshCutoutSettings.noiseLayers = new MeshCutoutSettings.NoiseLayer[]
         {
             new MeshCutoutSettings.NoiseLayer

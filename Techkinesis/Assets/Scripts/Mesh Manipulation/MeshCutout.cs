@@ -3,12 +3,6 @@ using UnityMeshSimplifier;
 
 // The base for creating a mesh cutout
 
-/* 
- * TODO: Might want to look at putting some of this into a job system? Seems like a kinda heavy operation..
- * https://www.youtube.com/watch?v=C56bbgtPr_w
- * But remember, can't create gameobjects inside a job
- */
-
 public class MeshCutout : MonoBehaviour
 {
     [Range(2, 256)]
