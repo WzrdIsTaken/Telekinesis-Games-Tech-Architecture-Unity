@@ -27,13 +27,11 @@ public class LevitationAbility : MonoBehaviour
     Vector3 levitationForce;
     Vector3 levitationRotation;
     Vector3 tiltVelocity;
-    //float rotateVelocity;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.detectCollisions = false;
-        rb.isKinematic = true;
     }
 
     public void PassReferences(Camera _cam, PlayerController _playerController, Animator _animator)
@@ -67,12 +65,10 @@ public class LevitationAbility : MonoBehaviour
 
     public void HandleLevitationRotation(InputState inputState)
     {
-        float xRot = rb.rotation.x;
-        float yRot = rb.rotation.y;
-        float zRot = rb.rotation.z;
+        float xRot, yRot, zRot;
 
-        //xRot = Mathf.SmoothDamp(levitationRotation.x, maxTilt * inputState.movementDirection.y, ref tiltVelocity.x, tiltSmoothTime);
-        // yRot = Mathf.SmoothDamp(levitationRotation.y, maxTilt * inputState.movementDirection.x, ref tiltVelocity.y, tiltSmoothTime);
+        xRot = Mathf.SmoothDamp(levitationRotation.x, maxTilt * inputState.movementDirection.y, ref tiltVelocity.x, tiltSmoothTime);
+        zRot = Mathf.SmoothDamp(levitationRotation.z, maxTilt * -inputState.movementDirection.x, ref tiltVelocity.z, tiltSmoothTime);
 
         float targetYRotation = Mathf.Atan2(inputState.movementDirection.x, inputState.movementDirection.y) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
         yRot = Mathf.SmoothDamp(levitationRotation.y, targetYRotation, ref tiltVelocity.y, rotateSmoothTime);

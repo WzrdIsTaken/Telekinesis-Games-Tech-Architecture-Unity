@@ -1512,7 +1512,7 @@ MonoBehaviour:
   downForce: -200
   maxTilt: 20
   tiltSmoothTime: 0.1
-  rotateSmoothTime: 0.25
+  rotateSmoothTime: 0.2
   minDrift: 0
   maxDrift: 0
 --- !u!114 &2018693940
@@ -1780,7 +1780,7 @@ Rigidbody:
   m_Drag: 25
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0

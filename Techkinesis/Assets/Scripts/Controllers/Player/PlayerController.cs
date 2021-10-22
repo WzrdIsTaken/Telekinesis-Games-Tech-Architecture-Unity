@@ -46,7 +46,7 @@ public class PlayerController : MovementController
         inputProvider.OnLaunchStart += launchAbility.LaunchStart;               inputProvider.OnLaunchEnd += launchAbility.LaunchEnd;
         inputProvider.OnShieldStart += shieldAbility.ShieldStart;               inputProvider.OnShieldEnd += shieldAbility.ShieldEnd;
         inputProvider.OnLevitationStart += levitationAbility.LevitationStart;   inputProvider.OnLevitationEnd += levitationAbility.LevitationEnd;
-        // For future reference, can do event += () => thing. Here I don't think its clear + we need the SetMovementState away, but its cool.
+        // For future reference, can do event += () => thing. Here I don't think its clear + we need the SetMovementState anyway, but its cool.
 
         movementState = MovementState.GROUND;
     }
