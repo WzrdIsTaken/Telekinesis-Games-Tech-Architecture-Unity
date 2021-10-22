@@ -31,7 +31,7 @@ public class LaunchAbility : MonoBehaviour
 
     Camera cam;
 
-    public void AssignCamera(Camera playerCamera)
+    public void PassReferences(Camera playerCamera)
     {
         cam = playerCamera;
     }

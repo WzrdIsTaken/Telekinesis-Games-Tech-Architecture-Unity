@@ -10,6 +10,7 @@ public static class MeshCutoutCreator
         mesh.GenerateCutout(CreateMeshSettings(force));
 
         if (materials != null) mesh.GetComponent<MeshRenderer>().sharedMaterials = materials;
+        else mesh.GetComponent<MeshRenderer>().enabled = false;
 
         mesh.transform.position = position;
         return mesh.gameObject;

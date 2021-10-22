@@ -29,34 +29,51 @@ public class PlayerController : MovementController
     float velocityY;
     float turnSmoothVelocity;
 
+    public enum MovementState { GROUND, LEVITATION, NONE }
+    MovementState movementState;
+
     public override void Start()
     {
         base.Start();  // CharacterController and Animator references grabbed here 
 
-        launchAbility = GetComponent<LaunchAbility>();
-        launchAbility.AssignCamera(cam);
-        shieldAbility = GetComponent<ShieldAbility>();
-        levitationAbility = GetComponent<LevitationAbility>();
+        launchAbility = GetComponent<LaunchAbility>();                          launchAbility.PassReferences(cam);
+        shieldAbility = GetComponent<ShieldAbility>();                          // Some cool reference here
+        levitationAbility = GetComponent<LevitationAbility>();                  levitationAbility.PassReferences(cam, this, animator);
 
         inputProvider.OnJump += Jump;
+        inputProvider.OnSwitchCameraSide += cam.GetComponent<ThirdPersonCamera>().SwitchCameraSide;
 
         inputProvider.OnLaunchStart += launchAbility.LaunchStart;               inputProvider.OnLaunchEnd += launchAbility.LaunchEnd;
         inputProvider.OnShieldStart += shieldAbility.ShieldStart;               inputProvider.OnShieldEnd += shieldAbility.ShieldEnd;
         inputProvider.OnLevitationStart += levitationAbility.LevitationStart;   inputProvider.OnLevitationEnd += levitationAbility.LevitationEnd;
+        // For future reference, can do event += () => thing. Here I don't think its clear + we need the SetMovementState away, but its cool.
 
-        inputProvider.OnSwitchCameraSide += cam.GetComponent<ThirdPersonCamera>().SwitchCameraSide;
+        movementState = MovementState.GROUND;
     }
 
     void Update()
     {
         InputState inputState = inputProvider.GetState();
 
-        HandleRotation(inputState);
-        HandleMovement(inputState);
-        HandleAnimation(inputState);
+        switch (movementState)
+        {
+            case MovementState.GROUND:
+                HandleGroundRotation(inputState);
+                HandleGroundMovement(inputState);
+                HandleGroundAnimation(inputState);
+                break;
+            case MovementState.LEVITATION:
+                levitationAbility.HandleLevitationRotation(inputState);
+                levitationAbility.HandleLevitationMovement(inputState);
+                levitationAbility.HandleLevitationAnimation(inputState);
+                break;
+            case MovementState.NONE:
+                // Could be used for a cutscene or something, where we don't want the player to be able to move
+                break;
+        }
     }
 
-    void HandleRotation(InputState inputState)
+    void HandleGroundRotation(InputState inputState)
     {
         if (inputState.movementDirection != Vector2.zero)
         {
@@ -65,7 +82,7 @@ public class PlayerController : MovementController
         }
     }
 
-    void HandleMovement(InputState inputState)
+    void HandleGroundMovement(InputState inputState)
     {
         float targetSpeed = (inputState.running ? runSpeed : walkSpeed) * inputState.movementDirection.magnitude;
         currentSpeed = Mathf.SmoothDamp(currentSpeed, targetSpeed, ref speedSmoothVelocity, GetModifiedSmoothTime(speedSmoothTime));
@@ -78,7 +95,7 @@ public class PlayerController : MovementController
         if (controller.isGrounded) velocityY = 0f;
     }
 
-    void HandleAnimation(InputState inputState)
+    void HandleGroundAnimation(InputState inputState)
     {
         float currentControllerSpeed = new Vector2(controller.velocity.x, controller.velocity.z).magnitude;
         float animationSpeedPercent = inputState.running ? currentControllerSpeed / runSpeed : currentControllerSpeed / walkSpeed * 0.5f;
@@ -99,5 +116,10 @@ public class PlayerController : MovementController
         if (airControlPercent == 0) return float.MaxValue;
 
         return smoothTime / airControlPercent;
+    }
+
+    public void SetMovementState(MovementState _movementState)
+    {
+        movementState = _movementState;
     }
 }

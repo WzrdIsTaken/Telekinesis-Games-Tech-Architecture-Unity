@@ -4,7 +4,7 @@ RIGHT NOW:
 - Improve launch code / optimise values
 
 WOULD BE NICE
-- Optimise the cutting of mesh
+- Optimise the cutting of mesh - this tutorial could be used to help create some 'holes' where the rocks are pulled out https://www.youtube.com/watch?v=IuP1fUPdxbo&list=PLPAgqhxd1Ib1YYqYnZioGyrSUzOwead17&index=11
 - Catch stack overflow 
 - Could prevent it on the floor with just a tag check. Floor could be dense concrete / steel and you can't pull it?
 
