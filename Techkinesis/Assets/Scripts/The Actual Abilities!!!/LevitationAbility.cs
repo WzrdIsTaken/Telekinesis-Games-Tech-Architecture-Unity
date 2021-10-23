@@ -120,7 +120,7 @@ public class LevitationAbility : MonoBehaviour
         else if (inputState.levitationVerticalState == PlayerInputState.LevitationVerticalState.DOWN) yForce = downForce;
 
         // Because the player leans forward when moving, we need to add a bit of force because we are using AddRelativeForce.
-        // Will think of a better solution later. 8.815 is just a random number that I got after a few guesses that seems to work well xd.
+        // Will (maybe) think of a better solution later. 8.815 is just a random number that I got after a few guesses that seems to work well xd.
         if (Mathf.Abs(xForce) > 0 || Mathf.Abs(zForce) > 0) yForce += maxTilt * 8.815f;  
 
         levitationForce = new Vector3(xForce, yForce, zForce);
