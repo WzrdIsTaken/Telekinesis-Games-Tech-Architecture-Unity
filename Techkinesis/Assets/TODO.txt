@@ -1,6 +1,9 @@
 RIGHT NOW:
 - Sheild
 - Levitate
+	- Collision
+	- Improve camera
+	- Make it so that the player can't spin around a bunch (just press S and it will happen soon enough..)
 - Improve launch code / optimise values
 
 WOULD BE NICE

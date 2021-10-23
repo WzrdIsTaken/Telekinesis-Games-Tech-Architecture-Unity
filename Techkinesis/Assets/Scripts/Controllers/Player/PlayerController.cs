@@ -47,14 +47,14 @@ public class PlayerController : MovementController
         inputProvider.OnShieldStart += shieldAbility.ShieldStart;               inputProvider.OnShieldEnd += shieldAbility.ShieldEnd;
         inputProvider.OnLevitationStart += levitationAbility.LevitationStart;   inputProvider.OnLevitationEnd += levitationAbility.LevitationEnd;
         // For future reference, can do event += () => thing. Here I don't think its clear + we need the SetMovementState anyway, but its cool.
-
+        
         movementState = MovementState.GROUND;
     }
 
     void Update()
     {
-        InputState inputState = inputProvider.GetState();
-
+        PlayerInputState inputState = inputProvider.GetState();
+        
         switch (movementState)
         {
             case MovementState.GROUND:

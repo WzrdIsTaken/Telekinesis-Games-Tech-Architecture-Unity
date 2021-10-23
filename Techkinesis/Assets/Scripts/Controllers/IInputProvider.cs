@@ -3,17 +3,17 @@ using UnityEngine;
 
 // Interface that all Input Providers (eg player, npc, etc) must use 
 
-public interface IInputProvider
+public interface IInputProvider<T> where T: InputState
 {
     event Action OnJump;                                
 
-    InputState GetState();
+    T GetState();
 }
 
-public struct InputState
+public abstract class InputState
 {
-    public Vector2 movementDirection;
-    public bool running;
+    public readonly Vector2 movementDirection;
+    public readonly bool running;
 
     public InputState(Vector2 _movementDirection, bool _running)
     {

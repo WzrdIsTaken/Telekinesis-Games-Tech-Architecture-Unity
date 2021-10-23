@@ -4,7 +4,7 @@ using UnityEngine;
 // Manages user input
 
 [CreateAssetMenu(fileName = "PlayerInputProvider", menuName = "ScriptableObjects/InputProviders/Player InputProvider", order = 1)]
-public class PlayerInput : ScriptableObject, IInputProvider
+public class PlayerInput : ScriptableObject, IInputProvider<PlayerInputState>
 {
     public event Action OnJump;
 
@@ -20,16 +20,23 @@ public class PlayerInput : ScriptableObject, IInputProvider
     [SerializeField] KeyCode launch = KeyCode.E;
     [SerializeField] KeyCode shield = KeyCode.Q;
     [SerializeField] KeyCode levitate = KeyCode.V;
+
+    [Space]
+    [SerializeField] KeyCode levitateUpKey = KeyCode.Space;
+    [SerializeField] KeyCode levitateDownKey = KeyCode.LeftControl;
+
+    [Space]
     [SerializeField] KeyCode switchCameraSide = KeyCode.R;
 
     bool isLevitating = false;
 
-    public InputState GetState()
+    public PlayerInputState GetState()
     {
-        InputState input = new InputState
+        PlayerInputState input = new PlayerInputState
         (
             new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized,   // Movement Direction
-            Input.GetKey(run)                                                                       // Running                         
+            Input.GetKey(run),                                                                      // Running  
+            GetLevitationState()                                                                    // Levitation State
         );
 
         if (Input.GetKeyDown(jump)) OnJump();                                                       // Jump
@@ -51,5 +58,27 @@ public class PlayerInput : ScriptableObject, IInputProvider
         if (Input.GetKeyDown(switchCameraSide)) OnSwitchCameraSide();                               // Switch Camera Side                       
 
         return input;
+    }
+
+    PlayerInputState.LevitationVerticalState GetLevitationState()
+    {
+        if (isLevitating)
+        {
+            if (Input.GetKey(levitateUpKey)) return PlayerInputState.LevitationVerticalState.UP;
+            if (Input.GetKey(levitateDownKey)) return PlayerInputState.LevitationVerticalState.DOWN;
+        }
+
+        return PlayerInputState.LevitationVerticalState.NONE;
+    }
+}
+
+public class PlayerInputState : InputState
+{
+    public enum LevitationVerticalState { UP, DOWN, NONE };
+    public readonly LevitationVerticalState levitationVerticalState;
+
+    public PlayerInputState(Vector2 _movementDirection, bool _running, LevitationVerticalState _levitationVerticalState) : base(_movementDirection, _running)
+    {
+        levitationVerticalState = _levitationVerticalState;
     }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 // Levitation
 
@@ -11,13 +12,16 @@ public class LevitationAbility : MonoBehaviour
     [Space]
     [SerializeField] float maxTilt;
     [SerializeField] float tiltSmoothTime;
-
-    [Space]
     [SerializeField] float rotateSmoothTime;
 
     [Space]
     [SerializeField] float minDrift;
     [SerializeField] float maxDrift;
+    [SerializeField] float minDriftTime;
+    [SerializeField] float maxDriftTime;
+
+    [Space]
+    [SerializeField] Vector3 startBoostForce;
 
     Camera cam;
     PlayerController playerController;
@@ -25,8 +29,11 @@ public class LevitationAbility : MonoBehaviour
     Rigidbody rb;
 
     Vector3 levitationForce;
-    Vector3 levitationRotation;
-    Vector3 tiltVelocity;
+    Vector3 driftForce;
+    Vector2 tiltVelocity;
+
+    Coroutine levitate;
+    Coroutine drift;
 
     void Start()
     {
@@ -45,59 +52,76 @@ public class LevitationAbility : MonoBehaviour
     {
         playerController.SetMovementState(PlayerController.MovementState.LEVITATION);
         rb.isKinematic = false;
+        rb.AddForce(startBoostForce, ForceMode.Force);
+
+        levitate = StartCoroutine(Levitate());
+        drift = StartCoroutine(Drift());
     }
 
     public void LevitationEnd()
     {
         playerController.SetMovementState(PlayerController.MovementState.GROUND);
         rb.isKinematic = true;
+
+        if (levitate != null) StopCoroutine(levitate);
+        if (drift != null) StopCoroutine(drift);
     }
 
-    void FixedUpdate()
+    IEnumerator Levitate()
     {
-        if (rb.isKinematic) return;
+        while (true)
+        {
+            rb.AddRelativeForce(levitationForce + driftForce);
+            yield return new WaitForFixedUpdate();
+        }
+    }
 
-        rb.AddRelativeForce(Vector3.up * levitationForce.y);        // Up / down
-        rb.AddRelativeForce(Vector3.forward * levitationForce.z);   // Forward / back
+    IEnumerator Drift()
+    {
+        Vector3 currentDrift = driftForce;
+        Vector3 targetDrift = new Vector3(Random.Range(minDrift, maxDrift), Random.Range(minDrift, maxDrift), Random.Range(minDrift, maxDrift));
 
-        rb.rotation = Quaternion.Euler(levitationRotation);
+        float driftTime = Random.Range(minDriftTime, maxDriftTime);
+        float time = 0;
+
+        while (time < driftTime)
+        {
+            driftForce = Vector3.Lerp(currentDrift, targetDrift, time / driftTime);
+            
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        driftForce = targetDrift;
+        drift = StartCoroutine(Drift());
     }
 
     public void HandleLevitationRotation(InputState inputState)
     {
-        float xRot, yRot, zRot;
+        float xRot = Mathf.SmoothDamp(transform.eulerAngles.x, maxTilt * inputState.movementDirection.magnitude, ref tiltVelocity.x, tiltSmoothTime);
+        float yRot = transform.eulerAngles.y;
 
-        xRot = Mathf.SmoothDamp(levitationRotation.x, maxTilt * inputState.movementDirection.y, ref tiltVelocity.x, tiltSmoothTime);
-        zRot = Mathf.SmoothDamp(levitationRotation.z, maxTilt * -inputState.movementDirection.x, ref tiltVelocity.z, tiltSmoothTime);
-
-        float targetYRotation = Mathf.Atan2(inputState.movementDirection.x, inputState.movementDirection.y) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
-        yRot = Mathf.SmoothDamp(levitationRotation.y, targetYRotation, ref tiltVelocity.y, rotateSmoothTime);
-
-        levitationRotation = new Vector3(xRot, yRot, zRot);
+        if (inputState.movementDirection != Vector2.zero)
+        {
+            float targetYRotation = Mathf.Atan2(inputState.movementDirection.x, inputState.movementDirection.y) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
+            yRot = Mathf.SmoothDamp(transform.eulerAngles.y, targetYRotation, ref tiltVelocity.y, rotateSmoothTime);
+        }
+            
+        transform.eulerAngles = new Vector3(xRot, yRot, transform.eulerAngles.z);
     }
 
-    public void HandleLevitationMovement(InputState inputState)
+    public void HandleLevitationMovement(PlayerInputState inputState)
     {
-        // Space becomes go up, shift go down?
-
-        float xForce = 0;
+        float xForce = inputState.movementDirection.x * levitationSpeed;
+        float zForce = inputState.movementDirection.y * levitationSpeed;
         float yForce = 0;
-        float zForce = 0;
 
-        if (Input.GetKey(KeyCode.Space)) yForce = upForce;                         // TODO: Change these controls
-        else if (Input.GetKey(KeyCode.LeftControl)) yForce = downForce;
+        if (inputState.levitationVerticalState == PlayerInputState.LevitationVerticalState.UP) yForce = upForce;                    
+        else if (inputState.levitationVerticalState == PlayerInputState.LevitationVerticalState.DOWN) yForce = downForce;
 
-        xForce = inputState.movementDirection.x * levitationSpeed;
-        zForce = inputState.movementDirection.y * levitationSpeed;
-
-        /*
-        levitationForce = new Vector3
-        {
-            x = 0,
-            y = inputState.movementDirection.x > 1 ? upForce : downForce,
-            z = inputState.movementDirection.y * levitationSpeed
-        };
-        */
+        // Because the player leans forward when moving, we need to add a bit of force because we are using AddRelativeForce.
+        // Will think of a better solution later. 8.815 is just a random number that I got after a few guesses that seems to work well xd.
+        if (Mathf.Abs(xForce) > 0 || Mathf.Abs(zForce) > 0) yForce += maxTilt * 8.815f;  
 
         levitationForce = new Vector3(xForce, yForce, zForce);
     }

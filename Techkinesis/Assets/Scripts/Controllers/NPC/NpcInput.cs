@@ -4,7 +4,7 @@ using UnityEngine;
 // Manages NPC input
 
 [CreateAssetMenu(fileName = "NpcInputProvider", menuName = "ScriptableObjects/InputProviders/NPC InputProvider", order = 2)]
-public class NpcInput : ScriptableObject, IInputProvider
+public class NpcInput : ScriptableObject, IInputProvider<InputState>
 {
     public event Action OnJump;
 
