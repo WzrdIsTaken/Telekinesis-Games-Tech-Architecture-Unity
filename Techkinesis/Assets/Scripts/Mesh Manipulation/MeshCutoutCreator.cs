@@ -4,11 +4,13 @@ using UnityEngine;
 
 public static class MeshCutoutCreator
 {
+    // Returns a created mesh gameobject
     public static GameObject CreateMesh(Vector3 position, float force, Material[] materials=null)
     {
         MeshCutout mesh = new GameObject("MeshCutout").AddComponent<MeshCutout>();
         mesh.GenerateCutout(CreateMeshSettings(force));
 
+        // If no materials then the mesh will only be used for a cutout, therefore it doesn't need to be visable
         if (materials != null) mesh.GetComponent<MeshRenderer>().sharedMaterials = materials;
         else mesh.GetComponent<MeshRenderer>().enabled = false;
 
@@ -16,6 +18,7 @@ public static class MeshCutoutCreator
         return mesh.gameObject;
     }
 
+    // Create the MeshCutcutSettings used to control the shape of a mesh cutout
     static MeshCutoutSettings CreateMeshSettings(float force)
     {
         // The force will influence the size / noise of the shape

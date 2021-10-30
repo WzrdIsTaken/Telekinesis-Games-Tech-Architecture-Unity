@@ -5,13 +5,13 @@ using System.Collections;
 
 public class ThirdPersonCamera : MonoBehaviour
 {
-    [SerializeField] float mouseSensitivity = 2.5f; 
-    [SerializeField] float distanceFromTarget = 2;
-    [SerializeField] float rotationSmoothTime = 0.12f;
-    [SerializeField] Transform target;
-    [SerializeField] Vector2 pitchMinMax = new Vector2(-40, 85);
-    [SerializeField] LayerMask collisionMask;
-    [SerializeField] float cameraSwitchSidesTime;
+    [SerializeField] float mouseSensitivity = 2.5f;               // How fast the camera will rotate
+    [SerializeField] float distanceFromTarget = 2;                // How far the camera will stay away from the player
+    [SerializeField] float rotationSmoothTime = 0.12f;            // How long it will take the camera to rotate
+    [SerializeField] Transform target;                            // The player
+    [SerializeField] Vector2 pitchMinMax = new Vector2(-40, 85);  // How far you can rotate the camera pitch
+    [SerializeField] LayerMask collisionMask;                     // What the camera will collide with
+    [SerializeField] float cameraSwitchSidesTime;                 // How long it takes for the camera to switch its position (left / right)
 
     float pitch;
     float yaw;
@@ -31,30 +31,43 @@ public class ThirdPersonCamera : MonoBehaviour
         cameraCollisionHandler.UpdateCameraClipPoints(target.position, transform.rotation, ref cameraCollisionHandler.desiredCameraClipPoints);
     }
 
+    // Calls the RotateCamera and MoveCamera methods. LateUpdate so that the players input has already been applied
     void LateUpdate()
     {
-        // Rotation
+        RotateCamera();
+        MoveCamera();
+    }
+
+    // Rotate the camera
+    void RotateCamera()
+    {
         yaw += Input.GetAxis("Mouse X") * mouseSensitivity;
         pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity;
         pitch = Mathf.Clamp(pitch, pitchMinMax.x, pitchMinMax.y);
 
         currentRotation = Vector3.SmoothDamp(currentRotation, new Vector3(pitch, yaw), ref rotationSmoothVelocity, rotationSmoothTime);
         transform.eulerAngles = currentRotation;
+    }
 
-        // Movement
+    // Move the camera
+    void MoveCamera()
+    {
         cameraCollisionHandler.UpdateCameraClipPoints(transform.position, transform.rotation, ref cameraCollisionHandler.adjustedCameraClipPoints);
         cameraCollisionHandler.UpdateCameraClipPoints(target.position, transform.rotation, ref cameraCollisionHandler.desiredCameraClipPoints);
 
-        Vector3 destination = target.position - transform.forward * (cameraCollisionHandler.CheckColliding(target.position) ? cameraCollisionHandler.GetAdjustedDistanceWithRayFrom(target.position) : distanceFromTarget);
+        Vector3 destination = target.position - transform.forward * (cameraCollisionHandler.CheckColliding(target.position) 
+                              ? cameraCollisionHandler.GetAdjustedDistanceWithRayFrom(target.position) : distanceFromTarget);
         transform.position = destination;
     }
 
+    // Starts the SwitchCameraSideCo coroutine. Called from an event hooked up in PlayerController Start
     public void SwitchCameraSide()
     {
         StopAllCoroutines();
         StartCoroutine(SwitchCameraSideCo());
     }
 
+    // Switch the cameras position from one side of the player to the other via a lerp
     IEnumerator SwitchCameraSideCo()
     {
         Vector3 targetPosition = new Vector3(target.localPosition.x < 0 ? targetStartX : -targetStartX, target.localPosition.y, target.localPosition.z);

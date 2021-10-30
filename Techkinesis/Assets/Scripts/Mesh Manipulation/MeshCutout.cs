@@ -1,32 +1,34 @@
 using UnityEngine;
 using UnityMeshSimplifier;
 
-// The base for creating a mesh cutout
+// The base for creating a mesh cutout. Can be used at runtime (the actual demo logic) or in the editor to preview what a cutout will look like
 
 public class MeshCutout : MonoBehaviour
 {
     [Range(2, 256)]
-    public int resolution = 10;
-    public bool autoUpdate = true;
+    public int resolution = 10;          // How detailed the mesh will be
+    public bool autoUpdate = true;       // Should the mesh autoUpdate? Only used in the editor
 
-    public MeshCutoutSettings settings;
+    public MeshCutoutSettings settings;  // The settings that will be applied to the cutout
 
     MeshCutoutGenerator meshCutoutGenerator;
 
     [HideInInspector]
     public bool meshCutoutSettingsFoldout;
 
-    [SerializeField, HideInInspector]
+    [SerializeField, HideInInspector]    // Serialized so that the cutouts can be saved as ScriptableObjects
     MeshFilter[] meshFilters;
     MeshCutoutFace[] meshFaces;
 
-    public void GenerateCutout()                               // Used in the editor, called from the 'Generate Cutout' button
+    // Used in the editor, called from the 'Generate Cutout' button
+    public void GenerateCutout()                               
     {
         Initialize();
         GenerateMesh();
     }
 
-    public void GenerateCutout(MeshCutoutSettings _settings)   // Used at runtime, called from MeshCutoutCreator
+    // Used at runtime, called from MeshCutoutCreator
+    public void GenerateCutout(MeshCutoutSettings _settings)   
     {
         settings = _settings;
 

@@ -7,7 +7,7 @@ using Parabox.CSG;
 // I can't be asked to actually code any optimisiations but can discuss them. Eg multithreading, 
 // spliting the map up into sections so don't have to cut as big of a mesh, etc
 
-// Performs CSG operations a mesh | Credot: karl- (https://bit.ly/30sqtiL)
+// Performs CSG operations a mesh | Credit: karl- (https://bit.ly/30sqtiL)
 
 public static class MeshCutter
 {

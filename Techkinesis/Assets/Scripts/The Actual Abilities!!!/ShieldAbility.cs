@@ -1,11 +1,16 @@
 using UnityEngine;
+using System.Collections;
 
-// Shield
+// Forms a shield infront of the player
 
 public class ShieldAbility : MonoBehaviour
 {
-    [SerializeField] LayerMask shieldInteractionMask;
-    [SerializeField] float shieldPullRange;
+    [SerializeField] Transform shieldFormPoint;        // Where the shield will form
+    [SerializeField] LayerMask shieldInteractionMask;  // What objects can be pulled to create the shield
+    [SerializeField] float shieldPullRange;            // From how far away objects will be pulled to create the shield
+
+    [Space]
+    [SerializeField] float shieldSize;                 // How big the shield is
 
     public void ShieldStart()
     {
@@ -15,5 +20,10 @@ public class ShieldAbility : MonoBehaviour
     public void ShieldEnd()
     {
         print("Shield End");
+    }
+
+    IEnumerator FormShield()
+    {
+        yield return null;
     }
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-// Launch
+// Pulls and launches and rock or object
 
 public class LaunchAbility : MonoBehaviour
 { 
@@ -31,45 +31,57 @@ public class LaunchAbility : MonoBehaviour
 
     Camera cam;
 
+    // Recieve the player camera reference from PlayerController
     public void PassReferences(Camera playerCamera)
     {
         cam = playerCamera;
     }
 
+    // Grab an object to be launched
     public void LaunchStart()
     {
         RaycastHit hit = RaycastSystem.Raycast(cam.transform.position, cam.transform.forward, launchRaycastRange, launchInteractionMask);
         Rigidbody selectedObject = null;
 
-        if (!hit.collider)                                         // We didn't hit an object
+        // We didn't hit an object
+        if (!hit.collider)
         {
             print("You didn't hit an object! Would make a cool sound or something");
             return;
         }
-        else if (hit.collider.CompareTag(TagManager.LAUNCHABLE))   // Hit an object that can be launched
+        // Hit an object that can be launched
+        else if (hit.collider.CompareTag(TagManager.LAUNCHABLE))   
         {
             selectedObject = hit.collider.gameObject.GetComponent<Rigidbody>();
         }
-        else                                                       // Hit an object, but not once that can be launched
+        // Hit an object, but not once that can be launched
+        else
         {
+            // We actually create two objects, one for the boolean operation and one to be thrown so they need to be the same size
             float meshSize = Random.Range(minPulledObjectSize, maxPulledObjectSize); 
 
+            // Create the object that the player will see / which will be thrown
             selectedObject = MeshCutoutCreator.CreateMesh(hit.point, meshSize, hit.collider.GetComponent<MeshRenderer>().sharedMaterials).AddComponent<Rigidbody>();
             selectedObject.tag = TagManager.LAUNCHABLE;
 
             if (actuallySliceMesh) 
             {
-                GameObject one = hit.collider.gameObject;
-                GameObject two = MeshCutoutCreator.CreateMesh(hit.point, meshSize);
-                MeshCutter.DoOperation(MeshCutter.BoolOp.SubtractLR, one, two);
+                GameObject one = hit.collider.gameObject;                            // The object that will have the hole cut out of it
+                GameObject two = MeshCutoutCreator.CreateMesh(hit.point, meshSize);  // The object that will be used to cut out the other object
+                MeshCutter.DoOperation(MeshCutter.BoolOp.SubtractLR, one, two);      // Perform the boolean operation
 
-                // TODO: Cutting an object *sometimes* causes stackoverflow kek
+                // TODO: Cutting an object too big or deformed *sometimes* causes stackoverflow...
+            }
+            else
+            {
+                // Shader magic
             }
         }
 
         pullObject = StartCoroutine(PullObject(selectedObject));
     }
 
+    // Reset the launch system / the pulled object and launch it using throwForce
     public void LaunchEnd()
     {
         if (!heldObject) return;
@@ -82,14 +94,14 @@ public class LaunchAbility : MonoBehaviour
         heldObject.useGravity = true;
 
         heldObject.velocity = cam.transform.forward * throwForce;
-
         heldObject = null;
     }
 
+    // Pull the object towards launchPullPoint
     IEnumerator PullObject(Rigidbody selectedObject)
     {
         heldObject = selectedObject;
-        float selectedObjectSize = selectedObject.GetComponent<MeshRenderer>().bounds.size.y / 2;
+        float selectedObjectSize = selectedObject.GetComponent<MeshRenderer>().bounds.size.y / 2;  // Needed so we know when to stop the coroutine
 
         while (true)
         {
@@ -97,6 +109,7 @@ public class LaunchAbility : MonoBehaviour
             Vector3 pullForceVec = pullDirection.normalized * pullForce;
             float distanceToPullPoint = Vector3.Distance(heldObject.transform.position, launchPullPoint.transform.position);
 
+            // Once the object has reached launchPullPoint set values and break out of the coroutine
             if (distanceToPullPoint < selectedObjectSize)
             {
                 heldObject.transform.position = launchPullPoint.transform.position;
@@ -111,6 +124,7 @@ public class LaunchAbility : MonoBehaviour
                 break;
             }
 
+            // So the object can't used keep accelerating forever
             if (heldObject.velocity.magnitude < pulledObjectMaxVelocity)
             {
                 heldObject.AddForce(pullForceVec, ForceMode.Force);
@@ -124,6 +138,7 @@ public class LaunchAbility : MonoBehaviour
         }
     }
 
+    // Make the object wobble around in the air once it has reached launchPullPoint. Combination of a spring joint and sin wave
     IEnumerator MakeObjectWobble()
     {
         launchPullPoint.connectedBody = heldObject;

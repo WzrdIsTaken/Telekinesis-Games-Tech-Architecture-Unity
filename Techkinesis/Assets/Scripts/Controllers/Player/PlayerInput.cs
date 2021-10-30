@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-// Manages user input
+// Gets user input and feeds it to the PlayerController via events and the PlayerInputState struct
 
 [CreateAssetMenu(fileName = "PlayerInputProvider", menuName = "ScriptableObjects/InputProviders/Player InputProvider", order = 1)]
 public class PlayerInput : ScriptableObject, IInputProvider<PlayerInputState>
@@ -30,6 +30,7 @@ public class PlayerInput : ScriptableObject, IInputProvider<PlayerInputState>
 
     bool isLevitating = false;
 
+    // Returns a PlayerInputState struct containing movement infomation, as well as fires the various events. Called from PlayerController Update
     public PlayerInputState GetState()
     {
         PlayerInputState input = new PlayerInputState
@@ -60,11 +61,12 @@ public class PlayerInput : ScriptableObject, IInputProvider<PlayerInputState>
         return input;
     }
 
+    // Returns if the player is levitating up or down
     PlayerInputState.LevitationVerticalState GetLevitationState()
     {
         if (isLevitating)
         {
-            if (Input.GetKey(levitateUpKey)) return PlayerInputState.LevitationVerticalState.UP;
+            if (Input.GetKey(levitateUpKey))   return PlayerInputState.LevitationVerticalState.UP;
             if (Input.GetKey(levitateDownKey)) return PlayerInputState.LevitationVerticalState.DOWN;
         }
 
@@ -72,6 +74,7 @@ public class PlayerInput : ScriptableObject, IInputProvider<PlayerInputState>
     }
 }
 
+// This struct will be created and used to work out the players movement values every frame
 public class PlayerInputState : InputState
 {
     public enum LevitationVerticalState { UP, DOWN, NONE };

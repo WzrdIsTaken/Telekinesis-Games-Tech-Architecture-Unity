@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 
 // Interface that all Input Providers (eg player, npc, etc) must use 
-
 public interface IInputProvider<T> where T: InputState
 {
     event Action OnJump;                                
@@ -10,6 +9,7 @@ public interface IInputProvider<T> where T: InputState
     T GetState();
 }
 
+// Base class for InputStates, contains infomation that all Controllers will use
 public abstract class InputState
 {
     public readonly Vector2 movementDirection;

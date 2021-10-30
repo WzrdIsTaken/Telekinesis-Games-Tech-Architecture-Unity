@@ -313,7 +313,7 @@ RectTransform:
   m_Children:
   - {fileID: 2064141873}
   m_Father: {fileID: 543450651689989318}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1456,6 +1456,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1980724230
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1980724231}
+  m_Layer: 6
+  m_Name: ShieldFormPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1980724231
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1980724230}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.25, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 543450651689989318}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2018693935
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1530,10 +1560,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23fc1da782a97d44e94855df4f594199, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shieldFormPoint: {fileID: 1980724231}
   shieldInteractionMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2147483647
   shieldPullRange: 0
+  shieldSize: 0
 --- !u!114 &2018693941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1697,6 +1729,7 @@ Transform:
   - {fileID: 3745622626598563747}
   - {fileID: 839621950}
   - {fileID: 773924307}
+  - {fileID: 1980724231}
   - {fileID: 219546239}
   m_Father: {fileID: 0}
   m_RootOrder: 2

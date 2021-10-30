@@ -1,18 +1,18 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// Handles some basic settings to make nagivation of the scene easier
+// Handles some basic settings to make nagivation of the scene easier. Can be changed at runtime.
 
 public class SettingsManager : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] Image crosshair;
+    [Header("References")]  // No touching!
+    [SerializeField] Image crosshair; 
 
     [Header("Cursor")]
-    [SerializeField] bool lockCursor;
+    [SerializeField] bool lockCursor;        // Should the cursor be locked?
 
     [Header("Crosshair")]
-    [SerializeField] Color crosshairColour;
+    [SerializeField] Color crosshairColour;  // What colour the crosshair is
 
     void OnValidate()
     {

@@ -7,7 +7,6 @@ using UnityEditor;
 public class RequireInterfaceDrawer : PropertyDrawer
 {
     // Overrides GUI drawing for the attribute
-
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         // Check if this is reference type property

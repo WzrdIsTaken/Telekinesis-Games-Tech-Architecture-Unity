@@ -10,7 +10,7 @@ public class NpcInput : ScriptableObject, IInputProvider<InputState>
 
     public InputState GetState()
     {
-        // Get some cool AI Logic
+        // TODO Get some cool AI Logic
 
         throw new NotImplementedException();
     }

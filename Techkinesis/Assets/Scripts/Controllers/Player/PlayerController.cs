@@ -5,20 +5,20 @@ using UnityEngine;
 public class PlayerController : MovementController
 {
     [Header("References")]
-    [SerializeField] PlayerInput inputProvider;
-    [SerializeField] Camera cam;
+    [SerializeField] PlayerInput inputProvider;                    // The players InputProvider
+    [SerializeField] Camera cam;                                   // The players camera
 
     [Header("Attributes")]
-    [SerializeField] float mass = -12f;
-    [SerializeField, Range(0, 1)] float airControlPercent = 0.5f;  // 1 = more control, 0 = less control
+    [SerializeField] float mass = -12f;                            // How heavy the player is, will affect how fast they fall
+    [SerializeField, Range(0, 1)] float airControlPercent = 0.5f;  // How much control the player has while jumping. 1 = more control, 0 = less control
 
     [Header("Movement")]
-    [SerializeField] float speedSmoothTime = 0.1f;
-    [SerializeField] float turnSmoothTime = 0.2f;
+    [SerializeField] float speedSmoothTime = 0.1f;                 // How long it will take for the player to go between stopping / walking / running
+    [SerializeField] float turnSmoothTime = 0.2f;                  // How long it will take for the player to turn
 
-    [SerializeField] float walkSpeed = 2;
-    [SerializeField] float runSpeed = 6;
-    [SerializeField] float jumpHeight = 1;
+    [SerializeField] float walkSpeed = 2;                          // How fast the player will walk
+    [SerializeField] float runSpeed = 6;                           // How fast the player will run
+    [SerializeField] float jumpHeight = 1;                         // How high the player will jump
 
     LaunchAbility launchAbility;
     ShieldAbility shieldAbility;
@@ -29,17 +29,21 @@ public class PlayerController : MovementController
     float velocityY;
     float turnSmoothVelocity;
 
-    public enum MovementState { GROUND, LEVITATION, NONE }
+    public enum MovementState { GROUND, LEVITATION, NONE }         // The players movement states. Dictates what rotation/movement/animation methods are called
     MovementState movementState;
 
+    // Setup the PlayerController
     public override void Start()
     {
-        base.Start();  // CharacterController and Animator references grabbed here 
+        // CharacterController and Animator references grabbed here
+        base.Start();  
 
+        // Grab the ability components and set them up
         launchAbility = GetComponent<LaunchAbility>();                          launchAbility.PassReferences(cam);
         shieldAbility = GetComponent<ShieldAbility>();                          // Some cool reference here
         levitationAbility = GetComponent<LevitationAbility>();                  levitationAbility.PassReferences(cam, this, animator);
 
+        // Hook up the events
         inputProvider.OnJump += Jump;
         inputProvider.OnSwitchCameraSide += cam.GetComponent<ThirdPersonCamera>().SwitchCameraSide;
 
@@ -48,9 +52,11 @@ public class PlayerController : MovementController
         inputProvider.OnLevitationStart += levitationAbility.LevitationStart;   inputProvider.OnLevitationEnd += levitationAbility.LevitationEnd;
         // For future reference, can do event += () => thing. Here I don't think its clear + we need the SetMovementState anyway, but its cool.
         
+        // Set the first movement state
         movementState = MovementState.GROUND;
     }
 
+    // Grab the current PlayerInputState and pass its values to the relevant methods depending on the movementState
     void Update()
     {
         PlayerInputState inputState = inputProvider.GetState();
@@ -73,8 +79,11 @@ public class PlayerController : MovementController
         }
     }
 
+    // Rotates the player
     void HandleGroundRotation(InputState inputState)
     {
+        // Is the player isn't providing any input, don't rotate the character so they can look around
+
         if (inputState.movementDirection != Vector2.zero)
         {
             float targetRotation = Mathf.Atan2(inputState.movementDirection.x, inputState.movementDirection.y) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
@@ -82,6 +91,7 @@ public class PlayerController : MovementController
         }
     }
 
+    // Move the player. Handles x/z and y explicitly (gravity) because we are using a CharacterController
     void HandleGroundMovement(InputState inputState)
     {
         float targetSpeed = (inputState.running ? runSpeed : walkSpeed) * inputState.movementDirection.magnitude;
@@ -95,6 +105,7 @@ public class PlayerController : MovementController
         if (controller.isGrounded) velocityY = 0f;
     }
 
+    // Smoothly interpolates between the animation walk / run states based on the CharacterControllers speed
     void HandleGroundAnimation(InputState inputState)
     {
         float currentControllerSpeed = new Vector2(controller.velocity.x, controller.velocity.z).magnitude;
@@ -102,6 +113,7 @@ public class PlayerController : MovementController
         animator.SetFloat("speedPercent", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
     }
 
+    // Adds y velocity when the player jumps
     void Jump()
     {
         if (!controller.isGrounded) return;
@@ -110,14 +122,16 @@ public class PlayerController : MovementController
         velocityY = jumpVelocity;
     }
 
+    // Calculate the smoothTime (used for calculating the players rotation while they are in the air) based on if the are grounded or not
     float GetModifiedSmoothTime(float smoothTime)
     {
-        if (controller.isGrounded) return smoothTime;
-        if (airControlPercent == 0) return float.MaxValue;
+        if (controller.isGrounded)  return smoothTime;
+        if (airControlPercent == 0) return float.MaxValue;  // Prevents any divide by 0 errors
 
         return smoothTime / airControlPercent;
     }
 
+    // Set the players movementState
     public void SetMovementState(MovementState _movementState)
     {
         movementState = _movementState;
