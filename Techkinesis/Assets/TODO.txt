@@ -2,6 +2,7 @@ RIGHT NOW:
 - Sheild
 	- Allow player to launch shield objects if launch key is pressed
 	- Min/max dist
+	- Shield needs to actually, well, shield something! just a collider or something should do
 - Levitate
 	- Collision
 	- Improve camera

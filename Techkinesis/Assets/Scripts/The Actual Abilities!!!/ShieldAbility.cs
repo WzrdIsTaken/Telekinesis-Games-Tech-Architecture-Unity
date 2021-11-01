@@ -7,8 +7,6 @@ using System.Linq;
 
 public class ShieldAbility : MonoBehaviour
 {
-    [SerializeField] Transform shieldFormPoint;          // Where the shield will form
-
     [Space]
     [SerializeField] LayerMask shieldInteractionMask;    // What objects can be pulled to create the shield
     [SerializeField] float shieldPullRange;              // From how far away objects will be pulled to create the shield
