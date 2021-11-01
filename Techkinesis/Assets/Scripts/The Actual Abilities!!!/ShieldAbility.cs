@@ -7,7 +7,6 @@ using System.Linq;
 
 public class ShieldAbility : MonoBehaviour
 {
-    [Space]
     [SerializeField] LayerMask shieldInteractionMask;    // What objects can be pulled to create the shield
     [SerializeField] float shieldPullRange;              // From how far away objects will be pulled to create the shield
     //[SerializeField] float minDistAwayFromPlayer;        // The minimum distance away from the player that objects will be pulled TODO
