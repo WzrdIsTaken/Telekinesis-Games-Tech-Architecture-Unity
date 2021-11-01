@@ -25,8 +25,8 @@ public static class MeshCutter
         float meshSize = Random.Range(minMeshSize, maxMeshSize);
 
         // Create the object that the player will see / which will be thrown
-        Rigidbody randomDebris = MeshCutoutCreator.CreateMesh(hit.point, meshSize, hit.collider.GetComponent<MeshRenderer>().sharedMaterials).AddComponent<Rigidbody>();
-        randomDebris.tag = TagManager.LAUNCHABLE;
+        Rigidbody randomMesh = MeshCutoutCreator.CreateMesh(hit.point, meshSize, hit.collider.GetComponent<MeshRenderer>().sharedMaterials).AddComponent<Rigidbody>();
+        randomMesh.tag = TagManager.LAUNCHABLE;
 
         if (actuallyCutMesh)
         {
@@ -39,7 +39,7 @@ public static class MeshCutter
             // Shader magic
         }
 
-        return randomDebris;
+        return randomMesh;
     }
 
     static void DoOperation(BoolOp operation, GameObject left, GameObject right)
