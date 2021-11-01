@@ -53,7 +53,7 @@ public class LaunchAbility : MonoBehaviour
         }
 
         // Hit an object that can be launched : Hit an object, but not once that can be launched so need to cut the mesh
-        selectedObject = hit.collider.CompareTag(TagManager.LAUNCHABLE) ? hit.collider.gameObject.GetComponent<Rigidbody>()  
+        selectedObject = hit.collider.CompareTag(TagAndLayerNameManager.LAUNCHABLE) ? hit.collider.gameObject.GetComponent<Rigidbody>()  
                                                                         : MeshCutter.CutAndReturnRandomMesh(hit, minPulledObjectSize, maxPulledObjectSize, actuallyCutMesh);
 
         pullObject = StartCoroutine(PullObject(selectedObject));

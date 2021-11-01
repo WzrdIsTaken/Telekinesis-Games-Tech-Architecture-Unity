@@ -1,6 +1,6 @@
 // Means that we only have to change tags / layer names in one place, and will never accidently spell them wrong
 
-public static class TagManager
+public static class TagAndLayerNameManager
 {
     // Tags
     public static string LAUNCHABLE = "Launchable";

@@ -165,7 +165,7 @@ public class ShieldAbility : MonoBehaviour
                 if (col)
                 {
                     // Hit an object that can be launched : Hit an object, but not once that can be launched so need to cut the mesh
-                    debrisObj = col.CompareTag(TagManager.LAUNCHABLE) ? col.GetComponent<Rigidbody>() 
+                    debrisObj = col.CompareTag(TagAndLayerNameManager.LAUNCHABLE) ? col.GetComponent<Rigidbody>() 
                                                                       : MeshCutter.CutAndReturnRandomMesh(hit, minRandomShieldObjectSize, maxRandomShieldObjectSize, actuallyCutMesh); 
                 }
             }
@@ -192,7 +192,7 @@ public class ShieldAbility : MonoBehaviour
     Stack<Collider> GetLaunchableObjects()
     {
         Collider[] objects = Physics.OverlapSphere(transform.position, shieldPullRange);
-        return new Stack<Collider>(objects.Where(obj => obj.CompareTag(TagManager.LAUNCHABLE))); 
+        return new Stack<Collider>(objects.Where(obj => obj.CompareTag(TagAndLayerNameManager.LAUNCHABLE))); 
     }
 
     // Creates some random points that shield debris will anchor to
