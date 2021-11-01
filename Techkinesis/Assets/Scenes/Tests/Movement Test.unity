@@ -1563,9 +1563,20 @@ MonoBehaviour:
   shieldFormPoint: {fileID: 1980724231}
   shieldInteractionMask:
     serializedVersion: 2
-    m_Bits: 2147483647
-  shieldPullRange: 0
-  shieldSize: 0
+    m_Bits: 55
+  shieldPullRange: 5
+  launchableBias: 0.5
+  shieldFormTime: 0.5
+  shieldSize: 3
+  minShieldObjects: 20
+  maxShieldObjects: 30
+  minRandomShieldObjectSize: 0.1
+  maxRandomShieldObjectSize: 0.11
+  actuallyCutMesh: 0
+  wobblePosSpeed: 2
+  wobblePosAmount: 0.05
+  wobbleRotSpeed: 2
+  wobbleRotAmount: 2
 --- !u!114 &2018693941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1585,7 +1596,7 @@ MonoBehaviour:
   launchRaycastRange: 100
   minPulledObjectSize: 0.11
   maxPulledObjectSize: 0.11
-  actuallySliceMesh: 1
+  actuallyCutMesh: 0
   pullForce: 30
   pulledObjectMaxVelocity: 16
   throwForce: 30

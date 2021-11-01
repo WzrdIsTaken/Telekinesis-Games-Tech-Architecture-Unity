@@ -40,7 +40,7 @@ public class PlayerController : MovementController
 
         // Grab the ability components and set them up
         launchAbility = GetComponent<LaunchAbility>();                          launchAbility.PassReferences(cam);
-        shieldAbility = GetComponent<ShieldAbility>();                          // Some cool reference here
+        shieldAbility = GetComponent<ShieldAbility>();                          shieldAbility.PassReferences(controller);
         levitationAbility = GetComponent<LevitationAbility>();                  levitationAbility.PassReferences(cam, this, animator);
 
         // Hook up the events

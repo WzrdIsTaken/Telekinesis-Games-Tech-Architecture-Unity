@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// Handles raycasts
+// Handles raycasts. Has some basic debug features
 
 public static class RaycastSystem
 {

@@ -1,10 +1,17 @@
 RIGHT NOW:
 - Sheild
+	- Allow player to launch shield objects if launch key is pressed
+	- Min/max dist
 - Levitate
 	- Collision
 	- Improve camera
 	- Make it so that the player can't spin around a bunch (just press S and it will happen soon enough..)
 - Improve launch code / optimise values
+
+- Convert all variable comments in the abilities / player controller to tooltips
+- Add slider that allows for the number of vertices in a cut away mesh to be added / removed
+
+- objects in the shield / that were launched shouldn't be able to collide with the player
 
 WOULD BE NICE
 - Optimise the cutting of mesh - this tutorial could be used to help create some 'holes' where the rocks are pulled out https://www.youtube.com/watch?v=IuP1fUPdxbo&list=PLPAgqhxd1Ib1YYqYnZioGyrSUzOwead17&index=11

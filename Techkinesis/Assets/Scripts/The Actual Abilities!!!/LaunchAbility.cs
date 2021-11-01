@@ -6,13 +6,15 @@ using System.Collections;
 public class LaunchAbility : MonoBehaviour
 { 
     [SerializeField] SpringJoint launchPullPoint;        // The point to which the object is drawn towards
+
+    [Space]
     [SerializeField] LayerMask launchInteractionMask;    // What layers of objects can be pulled
     [SerializeField] float launchRaycastRange;           // How far away objects can be
 
     [Space]
     [SerializeField] float minPulledObjectSize = 0.11f;  // WARNING!!! Having to big of an object size can cause.. interesting.. mesh slices! 
     [SerializeField] float maxPulledObjectSize = 0.11f;  // 0.11 seems to be kinda a magic number lol. Don't change it unless algorithm is optimised!
-    [SerializeField] bool actuallySliceMesh;             // WARNING! EXPENSIVE!! (but cool!)
+    [SerializeField] bool actuallyCutMesh;               // WARNING! EXPENSIVE!! (but cool!)
 
     [Space]
     [SerializeField] float pullForce;                    // How fast the object will be pulled
@@ -49,36 +51,37 @@ public class LaunchAbility : MonoBehaviour
             print("You didn't hit an object! Would make a cool sound or something");
             return;
         }
-        // Hit an object that can be launched
-        else if (hit.collider.CompareTag(TagManager.LAUNCHABLE))   
-        {
-            selectedObject = hit.collider.gameObject.GetComponent<Rigidbody>();
-        }
-        // Hit an object, but not once that can be launched
-        else
-        {
-            // We actually create two objects, one for the boolean operation and one to be thrown so they need to be the same size
-            float meshSize = Random.Range(minPulledObjectSize, maxPulledObjectSize); 
 
-            // Create the object that the player will see / which will be thrown
-            selectedObject = MeshCutoutCreator.CreateMesh(hit.point, meshSize, hit.collider.GetComponent<MeshRenderer>().sharedMaterials).AddComponent<Rigidbody>();
-            selectedObject.tag = TagManager.LAUNCHABLE;
-
-            if (actuallySliceMesh) 
-            {
-                GameObject one = hit.collider.gameObject;                            // The object that will have the hole cut out of it
-                GameObject two = MeshCutoutCreator.CreateMesh(hit.point, meshSize);  // The object that will be used to cut out the other object
-                MeshCutter.DoOperation(MeshCutter.BoolOp.SubtractLR, one, two);      // Perform the boolean operation
-
-                // TODO: Cutting an object too big or deformed *sometimes* causes stackoverflow...
-            }
-            else
-            {
-                // Shader magic
-            }
-        }
+        selectedObject = hit.collider.CompareTag(TagManager.LAUNCHABLE) ? hit.collider.gameObject.GetComponent<Rigidbody>()  // Hit an object that can be launched
+                                                                        :  CreateRandomLaunchMesh(hit, selectedObject);      // Hit an object, but not once that can be launched
 
         pullObject = StartCoroutine(PullObject(selectedObject));
+    }
+
+    // Create a random mesh for launching
+    Rigidbody CreateRandomLaunchMesh(RaycastHit hit, Rigidbody selectedObject)
+    {
+        // We actually create two objects, one for the boolean operation and one to be thrown so they need to be the same size
+        float meshSize = Random.Range(minPulledObjectSize, maxPulledObjectSize);
+
+        // Create the object that the player will see / which will be thrown
+        selectedObject = MeshCutoutCreator.CreateMesh(hit.point, meshSize, hit.collider.GetComponent<MeshRenderer>().sharedMaterials).AddComponent<Rigidbody>();
+        selectedObject.tag = TagManager.LAUNCHABLE;
+
+        if (actuallyCutMesh)
+        {
+            GameObject one = hit.collider.gameObject;                            // The object that will have the hole cut out of it
+            GameObject two = MeshCutoutCreator.CreateMesh(hit.point, meshSize);  // The object that will be used to cut out the other object
+            MeshCutter.DoOperation(MeshCutter.BoolOp.SubtractLR, one, two);      // Perform the boolean operation
+
+            // TODO: Cutting an object too big or deformed *sometimes* causes stackoverflow...
+        }
+        else
+        {
+            // Shader magic
+        }
+
+        return selectedObject;
     }
 
     // Reset the launch system / the pulled object and launch it using throwForce
@@ -145,13 +148,7 @@ public class LaunchAbility : MonoBehaviour
 
         while (true)
         {
-            float addToPos = Mathf.Sin(Time.time * wobblePosSpeed) * wobblePosAmount;
-            heldObject.transform.localPosition += Vector3.up * addToPos * Time.deltaTime;
-
-            float xRot = Mathf.Sin(Time.time * wobbleRotSpeed) * wobbleRotAmount;
-            float zRot = Mathf.Sin((Time.time - 1f) * wobbleRotSpeed) * wobbleRotAmount;
-
-            heldObject.transform.localEulerAngles = new Vector3(xRot, transform.eulerAngles.y, zRot);
+            ObjectBob.SineWaveBob(heldObject.gameObject, transform, wobblePosSpeed, wobblePosAmount, wobbleRotSpeed, wobbleRotAmount);
 
             yield return null;
         }

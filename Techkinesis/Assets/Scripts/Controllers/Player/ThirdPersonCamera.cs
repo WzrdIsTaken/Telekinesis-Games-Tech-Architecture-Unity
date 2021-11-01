@@ -70,9 +70,9 @@ public class ThirdPersonCamera : MonoBehaviour
     // Switch the cameras position from one side of the player to the other via a lerp
     IEnumerator SwitchCameraSideCo()
     {
+        Vector3 startPosition = target.localPosition;
         Vector3 targetPosition = new Vector3(target.localPosition.x < 0 ? targetStartX : -targetStartX, target.localPosition.y, target.localPosition.z);
         float time = 0;
-        Vector3 startPosition = target.localPosition;
 
         while (time < cameraSwitchSidesTime)
         {
