@@ -121,7 +121,8 @@ public class ShieldAbility : MonoBehaviour
         {
             for (int i = 0; i < shieldObjects.Count; i++)
             {
-                /** Could be a cool effect where the shield is a little behind the player when running, but when would have to solve the problem of objects clipping through the player.
+                /** 
+                   Could be a cool effect where the shield is a little behind the player when running, but when would have to solve the problem of objects clipping through the player.
                    When the player is just moving forward, this would be easy. But if they turned around or stopped then the objects behind would have to take a different path to they
                    didn't move through the player. So at the moment, they are just parented.
 

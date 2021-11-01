@@ -129,3 +129,10 @@ public class LaunchAbility : MonoBehaviour
         }
     }
 }
+
+/** 
+   Note: Objects which are already marked as launchable do not have their collisions with the player disabled after they are thrown
+   This is intentional! The idea being that objects in the scene marked as launchable are part of the world, so would therefore
+   want to have collisions. Smaller objects which would be annoying to collide with but are marked as launchable would have their
+   collisions disabled already.
+**/

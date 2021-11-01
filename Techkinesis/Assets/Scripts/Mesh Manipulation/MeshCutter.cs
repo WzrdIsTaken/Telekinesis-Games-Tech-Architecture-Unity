@@ -27,6 +27,7 @@ public static class MeshCutter
         // Create the object that the player will see / which will be thrown
         Rigidbody randomMesh = MeshCutoutCreator.CreateMesh(hit.point, meshSize, hit.collider.GetComponent<MeshRenderer>().sharedMaterials).AddComponent<Rigidbody>();
         randomMesh.tag = TagManager.LAUNCHABLE;
+        randomMesh.gameObject.layer = LayerMask.NameToLayer(TagManager.IGNORE_PLAYER_COLLISION);
 
         if (actuallyCutMesh)
         {

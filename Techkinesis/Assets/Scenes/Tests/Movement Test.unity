@@ -1539,7 +1539,7 @@ MonoBehaviour:
   shieldSize: 3
   minShieldObjects: 20
   maxShieldObjects: 30
-  minRandomShieldObjectSize: 0.1
+  minRandomShieldObjectSize: 0.05
   maxRandomShieldObjectSize: 0.11
   actuallyCutMesh: 0
   wobblePosSpeed: 2
