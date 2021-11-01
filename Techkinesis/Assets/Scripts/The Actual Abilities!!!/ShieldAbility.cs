@@ -34,7 +34,7 @@ public class ShieldAbility : MonoBehaviour
     [SerializeField] float wobbleRotAmount;              // The max amount a held object can rotate
 
     float playerHeight;
-    float raycastDownFromCircleRange = 25;               // How far the raycasts will be shot down from points gathered in GrabDebris() TODO: Make this value player height dependant
+    float raycastDownFromCircleRange;                    // How far the raycasts will be shot down from points gathered in GrabDebris()
 
     List<Rigidbody> shieldObjects;
     List<Transform> shieldPoints = new List<Transform>();
@@ -61,6 +61,7 @@ public class ShieldAbility : MonoBehaviour
     public void PassReferences(CharacterController controller)
     {
         playerHeight = controller.height;
+        raycastDownFromCircleRange = playerHeight * 3f;
     }
 
     // Start the shield creation. Called from an event hooked up in PlayerController Start
