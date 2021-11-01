@@ -139,9 +139,9 @@ public class ShieldAbility : MonoBehaviour
     List<Rigidbody> GrabDebris()
     {
         Vector3[] checkPoints = new Vector3[Random.Range(minShieldObjects, maxShieldObjects)];
-        List<Rigidbody> debris = new List<Rigidbody>();
-
         Stack<Collider> launchableObjects = GetLaunchableObjects();
+
+        List<Rigidbody> debris = new List<Rigidbody>();
 
         for (int i = 0; i < checkPoints.Length; i++)
         {
@@ -163,8 +163,9 @@ public class ShieldAbility : MonoBehaviour
 
                 if (col)
                 {
-                    debrisObj = col.CompareTag(TagManager.LAUNCHABLE) ? col.GetComponent<Rigidbody>()  // Hit an object that can be launched
-                                                                      : CreateRandomMesh(hit);         // Hit a mesh, need to cut an object out of it
+                    // Hit an object that can be launched : Hit an object, but not once that can be launched so need to cut the mesh
+                    debrisObj = col.CompareTag(TagManager.LAUNCHABLE) ? col.GetComponent<Rigidbody>() 
+                                                                      : MeshCutter.CutAndReturnRandomMesh(hit, minRandomShieldObjectSize, maxRandomShieldObjectSize, actuallyCutMesh); 
                 }
             }
 
@@ -178,6 +179,11 @@ public class ShieldAbility : MonoBehaviour
             }
         }
 
+        if (debris.Count == 0)
+        {
+            print("No objects were in range. Would make a cool sound or something");
+        }
+
         return debris;
     }
 
@@ -186,30 +192,6 @@ public class ShieldAbility : MonoBehaviour
     {
         Collider[] objects = Physics.OverlapSphere(transform.position, shieldPullRange);
         return new Stack<Collider>(objects.Where(obj => obj.CompareTag(TagManager.LAUNCHABLE))); 
-    }
-
-    // Create a random mesh for forming the shield
-    Rigidbody CreateRandomMesh(RaycastHit hit)
-    {
-        // We actually create two objects, one for the boolean operation and one to be part of the shield so they need to be the same size
-        float meshSize = Random.Range(minRandomShieldObjectSize, maxRandomShieldObjectSize);
-
-        // Create the object that the player will see / which will be thrown
-        Rigidbody randomDebris = MeshCutoutCreator.CreateMesh(hit.point, meshSize, hit.collider.GetComponent<MeshRenderer>().sharedMaterials).AddComponent<Rigidbody>();
-        randomDebris.tag = TagManager.LAUNCHABLE;
-
-        if (actuallyCutMesh)
-        {
-            GameObject one = hit.collider.gameObject;                            // The object that will have the hole cut out of it
-            GameObject two = MeshCutoutCreator.CreateMesh(hit.point, meshSize);  // The object that will be used to cut out the other object
-            MeshCutter.DoOperation(MeshCutter.BoolOp.SubtractLR, one, two);      // Perform the boolean operation
-        }
-        else
-        {
-            // Shader magic
-        }
-
-        return randomDebris;
     }
 
     // Creates some random points that shield debris will anchor to

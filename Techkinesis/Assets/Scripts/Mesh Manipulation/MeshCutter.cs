@@ -7,19 +7,42 @@ using Parabox.CSG;
 // I can't be asked to actually code any optimisiations but can discuss them. Eg multithreading, 
 // spliting the map up into sections so don't have to cut as big of a mesh, etc
 
-// Performs CSG operations a mesh | Credit: karl- (https://bit.ly/30sqtiL)
+// Performs CSG operations a mesh | Base: karl- (https://bit.ly/30sqtiL)
 
 public static class MeshCutter
 {
-    public enum BoolOp
+    enum BoolOp
     {
         Union,
         SubtractLR,
         SubtractRL,
         Intersect
-    }; 
+    };
 
-    public static void DoOperation(BoolOp operation, GameObject left, GameObject right)
+    public static Rigidbody CutAndReturnRandomMesh(RaycastHit hit, float minMeshSize, float maxMeshSize, bool actuallyCutMesh)
+    {
+        // We actually create two objects, one for the boolean operation and one to be part of the shield so they need to be the same size
+        float meshSize = Random.Range(minMeshSize, maxMeshSize);
+
+        // Create the object that the player will see / which will be thrown
+        Rigidbody randomDebris = MeshCutoutCreator.CreateMesh(hit.point, meshSize, hit.collider.GetComponent<MeshRenderer>().sharedMaterials).AddComponent<Rigidbody>();
+        randomDebris.tag = TagManager.LAUNCHABLE;
+
+        if (actuallyCutMesh)
+        {
+            GameObject one = hit.collider.gameObject;                            // The object that will have the hole cut out of it
+            GameObject two = MeshCutoutCreator.CreateMesh(hit.point, meshSize);  // The object that will be used to cut out the other object
+            DoOperation(BoolOp.SubtractLR, one, two);                            // Perform the boolean operation
+        }
+        else
+        {
+            // Shader magic
+        }
+
+        return randomDebris;
+    }
+
+    static void DoOperation(BoolOp operation, GameObject left, GameObject right)
     {
         Model result = null;
 

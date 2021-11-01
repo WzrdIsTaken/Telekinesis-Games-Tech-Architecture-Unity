@@ -52,36 +52,11 @@ public class LaunchAbility : MonoBehaviour
             return;
         }
 
-        selectedObject = hit.collider.CompareTag(TagManager.LAUNCHABLE) ? hit.collider.gameObject.GetComponent<Rigidbody>()  // Hit an object that can be launched
-                                                                        :  CreateRandomLaunchMesh(hit, selectedObject);      // Hit an object, but not once that can be launched
+        // Hit an object that can be launched : Hit an object, but not once that can be launched so need to cut the mesh
+        selectedObject = hit.collider.CompareTag(TagManager.LAUNCHABLE) ? hit.collider.gameObject.GetComponent<Rigidbody>()  
+                                                                        : MeshCutter.CutAndReturnRandomMesh(hit, minPulledObjectSize, maxPulledObjectSize, actuallyCutMesh);
 
         pullObject = StartCoroutine(PullObject(selectedObject));
-    }
-
-    // Create a random mesh for launching
-    Rigidbody CreateRandomLaunchMesh(RaycastHit hit, Rigidbody selectedObject)
-    {
-        // We actually create two objects, one for the boolean operation and one to be thrown so they need to be the same size
-        float meshSize = Random.Range(minPulledObjectSize, maxPulledObjectSize);
-
-        // Create the object that the player will see / which will be thrown
-        selectedObject = MeshCutoutCreator.CreateMesh(hit.point, meshSize, hit.collider.GetComponent<MeshRenderer>().sharedMaterials).AddComponent<Rigidbody>();
-        selectedObject.tag = TagManager.LAUNCHABLE;
-
-        if (actuallyCutMesh)
-        {
-            GameObject one = hit.collider.gameObject;                            // The object that will have the hole cut out of it
-            GameObject two = MeshCutoutCreator.CreateMesh(hit.point, meshSize);  // The object that will be used to cut out the other object
-            MeshCutter.DoOperation(MeshCutter.BoolOp.SubtractLR, one, two);      // Perform the boolean operation
-
-            // TODO: Cutting an object too big or deformed *sometimes* causes stackoverflow...
-        }
-        else
-        {
-            // Shader magic
-        }
-
-        return selectedObject;
     }
 
     // Reset the launch system / the pulled object and launch it using throwForce
