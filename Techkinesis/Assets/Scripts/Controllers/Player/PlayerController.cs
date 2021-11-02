@@ -6,7 +6,7 @@ public class PlayerController : MovementController
 {
     [Header("References")]
     [SerializeField] PlayerInput inputProvider;                    // The players InputProvider
-    [SerializeField] Camera cam;                                   // The players camera
+    [SerializeField] ThirdPersonCamera cam;                        // The players camera
 
     [Header("Attributes")]
     [SerializeField] int hp;                                       // How much HP the player has

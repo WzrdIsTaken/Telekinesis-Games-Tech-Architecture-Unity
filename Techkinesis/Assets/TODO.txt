@@ -3,7 +3,7 @@ RIGHT NOW:
 	- Min/max dist. would be nice to do but i cant work it out rn. maybe get the the point in world space (not inside the sphere) then clamp its pos? idk dude this rarely happens its okkkkk
 - Levitate
 	- Collision
-	- Improve camera
+	- Improve camera - kinda done?
 	- Make it so that the player can't spin around a bunch (just press S and it will happen soon enough..)
 - Improve launch code / optimise values
 	- Make it so that the object speeds up more when travelling to the player like in the real control. It moves really fast!

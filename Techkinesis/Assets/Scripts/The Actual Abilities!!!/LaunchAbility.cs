@@ -32,11 +32,11 @@ public class LaunchAbility : MonoBehaviour
     Coroutine pullObject;
     Coroutine makeObjectWobble;
 
-    Camera cam;
+    ThirdPersonCamera cam;
     ShieldAbility shieldAbility;
 
     // Recieve the player camera reference from PlayerController
-    public void PassReferences(Camera playerCamera, ShieldAbility _shieldAbility)
+    public void PassReferences(ThirdPersonCamera playerCamera, ShieldAbility _shieldAbility)
     {
         cam = playerCamera;
         shieldAbility = _shieldAbility;

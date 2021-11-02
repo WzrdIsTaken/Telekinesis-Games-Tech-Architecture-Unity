@@ -1527,7 +1527,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputProvider: {fileID: 11400000, guid: 9813155af66caba4cab179d075da0cb7, type: 2}
-  cam: {fileID: 307774672}
+  cam: {fileID: 307774674}
   hp: 0
   mass: -12
   airControlPercent: 0.5
@@ -1571,12 +1571,14 @@ MonoBehaviour:
   downForce: -200
   maxTilt: 10
   tiltSmoothTime: 0.1
-  rotateSmoothTime: 0.2
+  rotateSmoothTime: 0.5
   minDrift: -100
   maxDrift: 100
   minDriftTime: 0.1
   maxDriftTime: 0.25
   startBoostForce: {x: 0, y: 3000, z: 0}
+  levitatingFov: 80
+  levitatingFovChangeTime: 0.25
 --- !u!114 &2018693940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1590,7 +1592,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shieldCollider: {fileID: 1184865131}
-  damageReduction: 0
+  damageReduction: 0.75
   shieldInteractionMask:
     serializedVersion: 2
     m_Bits: 55

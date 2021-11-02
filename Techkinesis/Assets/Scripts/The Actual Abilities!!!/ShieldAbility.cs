@@ -71,7 +71,7 @@ public class ShieldAbility : MonoBehaviour
     float playerHeight;
     float raycastDownFromCircleRange;  // How far the raycasts will be shot down from points gathered in GrabDebris()
 
-    List<Rigidbody> shieldObjects;
+    List<Rigidbody> shieldObjects = new List<Rigidbody>();
     List<Transform> shieldPoints = new List<Transform>();
 
     Coroutine formShield;

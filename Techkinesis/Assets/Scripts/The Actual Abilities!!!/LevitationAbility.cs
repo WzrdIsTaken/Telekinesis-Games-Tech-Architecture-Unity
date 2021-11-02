@@ -23,7 +23,11 @@ public class LevitationAbility : MonoBehaviour
     [Space]
     [SerializeField] Vector3 startBoostForce;  // How much the player will boosted off the ground when they start levitating
 
-    Camera cam;
+    [Space]
+    [SerializeField] float levitatingFov;      // The cameras FoV when levitating
+    [SerializeField] float levitatingFovChangeTime; // How long it will take the cameras FoV to change when the player starts / stops levitating
+
+    ThirdPersonCamera cam;
     PlayerController playerController;
     Animator animator;
     Rigidbody rb;
@@ -31,6 +35,8 @@ public class LevitationAbility : MonoBehaviour
     Vector3 levitationForce;
     Vector3 driftForce;
     Vector2 tiltVelocity;
+
+    float startCameraFov;
 
     Coroutine levitate;
     Coroutine drift;
@@ -43,11 +49,13 @@ public class LevitationAbility : MonoBehaviour
     }
 
     // Pass LevitationAbility various references that are already 'got' in PlayerController
-    public void PassReferences(Camera _cam, PlayerController _playerController, Animator _animator)
+    public void PassReferences(ThirdPersonCamera _cam, PlayerController _playerController, Animator _animator)
     {
         cam = _cam;
         playerController = _playerController;
         animator = _animator;
+
+        startCameraFov = cam.GetCamera().fieldOfView;
     }
 
     // Start levitating. Called from an event hooked up in PlayerController Start
@@ -57,6 +65,7 @@ public class LevitationAbility : MonoBehaviour
         rb.isKinematic = false;
         rb.AddForce(startBoostForce, ForceMode.Force);
 
+        cam.ChangeCameraFov(levitatingFov, levitatingFovChangeTime);
         levitate = StartCoroutine(Levitate());
         drift = StartCoroutine(Drift());
 
@@ -71,6 +80,8 @@ public class LevitationAbility : MonoBehaviour
 
         if (levitate != null) StopCoroutine(levitate);
         if (drift != null) StopCoroutine(drift);
+
+        cam.ChangeCameraFov(startCameraFov, levitatingFovChangeTime);
 
         DebugLogManager.Print("Levitation end! Would make a cool sound or something.", DebugLogManager.OutputType.NOT_MY_JOB);
     }

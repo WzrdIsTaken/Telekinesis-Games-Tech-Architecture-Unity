@@ -20,13 +20,18 @@ public class ThirdPersonCamera : MonoBehaviour
 
     float targetStartX;
 
+    Coroutine switchCameraSideCo;
+    Coroutine changeCameraFovCo;
+
+    Camera cam;
     CameraCollisionHandler cameraCollisionHandler;
 
     void Start()
     {
+        cam = GetComponent<Camera>();
         targetStartX = target.localPosition.x;
 
-        cameraCollisionHandler = new CameraCollisionHandler(Camera.main, collisionMask);
+        cameraCollisionHandler = new CameraCollisionHandler(cam, collisionMask);
         cameraCollisionHandler.UpdateCameraClipPoints(transform.position, transform.rotation, ref cameraCollisionHandler.adjustedCameraClipPoints);
         cameraCollisionHandler.UpdateCameraClipPoints(target.position, transform.rotation, ref cameraCollisionHandler.desiredCameraClipPoints);
     }
@@ -63,8 +68,15 @@ public class ThirdPersonCamera : MonoBehaviour
     // Starts the SwitchCameraSideCo coroutine. Called from an event hooked up in PlayerController Start
     public void SwitchCameraSide()
     {
-        StopAllCoroutines();
-        StartCoroutine(SwitchCameraSideCo());
+        if (switchCameraSideCo != null) StopCoroutine(switchCameraSideCo);
+        switchCameraSideCo = StartCoroutine(SwitchCameraSideCo());
+    }
+
+    // Start the ChangeCameraDistanceCo coroutine. Called from Start / Stop Levitating in LevitationAbility
+    public void ChangeCameraFov(float targetDistance, float lerpTime)
+    {
+        if (changeCameraFovCo != null) StopCoroutine(changeCameraFovCo);
+        changeCameraFovCo = StartCoroutine(ChangeCameraFovCo(targetDistance, lerpTime));
     }
 
     // Switch the cameras position from one side of the player to the other via a lerp
@@ -82,6 +94,27 @@ public class ThirdPersonCamera : MonoBehaviour
         }
 
         target.localPosition = targetPosition;
+    }
+
+    // Moves the camera position back / towards the player
+    IEnumerator ChangeCameraFovCo(float targetDistance, float lerpTime)
+    {
+        float startFoV = cam.fieldOfView;
+        float time = 0;
+
+        while (time < lerpTime)
+        {
+            cam.fieldOfView = Mathf.Lerp(startFoV, targetDistance, time / lerpTime);
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        cam.fieldOfView = targetDistance;
+    }
+
+    public Camera GetCamera()
+    {
+        return cam;
     }
 
     // Checks if the camera can see the player - handles collision, occlusion and shearing (or at least it should xD) | Base: Renaissance Coders (https://bit.ly/3lH9FLb)
