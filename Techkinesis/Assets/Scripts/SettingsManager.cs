@@ -5,14 +5,17 @@ using UnityEngine.UI;
 
 public class SettingsManager : MonoBehaviour
 {
-    [Header("References")]  // No touching!
-    [SerializeField] Image crosshair; 
+    [Header("References"), Tooltip("No touching!")]
+    [SerializeField] Image crosshair;
 
-    [Header("Cursor")]
-    [SerializeField] bool lockCursor;        // Should the cursor be locked?
+    [Header("Cursor"), Tooltip("Should the cursor be locked?")]
+    [SerializeField] bool lockCursor;
 
-    [Header("Crosshair")]
-    [SerializeField] Color crosshairColour;  // What colour the crosshair is
+    [Header("Crosshair"), Tooltip("What colour the crosshair should be?")]
+    [SerializeField] Color crosshairColour;
+
+    [Header("Show Debug Messages"), Tooltip("Should messages from DebugLogManager be outputted?")]
+    [SerializeField] bool outputDebugMessages;
 
     void OnValidate()
     {
@@ -22,5 +25,8 @@ public class SettingsManager : MonoBehaviour
 
         // Crosshair
         crosshair.color = crosshairColour;
+
+        // Messages
+        DebugLogManager.SetOutputMessages(outputDebugMessages);
     }
 }

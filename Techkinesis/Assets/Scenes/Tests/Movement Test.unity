@@ -267,6 +267,7 @@ MonoBehaviour:
   crosshair: {fileID: 2064141871}
   lockCursor: 1
   crosshairColour: {r: 0.7755809, g: 0, b: 1, a: 1}
+  outputDebugMessages: 1
 --- !u!4 &208906877
 Transform:
   m_ObjectHideFlags: 0
@@ -313,7 +314,7 @@ RectTransform:
   m_Children:
   - {fileID: 2064141873}
   m_Father: {fileID: 543450651689989318}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1000,6 +1001,63 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3681543e5b0f59742b73073cb379cdc6, type: 3}
+--- !u!1 &1184865128
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1184865129}
+  - component: {fileID: 1184865130}
+  - component: {fileID: 1184865131}
+  m_Layer: 6
+  m_Name: ShieldCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1184865129
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1184865128}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 543450651689989318}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &1184865130
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1184865128}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1184865131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1184865128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 398961ac10e38d14f9ec94d36cfa7c6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1269531453
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1470,6 +1528,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputProvider: {fileID: 11400000, guid: 9813155af66caba4cab179d075da0cb7, type: 2}
   cam: {fileID: 307774672}
+  hp: 0
   mass: -12
   airControlPercent: 0.5
   speedSmoothTime: 0.1
@@ -1530,6 +1589,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23fc1da782a97d44e94855df4f594199, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shieldCollider: {fileID: 1184865131}
+  damageReduction: 0
   shieldInteractionMask:
     serializedVersion: 2
     m_Bits: 55
@@ -1709,6 +1770,7 @@ Transform:
   - {fileID: 3745622626598563747}
   - {fileID: 839621950}
   - {fileID: 773924307}
+  - {fileID: 1184865129}
   - {fileID: 219546239}
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -1778,7 +1840,7 @@ GameObject:
   - component: {fileID: 2018693941}
   m_Layer: 6
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

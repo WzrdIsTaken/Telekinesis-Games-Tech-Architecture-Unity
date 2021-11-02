@@ -7,34 +7,40 @@ using System.Linq;
 
 public class ShieldAbility : MonoBehaviour
 {
-    [SerializeField] LayerMask shieldInteractionMask;    // What objects can be pulled to create the shield
-    [SerializeField] float shieldPullRange;              // From how far away objects will be pulled to create the shield
+    public System.Action<int> TakeDamage;
+
+    [SerializeField] ShieldCollider shieldCollider;       // The ShieldCollider gameobject
+    [SerializeField, Range(0, 1)] float damageReduction;  // How much the shield reduces incoming damage. 1 = less reduction, 0 = more reduction
+
+    [Space]
+    [SerializeField] LayerMask shieldInteractionMask;     // What objects can be pulled to create the shield
+    [SerializeField] float shieldPullRange;               // From how far away objects will be pulled to create the shield
     //[SerializeField] float minDistAwayFromPlayer;        // The minimum distance away from the player that objects will be pulled TODO
-    [SerializeField, Range(0, 1)] float launchableBias;  // How much objects already tagged launchable will me prioritised with gathering debris. 1 = more bais, 0 = less bais
+    [SerializeField, Range(0, 1)] float launchableBias;   // How much objects already tagged launchable will me prioritised with gathering debris. 1 = more bais, 0 = less bais
 
     [Space]
-    [SerializeField] float shieldFormTime;               // How long it takes the shield to form to full size
-    [SerializeField] float shieldSize;                   // How big the shield is
-    [SerializeField] int minShieldObjects;               // The minimum objects that will be used to create a shield
-    [SerializeField] int maxShieldObjects;               // The maximum objects that will be used to create a shield. NOTE: Not configurable at runtime as shieldPoints are pooled in Start
+    [SerializeField] float shieldFormTime;                // How long it takes the shield to form to full size
+    [SerializeField] float shieldSize;                    // How big the shield is
+    [SerializeField] int minShieldObjects;                // The minimum objects that will be used to create a shield
+    [SerializeField] int maxShieldObjects;                // The maximum objects that will be used to create a shield. NOTE: Not configurable at runtime as shieldPoints are pooled in Start
 
     [Space]
-    [SerializeField] float minRandomShieldObjectSize;    // The minimum size object that are cut from the mesh will be
-    [SerializeField] float maxRandomShieldObjectSize;    // The maximum size object that are cut from the mesh will be
-    [SerializeField] bool actuallyCutMesh;               // WARNING! EXPENSIVE!! With current level of optimisation this is wayy to expensive
+    [SerializeField] float minRandomShieldObjectSize;     // The minimum size object that are cut from the mesh will be
+    [SerializeField] float maxRandomShieldObjectSize;     // The maximum size object that are cut from the mesh will be
+    [SerializeField] bool actuallyCutMesh;                // WARNING! EXPENSIVE!! With current level of optimisation this is wayy to expensive
 
     [Space]
     //[SerializeField] float minDebrisDistFromPlayer;      // 
     //[SerializeField] float maxDebrisDistFromPlayer;      //
 
     [Space]
-    [SerializeField] float wobblePosSpeed;               // How fast a held object will 'wobble' in the air
-    [SerializeField] float wobblePosAmount;              // The maximum amount a held object can wobble
-    [SerializeField] float wobbleRotSpeed;               // How fast a held object will rotate in the air
-    [SerializeField] float wobbleRotAmount;              // The max amount a held object can rotate
+    [SerializeField] float wobblePosSpeed;                // How fast a held object will 'wobble' in the air
+    [SerializeField] float wobblePosAmount;               // The maximum amount a held object can wobble
+    [SerializeField] float wobbleRotSpeed;                // How fast a held object will rotate in the air
+    [SerializeField] float wobbleRotAmount;               // The max amount a held object can rotate
 
     float playerHeight;
-    float raycastDownFromCircleRange;                    // How far the raycasts will be shot down from points gathered in GrabDebris()
+    float raycastDownFromCircleRange;                     // How far the raycasts will be shot down from points gathered in GrabDebris()
 
     List<Rigidbody> shieldObjects;
     List<Transform> shieldPoints = new List<Transform>();
@@ -42,7 +48,7 @@ public class ShieldAbility : MonoBehaviour
     Coroutine formShield;
     Coroutine moveShieldObjects;
 
-    // Create a pool of shieldPoints
+    // Create a pool of shieldPoints and setup shieldCollider
     void Start()
     {
         Transform shieldPointParent = new GameObject("ShieldPoints").transform;
@@ -55,6 +61,9 @@ public class ShieldAbility : MonoBehaviour
             
             shieldPoints.Add(shieldPoint);
         }
+
+        shieldCollider.SetColliderState(false);
+        shieldCollider.ObjectHitCollider += ObjectHitShield;
     }
 
     // Pass ShieldAbility the CharacterController as already been 'got' in PlayerController
@@ -84,6 +93,10 @@ public class ShieldAbility : MonoBehaviour
             obj.useGravity = true;
         }
         shieldObjects.Clear();
+
+        shieldCollider.SetColliderState(false);
+
+        DebugLogManager.Print("Shield down! Would make a nice sound.", DebugLogManager.OutputType.NOT_MY_JOB);
     }
 
     // Grab objects to be used in the shield, assign new shield points and then move the objects to those points
@@ -106,7 +119,10 @@ public class ShieldAbility : MonoBehaviour
             yield return null;
         }
 
+        shieldCollider.SetColliderState(true);
         moveShieldObjects = StartCoroutine(MoveShieldObjects());
+
+        DebugLogManager.Print("Shield active! Would make a nice sound.", DebugLogManager.OutputType.NOT_MY_JOB);
     }
 
     // Make sure that the shield objects stay with the player and add a sine wave bob effect to them
@@ -182,7 +198,7 @@ public class ShieldAbility : MonoBehaviour
 
         if (debris.Count == 0)
         {
-            print("No objects were in range. Would make a cool sound or something");
+            DebugLogManager.Print("No objects were in range. Would make a cool sound or something.", DebugLogManager.OutputType.NOT_MY_JOB);
         }
 
         return debris;
@@ -204,6 +220,16 @@ public class ShieldAbility : MonoBehaviour
             pointPosition.y = Random.Range(playerHeight / 2, playerHeight * 1.25f);
 
             shieldPoints[i].position = pointPosition;
+        }
+    }
+
+    // Passes on damage via the TakeDamage event to PlayerController. Hooked up to the ObjectHitCollider event in ShieldCollider
+    public void ObjectHitShield(Collider collider)
+    {
+        if (collider.CompareTag(TagAndLayerNameManager.ENEMY_PROJECTILE))
+        {
+            int damage = Mathf.RoundToInt(collider.GetComponent<EnemyProjectile>().GetDamage() * damageReduction);
+            TakeDamage(damage);
         }
     }
 }

@@ -48,7 +48,7 @@ public class LaunchAbility : MonoBehaviour
         // We didn't hit an object
         if (!hit.collider)
         {
-            print("You didn't hit an object! Would make a cool sound or something");
+            DebugLogManager.Print("You didn't hit an object! Would make a cool sound or something.", DebugLogManager.OutputType.NOT_MY_JOB);
             return;
         }
 
@@ -57,6 +57,8 @@ public class LaunchAbility : MonoBehaviour
                                                                         : MeshCutter.CutAndReturnRandomMesh(hit, minPulledObjectSize, maxPulledObjectSize, actuallyCutMesh);
 
         pullObject = StartCoroutine(PullObject(selectedObject));
+
+        DebugLogManager.Print("Launch pull active! Would make a cool sound or something.", DebugLogManager.OutputType.NOT_MY_JOB);
     }
 
     // Reset the launch system / the pulled object and launch it using throwForce
@@ -73,6 +75,8 @@ public class LaunchAbility : MonoBehaviour
 
         heldObject.velocity = cam.transform.forward * throwForce;
         heldObject = null;
+
+        DebugLogManager.Print("Launch object thrown! Would make a cool sound or something.", DebugLogManager.OutputType.NOT_MY_JOB);
     }
 
     // Pull the object towards launchPullPoint

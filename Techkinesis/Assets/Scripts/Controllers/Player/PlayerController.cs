@@ -9,6 +9,9 @@ public class PlayerController : MovementController
     [SerializeField] Camera cam;                                   // The players camera
 
     [Header("Attributes")]
+    [SerializeField] int hp;                                       // How much HP the player has
+
+    [Space]
     [SerializeField] float mass = -12f;                            // How heavy the player is, will affect how fast they fall
     [SerializeField, Range(0, 1)] float airControlPercent = 0.5f;  // How much control the player has while jumping. 1 = more control, 0 = less control
 
@@ -24,12 +27,14 @@ public class PlayerController : MovementController
     ShieldAbility shieldAbility;
     LevitationAbility levitationAbility;
 
+    HealthModule healthModule;
+
     float speedSmoothVelocity;
     float currentSpeed;
     float velocityY;
     float turnSmoothVelocity;
 
-    public enum MovementState { GROUND, LEVITATION, NONE }         // The players movement states. Dictates what rotation/movement/animation methods are called
+    public enum MovementState { GROUND, LEVITATION, DEAD, NONE }    // The players movement states. Dictates what rotation/movement/animation methods are called
     MovementState movementState;
 
     // Setup the PlayerController
@@ -51,7 +56,11 @@ public class PlayerController : MovementController
         inputProvider.OnShieldStart += shieldAbility.ShieldStart;               inputProvider.OnShieldEnd += shieldAbility.ShieldEnd;
         inputProvider.OnLevitationStart += levitationAbility.LevitationStart;   inputProvider.OnLevitationEnd += levitationAbility.LevitationEnd;
         // For future reference, can do event += () => thing. Here I don't think its clear + we need the SetMovementState anyway, but its cool.
-        
+
+        // Initialize the health module and hook up the TakeDamage event
+        healthModule = new HealthModule(hp);
+        shieldAbility.TakeDamage += TakeDamage;
+
         // Set the first movement state
         movementState = MovementState.GROUND;
     }
@@ -134,6 +143,23 @@ public class PlayerController : MovementController
     // Set the players movementState
     public void SetMovementState(MovementState _movementState)
     {
+        if (movementState == MovementState.DEAD) 
+        {
+            Debug.LogError("Something tried to set the player's MovementState when they are already dead! " +
+                           "The requested state was " + _movementState.ToString() + ".");
+            return;
+        }
+
         movementState = _movementState;
+    }
+
+    // Reduce the player's hp. If the player's hp is less than 0, set MovementState to Dead (which cuts off player input) and trigger the death effect
+    void TakeDamage(int damage)
+    {
+        if (healthModule.Damage(damage))
+        {
+            SetMovementState(MovementState.DEAD);
+            GetComponent<DeathEffect>().HumanoidDeath(animator);
+        }
     }
 }

@@ -59,6 +59,8 @@ public class LevitationAbility : MonoBehaviour
 
         levitate = StartCoroutine(Levitate());
         drift = StartCoroutine(Drift());
+
+        DebugLogManager.Print("Levitation active! Would make a cool sound or something.", DebugLogManager.OutputType.NOT_MY_JOB);
     }
 
     // Stop levitating. Called from an event hooked up in PlayerController Start
@@ -69,6 +71,8 @@ public class LevitationAbility : MonoBehaviour
 
         if (levitate != null) StopCoroutine(levitate);
         if (drift != null) StopCoroutine(drift);
+
+        DebugLogManager.Print("Levitation end! Would make a cool sound or something.", DebugLogManager.OutputType.NOT_MY_JOB);
     }
 
     // Move the player. Uses FixedUpdate because rigidbodies are in the physics system

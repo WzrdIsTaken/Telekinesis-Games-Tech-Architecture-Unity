@@ -2,7 +2,6 @@ RIGHT NOW:
 - Sheild
 	- Allow player to launch shield objects if launch key is pressed
 	- Min/max dist
-	- Shield needs to actually, well, shield something! just a collider or something should do
 - Levitate
 	- Collision
 	- Improve camera
@@ -10,7 +9,7 @@ RIGHT NOW:
 - Improve launch code / optimise values
 	- Make it so that the object speeds up more when travelling to the player like in the real control. It moves really fast!
 
-- Convert all variable comments in the abilities / player controller to tooltips
+- Convert all variable comments in the abilities / player controller to tooltips (say in writeup / github repo assume designer knows nothing)
 - Add slider that allows for the number of vertices in a cut away mesh to be added / removed (ie smoother cut less lag)
 
 WOULD BE NICE

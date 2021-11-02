@@ -3,10 +3,11 @@
 public static class TagAndLayerNameManager
 {
     // Tags
-    public static string LAUNCHABLE = "Launchable";
+    public static readonly string LAUNCHABLE = "Launchable";
+    public static readonly string ENEMY_PROJECTILE = "Enemy Projectile";
 
     // Layers
-    public static string IGNORE_PLAYER_COLLISION = "Ignore Player Collision";
+    public static readonly string IGNORE_PLAYER_COLLISION = "Ignore Player Collision";
 }
 
 // <small> yes, spelling accidentally wrong was a joke.. though I am very bad at spelling xD </small>
