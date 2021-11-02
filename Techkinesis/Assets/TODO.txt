@@ -1,6 +1,5 @@
 RIGHT NOW:
 - Sheild
-	- Allow player to launch shield objects if launch key is pressed
 	- Min/max dist
 - Levitate
 	- Collision

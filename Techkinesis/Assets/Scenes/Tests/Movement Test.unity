@@ -1598,8 +1598,8 @@ MonoBehaviour:
   launchableBias: 0.5
   shieldFormTime: 0.5
   shieldSize: 3
-  minShieldObjects: 20
-  maxShieldObjects: 30
+  minShieldObjects: 15
+  maxShieldObjects: 20
   minRandomShieldObjectSize: 0.05
   maxRandomShieldObjectSize: 0.11
   actuallyCutMesh: 0
@@ -1607,6 +1607,8 @@ MonoBehaviour:
   wobblePosAmount: 0.05
   wobbleRotSpeed: 2
   wobbleRotAmount: 2
+  minShieldObjectLaunchForce: 800
+  maxShieldObjectLaunchForce: 900
 --- !u!114 &2018693941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1629,7 +1631,8 @@ MonoBehaviour:
   actuallyCutMesh: 0
   pullForce: 30
   pulledObjectMaxVelocity: 16
-  throwForce: 30
+  minLaunchForce: 19
+  maxLaunchForce: 20
   wobblePosSpeed: 2
   wobblePosAmount: 0.05
   wobbleRotSpeed: 2
@@ -1838,6 +1841,7 @@ GameObject:
   - component: {fileID: 2018693937}
   - component: {fileID: 2018693940}
   - component: {fileID: 2018693941}
+  - component: {fileID: 919132147952905854}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -1861,6 +1865,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &919132147952905854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132147952905852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4626b5c3b463e7847ae71c8d15dd67db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minHorizontalForce: -3
+  maxHorizontalForce: 3
+  minVerticalForce: 3
+  maxVerticalForce: 6
 --- !u!4 &969414722796088198
 Transform:
   m_ObjectHideFlags: 0

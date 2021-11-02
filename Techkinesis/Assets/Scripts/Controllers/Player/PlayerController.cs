@@ -23,8 +23,8 @@ public class PlayerController : MovementController
     [SerializeField] float runSpeed = 6;                           // How fast the player will run
     [SerializeField] float jumpHeight = 1;                         // How high the player will jump
 
-    LaunchAbility launchAbility;
     ShieldAbility shieldAbility;
+    LaunchAbility launchAbility;
     LevitationAbility levitationAbility;
 
     HealthModule healthModule;
@@ -43,9 +43,9 @@ public class PlayerController : MovementController
         // CharacterController and Animator references grabbed here
         base.Start();  
 
-        // Grab the ability components and set them up
-        launchAbility = GetComponent<LaunchAbility>();                          launchAbility.PassReferences(cam);
+        // Grab the ability components and set them up 
         shieldAbility = GetComponent<ShieldAbility>();                          shieldAbility.PassReferences(controller);
+        launchAbility = GetComponent<LaunchAbility>();                          launchAbility.PassReferences(cam, shieldAbility);
         levitationAbility = GetComponent<LevitationAbility>();                  levitationAbility.PassReferences(cam, this, animator);
 
         // Hook up the events
@@ -84,6 +84,12 @@ public class PlayerController : MovementController
                 break;
             case MovementState.NONE:
                 // Could be used for a cutscene or something, where we don't want the player to be able to move
+                break;
+            case MovementState.DEAD:
+                // Similar to NONE, but in SetMovementState there is a check to make sure that the player can't transition out of this state
+                break;
+            default:
+                Debug.LogError("MovementState of type " + movementState.ToString() + " does not exist!");
                 break;
         }
     }

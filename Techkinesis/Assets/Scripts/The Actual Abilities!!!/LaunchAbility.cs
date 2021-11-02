@@ -19,7 +19,8 @@ public class LaunchAbility : MonoBehaviour
     [Space]
     [SerializeField] float pullForce;                    // How fast the object will be pulled
     [SerializeField] float pulledObjectMaxVelocity;      // The maximum velocity which an object can be pulled
-    [SerializeField] float throwForce;                   // How hard the object will be thrown
+    [SerializeField] float minLaunchForce;                // How minimum force the object will be launched
+    [SerializeField] float maxLaunchForce;                // The maximum force the object will be launched
 
     [Space]
     [SerializeField] float wobblePosSpeed;               // How fast a held object will 'wobble' in the air
@@ -32,16 +33,25 @@ public class LaunchAbility : MonoBehaviour
     Coroutine makeObjectWobble;
 
     Camera cam;
+    ShieldAbility shieldAbility;
 
     // Recieve the player camera reference from PlayerController
-    public void PassReferences(Camera playerCamera)
+    public void PassReferences(Camera playerCamera, ShieldAbility _shieldAbility)
     {
         cam = playerCamera;
+        shieldAbility = _shieldAbility;
     }
 
     // Grab an object to be launched
     public void LaunchStart()
     {
+        // If the player is holding objects in their shield, then we want to throw those objects instead 
+        if (shieldAbility.LaunchShieldObjects(cam.transform.forward)) 
+        {
+            // LaunchShieldObjects returns true if the shield is enabled
+            return;
+        }
+
         RaycastHit hit = RaycastSystem.Raycast(cam.transform.position, cam.transform.forward, launchRaycastRange, launchInteractionMask);
         Rigidbody selectedObject = null;
 
@@ -73,7 +83,7 @@ public class LaunchAbility : MonoBehaviour
         launchPullPoint.connectedBody = null;
         heldObject.useGravity = true;
 
-        heldObject.velocity = cam.transform.forward * throwForce;
+        heldObject.velocity = cam.transform.forward * Random.Range(minLaunchForce, maxLaunchForce);
         heldObject = null;
 
         DebugLogManager.Print("Launch object thrown! Would make a cool sound or something.", DebugLogManager.OutputType.NOT_MY_JOB);

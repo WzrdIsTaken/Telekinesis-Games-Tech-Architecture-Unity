@@ -39,6 +39,10 @@ public class ShieldAbility : MonoBehaviour
     [SerializeField] float wobbleRotSpeed;                // How fast a held object will rotate in the air
     [SerializeField] float wobbleRotAmount;               // The max amount a held object can rotate
 
+    [Space]
+    [SerializeField] float minShieldObjectLaunchForce;       // The minimum force a shield object will be launched
+    [SerializeField] float maxShieldObjectLaunchForce;       // The maximum force a shield object will be launched
+
     float playerHeight;
     float raycastDownFromCircleRange;                     // How far the raycasts will be shot down from points gathered in GrabDebris()
 
@@ -231,5 +235,21 @@ public class ShieldAbility : MonoBehaviour
             int damage = Mathf.RoundToInt(collider.GetComponent<EnemyProjectile>().GetDamage() * damageReduction);
             TakeDamage(damage);
         }
+    }
+
+    // Called from LaunchAbility. Throws shield objects in direction by min/max ShieldObjectLaunchForce. Returns true/false depending if the shield is currenly active
+    public bool LaunchShieldObjects(Vector3 direction)
+    {
+        if (shieldObjects.Count == 0) return false;
+
+        List<Rigidbody> objectsInShield = new List<Rigidbody>(shieldObjects);
+        ShieldEnd();
+
+        foreach (Rigidbody obj in objectsInShield)
+        {
+            obj.AddForce(direction * Random.Range(minShieldObjectLaunchForce, maxShieldObjectLaunchForce));
+        }
+
+        return true;
     }
 }
