@@ -1,6 +1,6 @@
 RIGHT NOW:
 - Sheild
-	- Min/max dist. would be nice to do but i cant work it out rn
+	- Min/max dist. would be nice to do but i cant work it out rn. maybe get the the point in world space (not inside the sphere) then clamp its pos? idk dude this rarely happens its okkkkk
 - Levitate
 	- Collision
 	- Improve camera

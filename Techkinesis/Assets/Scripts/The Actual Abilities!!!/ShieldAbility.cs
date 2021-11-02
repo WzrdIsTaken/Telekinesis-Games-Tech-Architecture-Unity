@@ -7,39 +7,69 @@ using System.Linq;
 
 public class ShieldAbility : MonoBehaviour
 {
-    public System.Action<int> TakeDamage;
+    public System.Action<int> TakeDamage;  // Used in PlayerController
 
-    [SerializeField] ShieldCollider shieldCollider;       // The ShieldCollider gameobject
-    [SerializeField, Range(0, 1)] float damageReduction;  // How much the shield reduces incoming damage. 1 = less reduction, 0 = more reduction
+    [Tooltip("The ShieldCollider gameobject")]
+    [SerializeField] ShieldCollider shieldCollider;
 
-    [Space]
-    [SerializeField] LayerMask shieldInteractionMask;     // What objects can be pulled to create the shield
-    [SerializeField] float shieldPullRange;               // From how far away objects will be pulled to create the shield
-    [SerializeField, Range(0, 1)] float launchableBias;   // How much objects already tagged launchable will me prioritised with gathering debris. 1 = more bais, 0 = less bais
+    [Tooltip("How much the shield reduces incoming damage. 1 = less reduction, 0 = more reduction")]
+    [SerializeField, Range(0, 1)] float damageReduction;
 
     [Space]
-    [SerializeField] float shieldFormTime;                // How long it takes the shield to form to full size
-    [SerializeField] float shieldSize;                    // How big the shield is
-    [SerializeField] int minShieldObjects;                // The minimum objects that will be used to create a shield
-    [SerializeField] int maxShieldObjects;                // The maximum objects that will be used to create a shield. NOTE: Not configurable at runtime as shieldPoints are pooled in Start
+    [Tooltip("What objects can be pulled to create the shield")]
+    [SerializeField] LayerMask shieldInteractionMask;
+
+    [Tooltip("From how far away objects will be pulled to create the shield")]
+    [SerializeField] float shieldPullRange;  
+
+    [Tooltip("How much objects already tagged launchable will me prioritised with gathering debris. 1 = more bais, 0 = less bias")]
+    [SerializeField, Range(0, 1)] float launchableBias;
 
     [Space]
-    [SerializeField] float minRandomShieldObjectSize;     // The minimum size object that are cut from the mesh will be
-    [SerializeField] float maxRandomShieldObjectSize;     // The maximum size object that are cut from the mesh will be
-    [SerializeField] bool actuallyCutMesh;                // WARNING! EXPENSIVE!! With current level of optimisation this is wayy to expensive
+    [Tooltip("How long it takes the shield to form to full size")]
+    [SerializeField] float shieldFormTime;
+
+    [Tooltip("How big the shield is")]
+    [SerializeField] float shieldSize;
+
+    [Tooltip("The minimum objects that will be used to create a shield")]
+    [SerializeField] int minShieldObjects; 
+
+    [Tooltip("The maximum objects that will be used to create a shield. NOTE: Not configurable at runtime as shieldPoints are pooled in Start")]
+    [SerializeField] int maxShieldObjects; 
 
     [Space]
-    [SerializeField] float wobblePosSpeed;                // How fast a held object will 'wobble' in the air
-    [SerializeField] float wobblePosAmount;               // The maximum amount a held object can wobble
-    [SerializeField] float wobbleRotSpeed;                // How fast a held object will rotate in the air
-    [SerializeField] float wobbleRotAmount;               // The max amount a held object can rotate
+    [Tooltip("The minimum size objects that are cut from the mesh will be")]
+    [SerializeField] float minRandomShieldObjectSize;
+
+    [Tooltip("The maximum size objects that are cut from the mesh will be")]
+    [SerializeField] float maxRandomShieldObjectSize; 
+
+    [Tooltip("WARNING! EXPENSIVE!! With current level of optimisation this is wayy to expensive")]
+    [SerializeField] bool actuallyCutMesh;  
 
     [Space]
-    [SerializeField] float minShieldObjectLaunchForce;       // The minimum force a shield object will be launched
-    [SerializeField] float maxShieldObjectLaunchForce;       // The maximum force a shield object will be launched
+    [Tooltip("How fast a held object will 'wobble' in the air")]
+    [SerializeField] float wobblePosSpeed; 
+
+    [Tooltip("The maximum amount a held object can wobble")]
+    [SerializeField] float wobblePosAmount;
+
+    [Tooltip("How fast a held object will rotate in the air")]
+    [SerializeField] float wobbleRotSpeed;   
+
+    [Tooltip("The max amount a held object can rotate")]
+    [SerializeField] float wobbleRotAmount; 
+
+    [Space]
+    [Tooltip("The minimum force a shield object will be launched")]
+    [SerializeField] float minShieldObjectLaunchForce;
+
+    [Tooltip("The maximum force a shield object will be launched")]
+    [SerializeField] float maxShieldObjectLaunchForce;
 
     float playerHeight;
-    float raycastDownFromCircleRange;                     // How far the raycasts will be shot down from points gathered in GrabDebris()
+    float raycastDownFromCircleRange;  // How far the raycasts will be shot down from points gathered in GrabDebris()
 
     List<Rigidbody> shieldObjects;
     List<Transform> shieldPoints = new List<Transform>();

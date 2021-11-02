@@ -6,7 +6,7 @@ using System;
 
 public class ShieldCollider : MonoBehaviour
 {
-    public Action<Collider> ObjectHitCollider;
+    public Action<Collider> ObjectHitCollider;  // Used in ShieldAbility
 
     SphereCollider col;
 
