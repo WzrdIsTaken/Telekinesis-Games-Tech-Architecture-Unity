@@ -15,7 +15,6 @@ public class ShieldAbility : MonoBehaviour
     [Space]
     [SerializeField] LayerMask shieldInteractionMask;     // What objects can be pulled to create the shield
     [SerializeField] float shieldPullRange;               // From how far away objects will be pulled to create the shield
-    //[SerializeField] float minDistAwayFromPlayer;        // The minimum distance away from the player that objects will be pulled TODO
     [SerializeField, Range(0, 1)] float launchableBias;   // How much objects already tagged launchable will me prioritised with gathering debris. 1 = more bais, 0 = less bais
 
     [Space]
@@ -28,10 +27,6 @@ public class ShieldAbility : MonoBehaviour
     [SerializeField] float minRandomShieldObjectSize;     // The minimum size object that are cut from the mesh will be
     [SerializeField] float maxRandomShieldObjectSize;     // The maximum size object that are cut from the mesh will be
     [SerializeField] bool actuallyCutMesh;                // WARNING! EXPENSIVE!! With current level of optimisation this is wayy to expensive
-
-    [Space]
-    //[SerializeField] float minDebrisDistFromPlayer;      // 
-    //[SerializeField] float maxDebrisDistFromPlayer;      //
 
     [Space]
     [SerializeField] float wobblePosSpeed;                // How fast a held object will 'wobble' in the air

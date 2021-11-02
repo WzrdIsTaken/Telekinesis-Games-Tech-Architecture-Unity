@@ -1,6 +1,6 @@
 RIGHT NOW:
 - Sheild
-	- Min/max dist
+	- Min/max dist. would be nice to do but i cant work it out rn
 - Levitate
 	- Collision
 	- Improve camera
@@ -10,6 +10,7 @@ RIGHT NOW:
 
 - Convert all variable comments in the abilities / player controller to tooltips (say in writeup / github repo assume designer knows nothing)
 - Add slider that allows for the number of vertices in a cut away mesh to be added / removed (ie smoother cut less lag)
+- gizmos to allow designer to see whats lauchable
 
 WOULD BE NICE
 - Optimise the cutting of mesh - this tutorial could be used to help create some 'holes' where the rocks are pulled out https://www.youtube.com/watch?v=IuP1fUPdxbo&list=PLPAgqhxd1Ib1YYqYnZioGyrSUzOwead17&index=11
