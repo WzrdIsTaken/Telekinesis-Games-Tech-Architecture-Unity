@@ -168,11 +168,13 @@ public class ShieldAbility : MonoBehaviour
             for (int i = 0; i < shieldObjects.Count; i++)
             {
                 /** 
-                   Could be a cool effect where the shield is a little behind the player when running, but when would have to solve the problem of objects clipping through the player.
-                   When the player is just moving forward, this would be easy. But if they turned around or stopped then the objects behind would have to take a different path to they
-                   didn't move through the player. So at the moment, they are just parented.
+                    Could be a cool effect where the shield is a little behind the player when running, but when would have to solve the problem of objects clipping through the player.
+                    When the player is just moving forward, this would be easy. But if they turned around or stopped then the objects behind would have to take a different path to they
+                    didn't move through the player. So at the moment, they are just parented.
 
-                   shieldObjects[i].transform.position = Vector3.MoveTowards(shieldObjects[i].transform.position, shieldPoints[i].position, 5 * Time.deltaTime);
+                    shieldObjects[i].transform.position = Vector3.MoveTowards(shieldObjects[i].transform.position, shieldPoints[i].position, 5 * Time.deltaTime);
+                    
+                    Or maybe spring joints on all of the bodies with their connectedBody being the player? Idk dude... so many cool possibilities but I gotta move onto other assignments...
                 **/
 
                 ObjectBob.SineWaveBob(shieldObjects[i].gameObject, transform, wobblePosSpeed, wobblePosAmount, wobbleRotSpeed, wobblePosAmount);
