@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7a0d93388d3830a478699cb52d85e3b0, type: 3}
-  m_Name: Shape Settings
+  m_Name: Shape Settings [For Testing]
   m_EditorClassIdentifier: 
   meshRadius: 0.5
   noiseLayers:

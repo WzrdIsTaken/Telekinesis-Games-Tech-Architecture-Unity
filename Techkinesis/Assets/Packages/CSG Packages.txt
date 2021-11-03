@@ -1,7 +1,0 @@
-Kinda just a note for my future self in case I want to do CSG stuff again.
-
-https://github.com/karl-/pb_CSG (for the actual operations)
-https://github.com/Whinarn/UnityMeshSimplifier (so shapes remained shapelike)
-
-The pb_CSG stuff works fine for normal shapes, but when you start to make more
-complex ones then the simplifer comes in handy.

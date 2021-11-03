@@ -22,3 +22,15 @@ WOULD BE NICE
 IMPORTANT
 - shield / launch effect kinda bug out with levitating
 - Hole shader
+
+---
+
+So:
+- Levitation optimisation
+- Shield / launch effect bugging out with levitation
+- Hole cut shader / effect
+- Gizmos on lauchable objects DONE
+- Rocks have to deal damage
+- Enemies have to deal damage
+- Demo scene
+- Check through code and tidy up project

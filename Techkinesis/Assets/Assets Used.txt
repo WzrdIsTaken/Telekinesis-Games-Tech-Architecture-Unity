@@ -1,0 +1,10 @@
+Images:
+	- Launchable Gizmo Image: https://www.shareicon.net/red-alphabet-letters-l-letter-846406
+
+Models:
+	- Character: https://github.com/SebLague/Blender-to-Unity-Character-Creation/tree/master/Blend%20files
+	- Unity Prototyping: [Unfortunately I don't think this asset exists anymore online, I just grabbed it from a previous project]
+
+Code:
+	- CSG Library: https://github.com/karl-/pb_CSG (for the actual operations)
+	- Mesh Simplification Library: https://github.com/Whinarn/UnityMeshSimplifier (so holes remained holelike with my bad algorithm)
