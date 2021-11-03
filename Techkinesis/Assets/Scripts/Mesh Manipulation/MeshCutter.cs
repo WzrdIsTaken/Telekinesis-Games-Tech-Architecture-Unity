@@ -1,12 +1,6 @@
 using UnityEngine;
 using Parabox.CSG;
 
-// using Unity.Jobs;
-// TODO: Think about some optimisation here
-
-// I can't be asked to actually code any optimisiations but can discuss them. Eg multithreading, 
-// spliting the map up into sections so don't have to cut as big of a mesh, etc
-
 // Performs CSG operations a mesh | Base: karl- (https://bit.ly/30sqtiL)
 
 public static class MeshCutter
@@ -37,7 +31,7 @@ public static class MeshCutter
         }
         else
         {
-            // Shader magic
+            DebugLogManager.Print("TODO: Cool mesh breaking shader magic would go here!", DebugLogManager.OutputType.TODO);
         }
 
         return randomMesh;
@@ -118,3 +112,9 @@ public static class MeshCutter
         go.GetComponent<MeshFilter>().sharedMesh = wireframeMesh;
     }
 }
+
+/** 
+    TODO: Think about some optimisation here. Dynamic mesh cutting is well hard so if don't want to go down that rabbit hole just discuss them as well
+    as the benefits and limitations of this approach in the writeup
+        - using Unity.Jobs;
+**/

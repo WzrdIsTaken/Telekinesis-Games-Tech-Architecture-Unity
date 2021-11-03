@@ -6,7 +6,6 @@ RIGHT NOW:
 	- Improve camera - kinda done?
 	- Make it so that the player can't spin around a bunch (just press S and it will happen soon enough..)
 - Improve launch code / optimise values
-	- Make it so that the object speeds up more when travelling to the player like in the real control. It moves really fast!
 
 - Convert all variable comments in the abilities / player controller to tooltips (say in writeup / github repo assume designer knows nothing)
 - Add slider that allows for the number of vertices in a cut away mesh to be added / removed (ie smoother cut less lag)
@@ -16,7 +15,10 @@ WOULD BE NICE
 - Optimise the cutting of mesh - this tutorial could be used to help create some 'holes' where the rocks are pulled out https://www.youtube.com/watch?v=IuP1fUPdxbo&list=PLPAgqhxd1Ib1YYqYnZioGyrSUzOwead17&index=11
 - Catch stack overflow 
 - Could prevent it on the floor with just a tag check. Floor could be dense concrete / steel and you can't pull it?
-
-- Outline shader under accessability options https://www.youtube.com/watch?v=hEth0drTuyg (shader already imported if not doing this remove the package)
+- Yeah dude not doing this its a complete rabit hole
 
 - Have git dependencies (Unity Mesh Simplifier) - might need to solve this? ngl which lecturer doesn't have git, but maybe idk. Ask Simon
+
+IMPORTANT
+- shield / launch effect kinda bug out with levitating
+- Hole shader

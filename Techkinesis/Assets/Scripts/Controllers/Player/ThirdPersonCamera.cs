@@ -5,13 +5,30 @@ using System.Collections;
 
 public class ThirdPersonCamera : MonoBehaviour
 {
-    [SerializeField] float mouseSensitivity = 2.5f;               // How fast the camera will rotate
-    [SerializeField] float distanceFromTarget = 2;                // How far the camera will stay away from the player
-    [SerializeField] float rotationSmoothTime = 0.12f;            // How long it will take the camera to rotate
-    [SerializeField] Transform target;                            // The player
-    [SerializeField] Vector2 pitchMinMax = new Vector2(-40, 85);  // How far you can rotate the camera pitch
-    [SerializeField] LayerMask collisionMask;                     // What the camera will collide with
-    [SerializeField] float cameraSwitchSidesTime;                 // How long it takes for the camera to switch its position (left / right)
+    #region Variables editable in the inspector (for a designer)
+
+    [Tooltip("How fast the camera will rotate")]
+    [SerializeField] float mouseSensitivity = 2.5f;
+
+    [Tooltip("How far the camera will stay away from the target")]
+    [SerializeField] float distanceFromTarget = 2;
+
+    [Tooltip("How long it will take the camera to rotate")]
+    [SerializeField] float rotationSmoothTime = 0.12f;
+
+    [Tooltip("What the camera will follow (eg the player)")]
+    [SerializeField] Transform target;
+
+    [Tooltip("How far you can rotate the camera pitch")]
+    [SerializeField] Vector2 pitchMinMax = new Vector2(-40, 85);
+
+    [Tooltip("What the camera will collide with")]
+    [SerializeField] LayerMask collisionMask;
+
+    [Tooltip("How long it takes for the camera to switch its position (left / right)")]
+    [SerializeField] float cameraSwitchSidesTime;
+
+    #endregion
 
     float pitch;
     float yaw;

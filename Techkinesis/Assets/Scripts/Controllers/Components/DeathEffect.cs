@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class DeathEffect : MonoBehaviour
 {
+    #region Variables editable in the inspector (for a designer)
+
     [Tooltip("The minimum force that will be applied on the horizontal axis")]
     [SerializeField] float minHorizontalForce;
 
@@ -15,6 +17,8 @@ public class DeathEffect : MonoBehaviour
 
     [Tooltip("The maximum force that will be applied on the vertical axis")]
     [SerializeField] float maxVerticalForce;
+
+    #endregion
 
     // Searches for the Armature transform (where humanoid bodies limbs are held) then adds the explosive effect
     public void HumanoidDeath (Animator animator)

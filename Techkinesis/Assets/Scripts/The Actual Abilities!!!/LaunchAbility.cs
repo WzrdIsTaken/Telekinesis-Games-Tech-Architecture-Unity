@@ -4,33 +4,77 @@ using System.Collections;
 // Pulls and launches and rock or object
 
 public class LaunchAbility : MonoBehaviour
-{ 
-    [SerializeField] SpringJoint launchPullPoint;        // The point to which the object is drawn towards
+{
+    #region Variables editable in the inspector (for a designer)
+
+    [Tooltip("The point to which the object is drawn towards")]
+    [SerializeField] SpringJoint launchPullPoint;
 
     [Space]
-    [SerializeField] LayerMask launchInteractionMask;    // What layers of objects can be pulled
-    [SerializeField] float launchRaycastRange;           // How far away objects can be
+    [Tooltip("What layers of objects can be pulled")]
+    [SerializeField] LayerMask launchInteractionMask;
+
+    [Tooltip("How far away objects can be")]
+    [SerializeField] float launchRaycastRange;
 
     [Space]
-    [SerializeField] float minPulledObjectSize = 0.11f;  // WARNING!!! Having to big of an object size can cause.. interesting.. mesh slices! 
-    [SerializeField] float maxPulledObjectSize = 0.11f;  // 0.11 seems to be kinda a magic number lol. Don't change it unless algorithm is optimised!
-    [SerializeField] bool actuallyCutMesh;               // WARNING! EXPENSIVE!! (but cool!)
+    [Tooltip("The minimum size objects that are cut from the mesh will be")]
+    [SerializeField] float minPulledObjectSize = 0.11f;  // WARNING! If actuallyCutMesh is enabled, having to big of an object size can cause.. interesting.. mesh slices! 
+
+    [Tooltip("The maximum size objects that are cut from the mesh will be")]
+    [SerializeField] float maxPulledObjectSize = 0.11f;  // 0.11 seems to be kinda a magic number lol. If actuallyCutMesh is enabled don't change unless the algorithm is optimised!
+
+    [Tooltip("The minimum time it will take to pull an object out of a mesh")]
+    [SerializeField] float minBreakTime;
+
+    [Tooltip("The maximum time it will take to pull an object out of a mesh")]
+    [SerializeField] float maxBreakTime;
+
+    [Tooltip("[WARNING - EXPENSIVE] Determines whether the mesh will be cut when a random object is created to be launched")]
+    [SerializeField] bool actuallyCutMesh;
 
     [Space]
-    [SerializeField] float pullForce;                    // How fast the object will be pulled
-    [SerializeField] float pulledObjectMaxVelocity;      // The maximum velocity which an object can be pulled
-    [SerializeField] float minLaunchForce;                // How minimum force the object will be launched
-    [SerializeField] float maxLaunchForce;                // The maximum force the object will be launched
+    [Tooltip("How minimum speed an object will be pulled")]
+    [SerializeField] float minPullSpeed;
+
+    [Tooltip("How maximum speed an object will be pulled")]
+    [SerializeField] float maxPullSpeed;
 
     [Space]
-    [SerializeField] float wobblePosSpeed;               // How fast a held object will 'wobble' in the air
-    [SerializeField] float wobblePosAmount;              // The maximum amount a held object can wobble
-    [SerializeField] float wobbleRotSpeed;               // How fast a held object will rotate in the air
-    [SerializeField] float wobbleRotAmount;              // The max amount a held object can rotate
+    [Tooltip("The minimum distance an object will float up before being pulled to the player")]
+    [SerializeField] float minFloatUpDistance;
+
+    [Tooltip("The maximum distance an object will float up before being pulled to the player")]
+    [SerializeField] float maxFloatUpDistance;
+
+    [Tooltip("The minimum amount an object will rotate before being pulled to the player")]
+    [SerializeField] float minFloatUpRotation;
+
+    [Tooltip("The maximum amount an object will rotate before being pulled to the player")]
+    [SerializeField] float maxFloatUpRotation;
+
+    [Tooltip("The minimum time an object will float up before being pulled to the player")]
+    [SerializeField] float minFloatUpTime;
+
+    [Tooltip("The maximum time an object will float up before being pulled to the player")]
+    [SerializeField] float maxFloatUpTime;
+
+    [Tooltip("The minimum time an object will just hover in the air before being pulled to the player")]
+    [SerializeField] float minHoverTime;
+
+    [Tooltip("The maximum time an object will just hover in the air before being pulled to the player")]
+    [SerializeField] float maxHoverTime;
+
+    [Space]
+    [Tooltip("How minimum force the object will be launched with")]
+    [SerializeField] float minLaunchForce;
+
+    [Tooltip("The maximum force the object will be launched with")]
+    [SerializeField] float maxLaunchForce;
+
+    #endregion
 
     Rigidbody heldObject;
-    Coroutine pullObject;
-    Coroutine makeObjectWobble;
 
     ThirdPersonCamera cam;
     ShieldAbility shieldAbility;
@@ -49,6 +93,7 @@ public class LaunchAbility : MonoBehaviour
         if (shieldAbility.LaunchShieldObjects(cam.transform.forward)) 
         {
             // LaunchShieldObjects returns true if the shield is enabled
+
             return;
         }
 
@@ -63,10 +108,11 @@ public class LaunchAbility : MonoBehaviour
         }
 
         // Hit an object that can be launched : Hit an object, but not once that can be launched so need to cut the mesh
-        selectedObject = hit.collider.CompareTag(TagAndLayerNameManager.LAUNCHABLE) ? hit.collider.gameObject.GetComponent<Rigidbody>()  
-                                                                        : MeshCutter.CutAndReturnRandomMesh(hit, minPulledObjectSize, maxPulledObjectSize, actuallyCutMesh);
+        bool launchableObject = hit.collider.CompareTag(TagAndLayerNameManager.LAUNCHABLE);
+        selectedObject = launchableObject ? hit.collider.gameObject.GetComponent<Rigidbody>()  
+                                          : MeshCutter.CutAndReturnRandomMesh(hit, minPulledObjectSize, maxPulledObjectSize, actuallyCutMesh);
 
-        pullObject = StartCoroutine(PullObject(selectedObject));
+        StartCoroutine(PullObject(selectedObject, !launchableObject));
 
         DebugLogManager.Print("Launch pull active! Would make a cool sound or something.", DebugLogManager.OutputType.NOT_MY_JOB);
     }
@@ -76,8 +122,7 @@ public class LaunchAbility : MonoBehaviour
     {
         if (!heldObject) return;
 
-        if (pullObject != null) StopCoroutine(pullObject);
-        if (makeObjectWobble != null) StopCoroutine(makeObjectWobble);
+        StopAllCoroutines();
 
         heldObject.transform.parent = null;
         launchPullPoint.connectedBody = null;
@@ -89,11 +134,130 @@ public class LaunchAbility : MonoBehaviour
         DebugLogManager.Print("Launch object thrown! Would make a cool sound or something.", DebugLogManager.OutputType.NOT_MY_JOB);
     }
 
-    // Pull the object towards launchPullPoint
-    IEnumerator PullObject(Rigidbody selectedObject)
+    // Perform relevant effects (depending if its already marked as launchable or not) on the heldObject then pull it towards launchPullPoint
+    IEnumerator PullObject(Rigidbody selectedObject, bool cutObject)
     {
         heldObject = selectedObject;
-        float selectedObjectSize = selectedObject.GetComponent<MeshRenderer>().bounds.size.y / 2;  // Needed so we know when to stop the coroutine
+        heldObject.useGravity = false;
+
+        // If the object already exists, we want to move it up then towards the player. Else we want to do a cool breaking effect
+        if (!cutObject)
+        {
+            // Move the object into the air
+            yield return MoveObjectUp();
+
+            // Wait x seconds before pulling it to the player
+            yield return new WaitForSeconds(Random.Range(minHoverTime, maxHoverTime));
+        }
+        else
+        {
+            yield return BreakMeshEffect();
+        }
+
+        // Move the object towards launchPullPoint
+        StartCoroutine(PullObjectToPlayer());
+    }
+
+    // Move the object up and apply some rotation
+    IEnumerator MoveObjectUp()
+    {
+        Vector3 startPosition = heldObject.transform.position;
+        Vector3 targetPosition = new Vector3(startPosition.x, startPosition.y + Random.Range(minFloatUpDistance, maxFloatUpDistance), startPosition.z);
+
+        Quaternion startRotation = heldObject.transform.rotation;
+        Quaternion targetRotation = new Quaternion(Random.Range(minFloatUpRotation, maxFloatUpRotation), Random.Range(minFloatUpRotation, maxFloatUpRotation),
+                                                   Random.Range(minFloatUpRotation, maxFloatUpRotation), Random.Range(minFloatUpRotation, maxFloatUpRotation));
+
+        float floatUpTimer = 0;
+        float floatUpDuration = Random.Range(minFloatUpTime, maxFloatUpTime);
+        while (floatUpTimer < floatUpDuration)
+        {
+            heldObject.transform.position = Vector3.Lerp(startPosition, targetPosition, floatUpTimer / floatUpDuration);
+            heldObject.transform.rotation = Quaternion.Lerp(startRotation, targetRotation, floatUpTimer / floatUpDuration);
+
+            floatUpTimer += Time.deltaTime;
+            yield return null;
+        }
+
+        heldObject.transform.position = targetPosition;
+        heldObject.transform.rotation = targetRotation;
+    }
+
+    // Make it look like the mesh is breaking with some shader magic
+    IEnumerator BreakMeshEffect()
+    {
+        // Effect would actually take place in MeshCutter -> CutAndReturnRandomMesh
+
+        yield return new WaitForSeconds(Random.Range(minBreakTime, maxBreakTime));
+    }
+
+    // Move the object towards launchPullPoint via a lerp, then setup the object for 'carrying'
+    IEnumerator PullObjectToPlayer()
+    {
+        Vector3 startPosition = heldObject.transform.position;
+
+        float time = 0;
+        float duration = CalculatePulledObjectLerpTime();
+        while (time < duration)
+        {
+            float x = Mathf.SmoothStep(startPosition.x, launchPullPoint.transform.position.x, time / duration);
+            float y = Mathf.SmoothStep(startPosition.y, launchPullPoint.transform.position.y, time / duration);
+            float z = Mathf.SmoothStep(startPosition.z, launchPullPoint.transform.position.z, time / duration);
+            heldObject.transform.position = Vector3.Lerp(startPosition, new Vector3(x, y, z), time / duration);
+            // heldObject.transform.position = Vector3.Lerp(startPosition, launchPullPoint.transform.position, time / duration); I don't know which is better! Not my job :D
+
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        heldObject.transform.position = launchPullPoint.transform.position;
+
+        heldObject.transform.parent = launchPullPoint.transform;
+        launchPullPoint.connectedBody = heldObject;
+    }
+
+    // The downside with using lerp is that whatever the distance, the time of travel is the same. Therefore, we need to change the lerp time to take distance into account 
+    float CalculatePulledObjectLerpTime()
+    {
+        float distance = Vector3.Distance(heldObject.transform.position, launchPullPoint.transform.position);
+        return distance / Random.Range(minPullSpeed, maxPullSpeed);
+    }
+}
+
+/** 
+   Note: Objects which are already marked as launchable do not have their collisions with the player disabled after they are thrown.
+   This is intentional! The idea being that objects in the scene marked as launchable are part of the world, so would therefore
+   want to have collisions. Smaller objects which would be annoying to collide with but are marked as launchable would have their
+   collisions disabled already.
+**/
+
+/***
+    Originally I had this code inside PullObjectToPlayer. It worked great.. until you wanted to move the object towards the player at high speed. 
+    Now I have a solution with lerp. Honestly I like the way lerp feels more, I scrapped the sine wave stuff for the 'feel' as well, but if its ever needed 
+    here is the old rigidbody code:
+
+    [Tooltip("How fast the object will be pulled")]
+    [SerializeField] float pullForce;
+
+    [Tooltip("The maximum velocity which an object can be pulled")]
+    [SerializeField] float pulledObjectMaxVelocity;
+
+    [Tooltip("How fast a held object will 'wobble' in the air")]
+    [SerializeField] float wobblePosSpeed;
+
+    [Tooltip("The maximum amount a held object can wobble")]
+    [SerializeField] float wobblePosAmount;
+
+    [Tooltip("How fast a held object will rotate in the air")]
+    [SerializeField] float wobbleRotSpeed;
+
+    [Tooltip("The max amount a held object can rotate")]
+    [SerializeField] float wobbleRotAmount;
+
+    // Pull the object towards launchPullPoint
+    IEnumerator PullObjectToPlayer()
+    {
+        float selectedObjectSize = heldObject.GetComponent<MeshRenderer>().bounds.size.y / 2;  // Needed so we know when to stop the coroutine
 
         while (true)
         {
@@ -106,12 +270,11 @@ public class LaunchAbility : MonoBehaviour
             {
                 heldObject.transform.position = launchPullPoint.transform.position;
                 heldObject.transform.parent = launchPullPoint.transform;
-                heldObject.useGravity = false;
 
                 heldObject.velocity = Vector3.zero;
                 heldObject.angularVelocity = Vector3.zero;
 
-                makeObjectWobble = StartCoroutine(MakeObjectWobble());
+                StartCoroutine(MakeObjectWobble());
 
                 break;
             }
@@ -142,11 +305,4 @@ public class LaunchAbility : MonoBehaviour
             yield return null;
         }
     }
-}
-
-/** 
-   Note: Objects which are already marked as launchable do not have their collisions with the player disabled after they are thrown
-   This is intentional! The idea being that objects in the scene marked as launchable are part of the world, so would therefore
-   want to have collisions. Smaller objects which would be annoying to collide with but are marked as launchable would have their
-   collisions disabled already.
-**/
+***/

@@ -4,24 +4,43 @@ using UnityEngine;
 
 public class PlayerController : MovementController
 {
+    #region Variables editable in the inspector (for a designer)
+
     [Header("References")]
-    [SerializeField] PlayerInput inputProvider;                    // The players InputProvider
-    [SerializeField] ThirdPersonCamera cam;                        // The players camera
+    [Tooltip("The players InputProvider")]
+    [SerializeField] PlayerInput inputProvider;
+
+    [Tooltip("The players camera")]
+    [SerializeField] ThirdPersonCamera cam;
 
     [Header("Attributes")]
-    [SerializeField] int hp;                                       // How much HP the player has
+    [Tooltip("How much HP the player has")]
+    [SerializeField, Min(1)] int hp;
 
     [Space]
-    [SerializeField] float mass = -12f;                            // How heavy the player is, will affect how fast they fall
-    [SerializeField, Range(0, 1)] float airControlPercent = 0.5f;  // How much control the player has while jumping. 1 = more control, 0 = less control
+    [Tooltip("How heavy the player is, will affect how fast they fall")]
+    [SerializeField] float mass = -12f;
+
+    [Tooltip("How much control the player has while jumping. 1 = more control, 0 = less control")]
+    [SerializeField, Range(0, 1)] float airControlPercent = 0.5f;
 
     [Header("Movement")]
-    [SerializeField] float speedSmoothTime = 0.1f;                 // How long it will take for the player to go between stopping / walking / running
-    [SerializeField] float turnSmoothTime = 0.2f;                  // How long it will take for the player to turn
+    [Tooltip("How long it will take for the player to go between stopping / walking / running")]
+    [SerializeField] float speedSmoothTime = 0.1f;
 
-    [SerializeField] float walkSpeed = 2;                          // How fast the player will walk
-    [SerializeField] float runSpeed = 6;                           // How fast the player will run
-    [SerializeField] float jumpHeight = 1;                         // How high the player will jump
+    [Tooltip("How long it will take for the player to turn")]
+    [SerializeField] float turnSmoothTime = 0.2f;
+
+    [Tooltip("How fast the player will walk")]
+    [SerializeField] float walkSpeed = 2;
+
+    [Tooltip("How fast the player will run")]
+    [SerializeField] float runSpeed = 6;
+
+    [Tooltip("How high the player will jump")]
+    [SerializeField] float jumpHeight = 1;
+
+    #endregion
 
     ShieldAbility shieldAbility;
     LaunchAbility launchAbility;

@@ -9,6 +9,8 @@ public class ShieldAbility : MonoBehaviour
 {
     public System.Action<int> TakeDamage;  // Used in PlayerController
 
+    #region Variables editable in the inspector (for a designer)
+
     [Tooltip("The ShieldCollider gameobject")]
     [SerializeField] ShieldCollider shieldCollider;
 
@@ -45,7 +47,8 @@ public class ShieldAbility : MonoBehaviour
     [Tooltip("The maximum size objects that are cut from the mesh will be")]
     [SerializeField] float maxRandomShieldObjectSize; 
 
-    [Tooltip("WARNING! EXPENSIVE!! With current level of optimisation this is wayy to expensive")]
+    [Tooltip("[WARNING - EXPENSIVE (With current level of optimisation this is wayy to expensive..)] " +
+             "Determines whether the mesh will be cut when a random object is created for the sheild")]
     [SerializeField] bool actuallyCutMesh;  
 
     [Space]
@@ -68,14 +71,13 @@ public class ShieldAbility : MonoBehaviour
     [Tooltip("The maximum force a shield object will be launched")]
     [SerializeField] float maxShieldObjectLaunchForce;
 
+    #endregion
+
     float playerHeight;
     float raycastDownFromCircleRange;  // How far the raycasts will be shot down from points gathered in GrabDebris()
 
     List<Rigidbody> shieldObjects = new List<Rigidbody>();
     List<Transform> shieldPoints = new List<Transform>();
-
-    Coroutine formShield;
-    Coroutine moveShieldObjects;
 
     // Create a pool of shieldPoints and setup shieldCollider
     void Start()
@@ -105,14 +107,13 @@ public class ShieldAbility : MonoBehaviour
     // Start the shield creation. Called from an event hooked up in PlayerController Start
     public void ShieldStart()
     {
-        formShield = StartCoroutine(FormShield());
+        StartCoroutine(FormShield());
     }
 
     // Stop the shield. Called from an event hooked up in PlayerController Start
     public void ShieldEnd()
     {
-        if (formShield != null) StopCoroutine(formShield);
-        if (moveShieldObjects != null) StopCoroutine(moveShieldObjects);
+        StopAllCoroutines();
 
         foreach (Rigidbody obj in shieldObjects) 
         {
@@ -149,7 +150,7 @@ public class ShieldAbility : MonoBehaviour
         }
 
         shieldCollider.SetColliderState(true);
-        moveShieldObjects = StartCoroutine(MoveShieldObjects());
+        StartCoroutine(MoveShieldObjects());
 
         DebugLogManager.Print("Shield active! Would make a nice sound.", DebugLogManager.OutputType.NOT_MY_JOB);
     }
@@ -211,7 +212,7 @@ public class ShieldAbility : MonoBehaviour
                 {
                     // Hit an object that can be launched : Hit an object, but not once that can be launched so need to cut the mesh
                     debrisObj = col.CompareTag(TagAndLayerNameManager.LAUNCHABLE) ? col.GetComponent<Rigidbody>() 
-                                                                      : MeshCutter.CutAndReturnRandomMesh(hit, minRandomShieldObjectSize, maxRandomShieldObjectSize, actuallyCutMesh); 
+                                                                                  : MeshCutter.CutAndReturnRandomMesh(hit, minRandomShieldObjectSize, maxRandomShieldObjectSize, actuallyCutMesh); 
                 }
             }
 

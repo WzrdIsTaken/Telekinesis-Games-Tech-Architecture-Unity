@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class DebugLogManager
 {
-    public enum OutputType { NOT_MY_JOB };
+    public enum OutputType { NOT_MY_JOB, TODO };
 
     static bool outputMessages;
 
@@ -17,6 +17,9 @@ public static class DebugLogManager
         {
             case OutputType.NOT_MY_JOB:
                 PrintMessage(content, ColorUtility.ToHtmlStringRGBA(Color.cyan));
+                break;
+            case OutputType.TODO:
+                PrintMessage(content, ColorUtility.ToHtmlStringRGBA(Color.yellow));
                 break;
             default:
                 Debug.LogError("OutputType of type " + outputType.ToString() + " does not exist!");

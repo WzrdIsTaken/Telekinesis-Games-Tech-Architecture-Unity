@@ -1630,15 +1630,21 @@ MonoBehaviour:
   launchRaycastRange: 100
   minPulledObjectSize: 0.11
   maxPulledObjectSize: 0.11
+  minBreakTime: 0.1
+  maxBreakTime: 0.25
   actuallyCutMesh: 0
-  pullForce: 30
-  pulledObjectMaxVelocity: 16
+  minPullSpeed: 50
+  maxPullSpeed: 60
+  minFloatUpDistance: 1.5
+  maxFloatUpDistance: 2
+  minFloatUpRotation: -30
+  maxFloatUpRotation: 30
+  minFloatUpTime: 0.15
+  maxFloatUpTime: 0.4
+  minHoverTime: 0.25
+  maxHoverTime: 0.5
   minLaunchForce: 19
   maxLaunchForce: 20
-  wobblePosSpeed: 2
-  wobblePosAmount: 0.05
-  wobbleRotSpeed: 2
-  wobbleRotAmount: 2
 --- !u!1 &2064141870
 GameObject:
   m_ObjectHideFlags: 0

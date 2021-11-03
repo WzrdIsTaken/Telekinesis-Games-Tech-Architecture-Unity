@@ -38,9 +38,6 @@ public class LevitationAbility : MonoBehaviour
 
     float startCameraFov;
 
-    Coroutine levitate;
-    Coroutine drift;
-
     // Grab the rigid body and disable collisions because these are already handled by the character controller
     void Start()
     {
@@ -66,8 +63,8 @@ public class LevitationAbility : MonoBehaviour
         rb.AddForce(startBoostForce, ForceMode.Force);
 
         cam.ChangeCameraFov(levitatingFov, levitatingFovChangeTime);
-        levitate = StartCoroutine(Levitate());
-        drift = StartCoroutine(Drift());
+        StartCoroutine(Levitate());
+        StartCoroutine(Drift());
 
         DebugLogManager.Print("Levitation active! Would make a cool sound or something.", DebugLogManager.OutputType.NOT_MY_JOB);
     }
@@ -78,8 +75,7 @@ public class LevitationAbility : MonoBehaviour
         playerController.SetMovementState(PlayerController.MovementState.GROUND);
         rb.isKinematic = true;
 
-        if (levitate != null) StopCoroutine(levitate);
-        if (drift != null) StopCoroutine(drift);
+        StopAllCoroutines();
 
         cam.ChangeCameraFov(startCameraFov, levitatingFovChangeTime);
 
@@ -114,7 +110,7 @@ public class LevitationAbility : MonoBehaviour
         }
 
         driftForce = targetDrift;
-        drift = StartCoroutine(Drift());
+        StartCoroutine(Drift());
     }
 
     // Turns the player. Called from PlayerController Update
