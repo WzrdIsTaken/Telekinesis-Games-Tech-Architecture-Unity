@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// Allows for custom gizmos to be drawn. 
+// Allows for custom gizmos to be drawn
 
 public class GizmoManager : MonoBehaviour
 {
