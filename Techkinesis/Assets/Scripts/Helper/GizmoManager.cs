@@ -8,7 +8,7 @@ public class GizmoManager : MonoBehaviour
     [SerializeField] bool drawCustomGizmos;
 
     [Space]
-    [Tooltip("Enter the tag and filepath of any custom gizmos you want to draw. " +
+    [Tooltip("Enter the tag and filepath of any custom gizmos you want to draw. " +  // Tag of the gameobject(s), filepath of the image (including the extension)
              "Gizmo images must be put in Assets/Gizmos")]
     [SerializeField] TagToFile[] gizmoIcons;
 
