@@ -2,11 +2,10 @@ using UnityEngine;
 using System;
 
 // Triggers the ObjectHitCollider which calls the ObjectHitShield method in ShieldAbility when the collider is hit
-// Handles both Collision and Trigger Enter as we don't know what the designer will want to use
 
-public class ShieldCollider : MonoBehaviour
+public class ShieldCollider : MonoBehaviour, IProjectileInteraction
 {
-    public Action<Collider> ObjectHitCollider;  // Used in ShieldAbility
+    public Action<int> ObjectHitCollider;  // Used in ShieldAbility
 
     SphereCollider col;
 
@@ -15,14 +14,10 @@ public class ShieldCollider : MonoBehaviour
         col = GetComponent<SphereCollider>();
     }
 
-    void OnCollisionEnter(Collision collision)
+    // Called rom the IProjectileInteraction interface. Called with a projectile collides with the SphereCollider
+    public void ProjectileCollision(int damage)
     {
-        ObjectHitCollider(collision.collider);
-    }
-
-    void OnTriggerEnter(Collider collider)
-    {
-        ObjectHitCollider(collider);
+        ObjectHitCollider(damage);
     }
 
     // Called from ShieldAbility. Enables/disables the SphereCollider

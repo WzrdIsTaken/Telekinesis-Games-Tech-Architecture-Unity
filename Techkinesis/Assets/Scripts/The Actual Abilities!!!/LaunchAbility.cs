@@ -12,7 +12,7 @@ public class LaunchAbility : MonoBehaviour
 
     [Space]
     [Tooltip("What layers of objects can be pulled")]
-    [SerializeField] LayerMask launchInteractionMask;
+    [SerializeField] LayerMask launchPullInteractionMask;
 
     [Tooltip("How far away objects can be")]
     [SerializeField] float launchRaycastRange;
@@ -66,11 +66,17 @@ public class LaunchAbility : MonoBehaviour
     [SerializeField] float maxHoverTime;
 
     [Space]
+    [Tooltip("What layers launched objects will perfom special interactions with (eg: damaging enemies)")]
+    [SerializeField] LayerMask launchLaunchInteractionMask;
+
     [Tooltip("How minimum force the object will be launched with")]
     [SerializeField] float minLaunchForce;
 
     [Tooltip("The maximum force the object will be launched with")]
     [SerializeField] float maxLaunchForce;
+
+    [Tooltip("A multiplier for damage applied to the damage = force * mass calculation")]
+    [SerializeField] float damageMultiplier;
 
     #endregion
 
@@ -97,7 +103,7 @@ public class LaunchAbility : MonoBehaviour
             return;
         }
 
-        RaycastHit hit = RaycastSystem.Raycast(cam.transform.position, cam.transform.forward, launchRaycastRange, launchInteractionMask);
+        RaycastHit hit = RaycastSystem.Raycast(cam.transform.position, cam.transform.forward, launchRaycastRange, launchPullInteractionMask);
         Rigidbody selectedObject = null;
 
         // We didn't hit an object
@@ -108,7 +114,7 @@ public class LaunchAbility : MonoBehaviour
         }
 
         // Hit an object that can be launched : Hit an object, but not once that can be launched so need to cut the mesh
-        bool launchableObject = hit.collider.CompareTag(TagAndLayerNameManager.LAUNCHABLE);
+        bool launchableObject = hit.collider.CompareTag(TagNameManager.LAUNCHABLE);
         selectedObject = launchableObject ? hit.collider.gameObject.GetComponent<Rigidbody>()  
                                           : MeshCutter.CutAndReturnRandomMesh(hit, minPulledObjectSize, maxPulledObjectSize, actuallyCutMesh);
 
@@ -128,7 +134,12 @@ public class LaunchAbility : MonoBehaviour
         launchPullPoint.connectedBody = null;
         heldObject.useGravity = true;
 
-        heldObject.velocity = cam.transform.forward * Random.Range(minLaunchForce, maxLaunchForce);
+        float launchForce = Random.Range(minLaunchForce, maxLaunchForce);
+        int damage = ProjectileManager.CalculateProjectileDamage(heldObject.mass, launchForce, damageMultiplier);
+
+        ProjectileManager.SetupProjectile(heldObject.gameObject, launchLaunchInteractionMask, damage, false);
+        heldObject.velocity = cam.transform.forward * launchForce;
+
         heldObject = null;
 
         DebugLogManager.Print("Launch object thrown! Would make a cool sound or something.", DebugLogManager.OutputType.NOT_MY_JOB);

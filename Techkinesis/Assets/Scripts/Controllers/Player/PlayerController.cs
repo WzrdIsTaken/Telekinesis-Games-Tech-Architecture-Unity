@@ -2,7 +2,10 @@ using UnityEngine;
 
 // Controls the player
 
-public class PlayerController : MovementController
+[RequireComponent(typeof(ShieldAbility))]
+[RequireComponent(typeof(LaunchAbility))]
+[RequireComponent(typeof(LevitationAbility))]
+public class PlayerController : MovementController, IProjectileInteraction
 {
     #region Variables editable in the inspector (for a designer)
 
@@ -12,17 +15,6 @@ public class PlayerController : MovementController
 
     [Tooltip("The players camera")]
     [SerializeField] ThirdPersonCamera cam;
-
-    [Header("Attributes")]
-    [Tooltip("How much HP the player has")]
-    [SerializeField, Min(1)] int hp;
-
-    [Space]
-    [Tooltip("How heavy the player is, will affect how fast they fall")]
-    [SerializeField] float mass = -12f;
-
-    [Tooltip("How much control the player has while jumping. 1 = more control, 0 = less control")]
-    [SerializeField, Range(0, 1)] float airControlPercent = 0.5f;
 
     [Header("Movement")]
     [Tooltip("How long it will take for the player to go between stopping / walking / running")]
@@ -40,13 +32,14 @@ public class PlayerController : MovementController
     [Tooltip("How high the player will jump")]
     [SerializeField] float jumpHeight = 1;
 
+    [Tooltip("How much control the player has while jumping. 1 = more control, 0 = less control")]
+    [SerializeField, Range(0, 1)] float airControlPercent = 0.5f;
+
     #endregion
 
     ShieldAbility shieldAbility;
     LaunchAbility launchAbility;
     LevitationAbility levitationAbility;
-
-    HealthModule healthModule;
 
     float speedSmoothVelocity;
     float currentSpeed;
@@ -74,10 +67,7 @@ public class PlayerController : MovementController
         inputProvider.OnLaunchStart += launchAbility.LaunchStart;               inputProvider.OnLaunchEnd += launchAbility.LaunchEnd;
         inputProvider.OnShieldStart += shieldAbility.ShieldStart;               inputProvider.OnShieldEnd += shieldAbility.ShieldEnd;
         inputProvider.OnLevitationStart += levitationAbility.LevitationStart;   inputProvider.OnLevitationEnd += levitationAbility.LevitationEnd;
-        // For future reference, can do event += () => thing. Here I don't think its clear + we need the SetMovementState anyway, but its cool.
 
-        // Initialize the health module and hook up the TakeDamage event
-        healthModule = new HealthModule(hp);
         shieldAbility.TakeDamage += TakeDamage;
 
         // Set the first movement state
@@ -179,12 +169,16 @@ public class PlayerController : MovementController
     }
 
     // Reduce the player's hp. If the player's hp is less than 0, set MovementState to Dead (which cuts off player input) and trigger the death effect
-    void TakeDamage(int damage)
+    public override void TakeDamage(int damage)
     {
+        print(damage);
+
         if (healthModule.Damage(damage))
         {
             SetMovementState(MovementState.DEAD);
-            GetComponent<DeathEffect>().HumanoidDeath(animator);
+            GetComponent<DeathEffectModule>().HumanoidDeath(animator);
+
+            DebugLogManager.Print("Some cool player death logic would go here.", DebugLogManager.OutputType.NOT_MY_JOB);
         }
     }
 }

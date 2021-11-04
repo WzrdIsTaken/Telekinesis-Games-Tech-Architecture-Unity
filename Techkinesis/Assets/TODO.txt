@@ -30,7 +30,9 @@ So:
 - Shield / launch effect bugging out with levitation
 - Hole cut shader / effect
 - Gizmos on lauchable objects DONE
-- Rocks have to deal damage
+- Rocks have to deal damage DONE
 - Enemies have to deal damage
 - Demo scene
 - Check through code and tidy up project
+
+For future reference, can do event += () => thing. Here I don't think its clear + we need the SetMovementState anyway, but its cool.

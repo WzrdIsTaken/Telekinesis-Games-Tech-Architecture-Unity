@@ -19,7 +19,7 @@ public class ShieldAbility : MonoBehaviour
 
     [Space]
     [Tooltip("What objects can be pulled to create the shield")]
-    [SerializeField] LayerMask shieldInteractionMask;
+    [SerializeField] LayerMask shieldPullInteractionMask;
 
     [Tooltip("From how far away objects will be pulled to create the shield")]
     [SerializeField] float shieldPullRange;  
@@ -62,14 +62,20 @@ public class ShieldAbility : MonoBehaviour
     [SerializeField] float wobbleRotSpeed;   
 
     [Tooltip("The max amount a held object can rotate")]
-    [SerializeField] float wobbleRotAmount; 
+    [SerializeField] float wobbleRotAmount;
 
     [Space]
+    [Tooltip("What layers launched shield objects will perfom special interactions with (eg: damaging enemies)")]
+    [SerializeField] LayerMask shieldLaunchInteractionMask;
+
     [Tooltip("The minimum force a shield object will be launched")]
     [SerializeField] float minShieldObjectLaunchForce;
 
     [Tooltip("The maximum force a shield object will be launched")]
     [SerializeField] float maxShieldObjectLaunchForce;
+
+    [Tooltip("A multiplier for damage applied to the damage = force * mass calculation")]
+    [SerializeField] float damageMultiplier;
 
     #endregion
 
@@ -207,13 +213,13 @@ public class ShieldAbility : MonoBehaviour
                 Vector3 point = (Random.insideUnitSphere * shieldPullRange) + transform.position;
                 point.y = transform.position.y + playerHeight / 2;
 
-                RaycastHit hit = RaycastSystem.Raycast(point, -Vector3.up, raycastDownFromCircleRange, shieldInteractionMask);
+                RaycastHit hit = RaycastSystem.Raycast(point, -Vector3.up, raycastDownFromCircleRange, shieldPullInteractionMask);
                 Collider col = hit.collider;
 
                 if (col)
                 {
                     // Hit an object that can be launched : Hit an object, but not once that can be launched so need to cut the mesh
-                    debrisObj = col.CompareTag(TagAndLayerNameManager.LAUNCHABLE) ? col.GetComponent<Rigidbody>() 
+                    debrisObj = col.CompareTag(TagNameManager.LAUNCHABLE) ? col.GetComponent<Rigidbody>() 
                                                                                   : MeshCutter.CutAndReturnRandomMesh(hit, minRandomShieldObjectSize, maxRandomShieldObjectSize, actuallyCutMesh); 
                 }
             }
@@ -240,7 +246,7 @@ public class ShieldAbility : MonoBehaviour
     Stack<Collider> GetLaunchableObjects()
     {
         Collider[] objects = Physics.OverlapSphere(transform.position, shieldPullRange);
-        return new Stack<Collider>(objects.Where(obj => obj.CompareTag(TagAndLayerNameManager.LAUNCHABLE))); 
+        return new Stack<Collider>(objects.Where(obj => obj.CompareTag(TagNameManager.LAUNCHABLE))); 
     }
 
     // Creates some random points that shield debris will anchor to
@@ -256,13 +262,10 @@ public class ShieldAbility : MonoBehaviour
     }
 
     // Passes on damage via the TakeDamage event to PlayerController. Hooked up to the ObjectHitCollider event in ShieldCollider
-    public void ObjectHitShield(Collider collider)
+    public void ObjectHitShield(int baseDamage)
     {
-        if (collider.CompareTag(TagAndLayerNameManager.ENEMY_PROJECTILE))
-        {
-            int damage = Mathf.RoundToInt(collider.GetComponent<EnemyProjectile>().GetDamage() * damageReduction);
-            TakeDamage(damage);
-        }
+        int damage = Mathf.RoundToInt(baseDamage * damageReduction);
+        TakeDamage(damage);
     }
 
     // Called from LaunchAbility. Throws shield objects in direction by min/max ShieldObjectLaunchForce. Returns true/false depending if the shield is currenly active
@@ -275,7 +278,11 @@ public class ShieldAbility : MonoBehaviour
 
         foreach (Rigidbody obj in objectsInShield)
         {
-            obj.AddForce(direction * Random.Range(minShieldObjectLaunchForce, maxShieldObjectLaunchForce));
+            float launchForce = Random.Range(minShieldObjectLaunchForce, maxShieldObjectLaunchForce);
+            int damage = ProjectileManager.CalculateProjectileDamage(obj.mass, launchForce, damageMultiplier);
+
+            ProjectileManager.SetupProjectile(obj.gameObject, shieldLaunchInteractionMask, damage, false);
+            obj.AddForce(direction * launchForce);
         }
 
         return true;

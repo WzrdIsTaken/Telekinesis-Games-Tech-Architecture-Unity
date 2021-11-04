@@ -2,7 +2,7 @@ using UnityEngine;
 
 // 'Explosive' death effect for any object that is made up of multiple parts
 
-public class DeathEffect : MonoBehaviour
+public class DeathEffectModule : MonoBehaviour
 {
     #region Variables editable in the inspector (for a designer)
 
@@ -29,6 +29,8 @@ public class DeathEffect : MonoBehaviour
         {
             AddRigidbodyAndForce(child.gameObject);
         }
+
+        Destroy(gameObject, 10f);  // TODO: Could have a cool fade out effect. 10 seconds is just an arbitrary number
     }
 
     // Add rigidbodies to all the parts of the object, then shoot them all in different directions! Expensive but fun 

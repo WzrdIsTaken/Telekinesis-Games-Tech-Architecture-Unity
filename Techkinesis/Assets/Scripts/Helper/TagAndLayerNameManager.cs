@@ -1,12 +1,12 @@
 // Means that we only have to change tags / layer names in one place, and will never accidently spell them wrong
 
-public static class TagAndLayerNameManager
+public static class TagNameManager
 {
-    // Tags
     public static readonly string LAUNCHABLE = "Launchable";
-    public static readonly string ENEMY_PROJECTILE = "Enemy Projectile";
+}
 
-    // Layers
+public static class LayerNameManager
+{
     public static readonly string IGNORE_PLAYER_COLLISION = "Ignore Player Collision";
 }
 
