@@ -1073,10 +1073,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1184865129}
   - component: {fileID: 1184865130}
+  - component: {fileID: 1184865132}
   - component: {fileID: 1184865131}
   m_Layer: 6
   m_Name: ShieldCollider
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1120,6 +1121,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 398961ac10e38d14f9ec94d36cfa7c6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!54 &1184865132
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1184865128}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &1269531453
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2738,7 +2755,7 @@ PrefabInstance:
       objectReference: {fileID: 1714982472}
     - target: {fileID: 5243063980325474655, guid: ccaf462e19013d64b8b6c6f7e5c181cb, type: 3}
       propertyPath: npcBehaviour
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5243063980325474655, guid: ccaf462e19013d64b8b6c6f7e5c181cb, type: 3}
       propertyPath: bulletVelocity

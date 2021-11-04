@@ -171,8 +171,6 @@ public class PlayerController : MovementController, IProjectileInteraction
     // Reduce the player's hp. If the player's hp is less than 0, set MovementState to Dead (which cuts off player input) and trigger the death effect
     public override void TakeDamage(int damage)
     {
-        print(damage);
-
         if (healthModule.Damage(damage))
         {
             SetMovementState(MovementState.DEAD);

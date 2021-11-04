@@ -36,3 +36,5 @@ So:
 - Check through code and tidy up project
 
 For future reference, can do event += () => thing. Here I don't think its clear + we need the SetMovementState anyway, but its cool.
+
+Can use abilities while dead

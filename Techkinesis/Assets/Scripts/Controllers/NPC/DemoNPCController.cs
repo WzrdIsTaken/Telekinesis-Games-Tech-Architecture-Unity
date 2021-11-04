@@ -138,5 +138,3 @@ public class DemoNPCController : MovementController, IProjectileInteraction
         }
     }
 }
-
-// TODO: Shield currently doesnt reduce damage

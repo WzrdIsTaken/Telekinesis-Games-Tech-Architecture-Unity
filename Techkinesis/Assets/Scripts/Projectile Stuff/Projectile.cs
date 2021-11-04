@@ -33,7 +33,6 @@ public class Projectile : MonoBehaviour
             IProjectileInteraction projectileInteraction = col.gameObject.GetComponent<IProjectileInteraction>();
             if (projectileInteraction != null)
             {
-
                 projectileInteraction.ProjectileCollision(damage);
             }
             else
