@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using UnityEngine.SceneManagement;
 
 // Manages the NPCs in the demo scene. Like the DemoNPCController, very rough / hacked together but only needed for the visual showcase
 
@@ -28,14 +27,6 @@ public class DemoSceneManager : MonoBehaviour
                 npcs[i].transform.position,
                 npcs[i].transform.rotation
             );
-        }
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(resetSceneKey))
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 

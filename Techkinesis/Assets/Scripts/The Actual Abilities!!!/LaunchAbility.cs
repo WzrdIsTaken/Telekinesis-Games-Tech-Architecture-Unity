@@ -222,7 +222,7 @@ public class LaunchAbility : MonoBehaviour
             float y = Mathf.SmoothStep(startPosition.y, launchPullPoint.transform.position.y, time / duration);
             float z = Mathf.SmoothStep(startPosition.z, launchPullPoint.transform.position.z, time / duration);
             heldObject.transform.position = Vector3.Lerp(startPosition, new Vector3(x, y, z), time / duration);
-            // heldObject.transform.position = Vector3.Lerp(startPosition, launchPullPoint.transform.position, time / duration); I don't know which is better! Not my job :D
+            // heldObject.transform.position = Vector3.Lerp(startPosition, launchPullPoint.transform.position, time / duration); I don't know which is better!
 
             time += Time.deltaTime;
             yield return null;

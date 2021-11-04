@@ -43,5 +43,6 @@ public class Projectile : MonoBehaviour
         }
 
         if (destroyOnCollision) Destroy(gameObject);
+        else Destroy(this);
     }
 }

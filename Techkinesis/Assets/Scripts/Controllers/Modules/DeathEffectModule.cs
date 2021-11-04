@@ -40,6 +40,9 @@ public class DeathEffectModule : MonoBehaviour
         float yForce = Random.Range(minVerticalForce, maxVerticalForce);
         float zForce = Random.Range(minHorizontalForce, maxHorizontalForce);
 
-        gO?.AddComponent<Rigidbody>().AddForce(xForce, yForce, zForce, ForceMode.Impulse);
+        Rigidbody rb = gO.GetComponent<Rigidbody>();
+        if (!rb) rb = gO.AddComponent<Rigidbody>();
+
+        rb.AddForce(xForce, yForce, zForce, ForceMode.Impulse);
     }
 }

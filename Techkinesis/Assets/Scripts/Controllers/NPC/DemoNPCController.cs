@@ -89,7 +89,7 @@ public class DemoNPCController : MovementController, IProjectileInteraction
                 projectile.GetComponent<Projectile>().Setup(playerLayer, damage, true);
 
                 projectile.transform.LookAt(shootPoint);
-                projectile.GetComponent<Rigidbody>().AddForce(Vector3.forward * bulletVelocity, ForceMode.Force);
+                projectile.GetComponent<Rigidbody>().AddForce(shootPoint.transform.forward * bulletVelocity, ForceMode.Force);
 
                 timer = 0;
             }

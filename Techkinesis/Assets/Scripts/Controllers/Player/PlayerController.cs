@@ -77,16 +77,20 @@ public class PlayerController : MovementController, IProjectileInteraction
     // Grab the current PlayerInputState and pass its values to the relevant methods depending on the movementState
     void Update()
     {
-        PlayerInputState inputState = inputProvider.GetState();
+        PlayerInputState inputState;
         
         switch (movementState)
         {
             case MovementState.GROUND:
+                inputState = inputProvider.GetState();
+
                 HandleGroundRotation(inputState);
                 HandleGroundMovement(inputState);
                 HandleGroundAnimation(inputState);
                 break;
             case MovementState.LEVITATION:
+                inputState = inputProvider.GetState();
+
                 levitationAbility.HandleLevitationRotation(inputState);
                 levitationAbility.HandleLevitationMovement(inputState);
                 levitationAbility.HandleLevitationAnimation(inputState);

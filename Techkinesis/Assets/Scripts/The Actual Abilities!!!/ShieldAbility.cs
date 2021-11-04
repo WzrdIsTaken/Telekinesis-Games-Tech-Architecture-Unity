@@ -262,7 +262,7 @@ public class ShieldAbility : MonoBehaviour
         for (int i = 0; i < amountOfDebris; i++)
         {
             Vector3 pointPosition = (Random.insideUnitSphere * shieldSize) + transform.position;
-            pointPosition.y = Random.Range(playerHeight / 2, playerHeight * 1.25f);
+            pointPosition.y = Random.Range(transform.position.y + playerHeight / 2, transform.position.y + playerHeight * 1.25f);
 
             shieldPoints[i].position = pointPosition;
         }
