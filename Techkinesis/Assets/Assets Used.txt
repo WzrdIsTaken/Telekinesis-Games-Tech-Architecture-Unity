@@ -1,5 +1,6 @@
 Images:
 	- Launchable Gizmo Image: https://www.shareicon.net/red-alphabet-letters-l-letter-846406
+	- Cuttable Gizmo Image: https://www.shareicon.net/letter-alphabet-letters-blue-c-846459
 
 Models:
 	- Character: https://github.com/SebLague/Blender-to-Unity-Character-Creation/tree/master/Blend%20files

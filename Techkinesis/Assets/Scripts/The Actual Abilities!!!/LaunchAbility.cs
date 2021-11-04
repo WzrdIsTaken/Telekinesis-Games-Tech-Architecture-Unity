@@ -113,10 +113,17 @@ public class LaunchAbility : MonoBehaviour
             return;
         }
 
-        // Hit an object that can be launched : Hit an object, but not once that can be launched so need to cut the mesh
+        // Hit an object that can be launched
         bool launchableObject = hit.collider.CompareTag(TagNameManager.LAUNCHABLE);
-        selectedObject = launchableObject ? hit.collider.gameObject.GetComponent<Rigidbody>()  
-                                          : MeshCutter.CutAndReturnRandomMesh(hit, minPulledObjectSize, maxPulledObjectSize, actuallyCutMesh);
+        if (launchableObject) 
+        {
+            selectedObject = hit.collider.gameObject.GetComponent<Rigidbody>();
+        }
+        // Hit an object, but not once that can be launched so need to cut the mesh
+        else if (hit.collider.CompareTag(TagNameManager.CUTTABLE))
+        {
+            selectedObject = MeshCutter.CutAndReturnRandomMesh(hit, minPulledObjectSize, maxPulledObjectSize, actuallyCutMesh);
+        }
 
         StartCoroutine(PullObject(selectedObject, !launchableObject));
 

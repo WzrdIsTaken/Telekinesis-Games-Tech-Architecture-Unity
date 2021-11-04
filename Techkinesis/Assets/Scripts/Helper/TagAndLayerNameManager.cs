@@ -3,6 +3,7 @@
 public static class TagNameManager
 {
     public static readonly string LAUNCHABLE = "Launchable";
+    public static readonly string CUTTABLE = "Cuttable";
 }
 
 public static class LayerNameManager

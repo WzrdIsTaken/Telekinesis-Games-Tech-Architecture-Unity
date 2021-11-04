@@ -31,7 +31,7 @@ So:
 - Hole cut shader / effect
 - Gizmos on lauchable objects DONE
 - Rocks have to deal damage DONE
-- Enemies have to deal damage
+- Enemies have to deal damage DONE 
 - Demo scene
 - Check through code and tidy up project
 

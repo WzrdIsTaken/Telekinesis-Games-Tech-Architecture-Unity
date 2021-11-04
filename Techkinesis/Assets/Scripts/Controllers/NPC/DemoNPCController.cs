@@ -139,4 +139,4 @@ public class DemoNPCController : MovementController, IProjectileInteraction
     }
 }
 
-// TODO: currently when you try to pull / shiled and enemy will get a null ref need to perfom layer check
+// TODO: Shield currently doesnt reduce damage

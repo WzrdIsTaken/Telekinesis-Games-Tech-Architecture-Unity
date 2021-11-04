@@ -218,9 +218,16 @@ public class ShieldAbility : MonoBehaviour
 
                 if (col)
                 {
-                    // Hit an object that can be launched : Hit an object, but not once that can be launched so need to cut the mesh
-                    debrisObj = col.CompareTag(TagNameManager.LAUNCHABLE) ? col.GetComponent<Rigidbody>() 
-                                                                                  : MeshCutter.CutAndReturnRandomMesh(hit, minRandomShieldObjectSize, maxRandomShieldObjectSize, actuallyCutMesh); 
+                    // Hit an object that can be launched
+                    if (col.CompareTag(TagNameManager.LAUNCHABLE))
+                    {
+                        debrisObj = col.GetComponent<Rigidbody>();
+                    }
+                    // Hit an object, but not once that can be launched so need to cut the mesh
+                    else if (col.CompareTag(TagNameManager.CUTTABLE))
+                    {
+                        debrisObj = MeshCutter.CutAndReturnRandomMesh(hit, minRandomShieldObjectSize, maxRandomShieldObjectSize, actuallyCutMesh);
+                    }
                 }
             }
 
