@@ -62,7 +62,7 @@ public abstract class AbilityBase : MonoBehaviour
                 break;
             case EnergyDrainType.CONTINUOUS:
                 energyModule.SetCanRegen(true);
-                StopCoroutine(UseEnergyContinuously());
+                StopCoroutine(useEnergyContinuously);
 
                 AbilityEnd();
                 break;
