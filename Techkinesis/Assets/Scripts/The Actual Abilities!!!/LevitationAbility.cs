@@ -5,28 +5,53 @@ using System.Collections;
 
 public class LevitationAbility : AbilityBase
 {
-    [Space]
-    [SerializeField] float levitationSpeed;    // How fast the player can fly on the x/y axis
-    [SerializeField] float upForce;            // How fast the player can move up
-    [SerializeField] float downForce;          // How fast the player can move down
+    #region Variables editable in the inspector (for a designer)
 
     [Space]
-    [SerializeField] float maxTilt;            // How far the player tilts forward when levitating
-    [SerializeField] float tiltSmoothTime;     // How long it takes from the player to go from upright to tilted
-    [SerializeField] float rotateSmoothTime;   // How long it takes the player to rotate 
+    [Tooltip("How fast the player can fly on the x/y axis")]
+    [SerializeField] float levitationSpeed;
+
+    [Tooltip("How fast the player can move up")]
+    [SerializeField] float upForce;
+
+    [Tooltip("How fast the player can move down")]
+    [SerializeField] float downForce;
 
     [Space]
-    [SerializeField] float minDrift;           // The minimum amount that the player will be buffeted around while levitating 
-    [SerializeField] float maxDrift;           // The maximum amount that the player will be buffeted around while levitating
-    [SerializeField] float minDriftTime;       // The minimum time that the player will move in a certain 'buffet direction'
-    [SerializeField] float maxDriftTime;       // The maximum time that the player will move in a certain 'buffet direction'
+    [Tooltip("How far the player tilts forward when levitating")]
+    [SerializeField] float maxTilt;
+
+    [Tooltip("How long it takes from the player to go from upright to tilted")]
+    [SerializeField] float tiltSmoothTime;
+
+    [Tooltip("How long it takes the player to rotate ")]
+    [SerializeField] float rotateSmoothTime;
 
     [Space]
-    [SerializeField] Vector3 startBoostForce;  // How much the player will boosted off the ground when they start levitating
+    [Tooltip("The minimum amount that the player will be buffeted around while levitating ")]
+    [SerializeField] float minDrift;
+
+    [Tooltip("The maximum amount that the player will be buffeted around while levitating")]
+    [SerializeField] float maxDrift;
+
+    [Tooltip("The minimum time that the player will move in a certain 'buffet direction'")]
+    [SerializeField] float minDriftTime;
+
+    [Tooltip("The maximum time that the player will move in a certain 'buffet direction'")]
+    [SerializeField] float maxDriftTime;
 
     [Space]
-    [SerializeField] float levitatingFov;      // The cameras FoV when levitating
-    [SerializeField] float levitatingFovChangeTime; // How long it will take the cameras FoV to change when the player starts / stops levitating
+    [Tooltip("How much the player will boosted off the ground when they start levitating")]
+    [SerializeField] Vector3 startBoostForce;
+
+    [Space]
+    [Tooltip("The cameras FoV when levitating")]
+    [SerializeField] float levitatingFov;
+
+    [Tooltip("How long it will take the cameras FoV to change when the player starts / stops levitating")]
+    [SerializeField] float levitatingFovChangeTime;
+
+    #endregion
 
     ThirdPersonCamera cam;
     PlayerController playerController;

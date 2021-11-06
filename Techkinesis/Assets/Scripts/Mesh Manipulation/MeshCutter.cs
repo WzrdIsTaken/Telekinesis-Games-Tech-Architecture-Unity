@@ -66,6 +66,7 @@ public static class MeshCutter
         composite.AddComponent<MeshFilter>().sharedMesh = result.Mesh;
         composite.AddComponent<MeshRenderer>().sharedMaterials = left.GetComponent<MeshRenderer>().sharedMaterials;  // result.Materials.ToArray();
         composite.AddComponent<MeshCollider>();
+        composite.tag = TagNameManager.CUTTABLE;
 
         GenerateBarycentric(composite);
 

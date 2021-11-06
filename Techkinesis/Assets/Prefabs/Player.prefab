@@ -1927,7 +1927,7 @@ MonoBehaviour:
   maxPulledObjectSize: 0.11
   minBreakTime: 0.1
   maxBreakTime: 0.25
-  actuallyCutMesh: 0
+  actuallyCutMesh: 1
   minPullSpeed: 50
   maxPullSpeed: 60
   minFloatUpDistance: 1.5

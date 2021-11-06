@@ -131,7 +131,7 @@ public class LaunchAbility : AbilityBase
 
         // Hit an object that can be launched
         bool launchableObject = hit.collider.CompareTag(TagNameManager.LAUNCHABLE);
-        if (launchableObject) 
+        if (launchableObject)
         {
             selectedObject = hit.collider.gameObject.GetComponent<Rigidbody>();
         }
@@ -140,7 +140,7 @@ public class LaunchAbility : AbilityBase
         {
             selectedObject = MeshCutter.CutAndReturnRandomMesh(hit, minPulledObjectSize, maxPulledObjectSize, actuallyCutMesh);
         }
-         
+        
         StartCoroutine(PullObject(selectedObject, !launchableObject));
 
         DebugLogManager.Print("Launch pull active! Would make a cool sound or something.", DebugLogManager.OutputType.NOT_MY_JOB);
