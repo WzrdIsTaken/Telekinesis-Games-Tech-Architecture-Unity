@@ -199,7 +199,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Energy: 100/100'
+  m_text: 'Energy: 300/300'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1799,6 +1799,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 100
+  energy: 300
+  energyRegenRate: 1
   mass: -12
   inputProvider: {fileID: 11400000, guid: 9813155af66caba4cab179d075da0cb7, type: 2}
   cam: {fileID: 8594199898484827962}
@@ -1820,8 +1822,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6577607023f34d64496cb35390d9e713, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  demoHealthText: {fileID: 0}
-  demoEnergyText: {fileID: 0}
+  demoHealthText: {fileID: 329945712}
+  demoEnergyText: {fileID: 524151925}
 --- !u!114 &8594199899995140313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1834,6 +1836,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fa6319049fe42c4a993511e208fa7cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  energyDrainType: 1
+  energyCost: 3
   levitationSpeed: 500
   upForce: 450
   downForce: -200
@@ -1859,6 +1863,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23fc1da782a97d44e94855df4f594199, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  energyDrainType: 0
+  energyCost: 50
   shieldCollider: {fileID: 8594199899747465347}
   damageReduction: 0.75
   shieldPullInteractionMask:
@@ -1895,6 +1901,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4991c51201a87e848b734dd58ef49cd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  energyDrainType: 0
+  energyCost: 10
   launchPullPoint: {fileID: 8594199899084129852}
   launchPullInteractionMask:
     serializedVersion: 2
