@@ -1884,7 +1884,7 @@ MonoBehaviour:
   damageReduction: 0.75
   shieldPullInteractionMask:
     serializedVersion: 2
-    m_Bits: 183
+    m_Bits: 55
   shieldPullRange: 5
   launchableBias: 0.5
   shieldFormTime: 0.5
@@ -1921,7 +1921,7 @@ MonoBehaviour:
   launchPullPoint: {fileID: 8594199899084129852}
   launchPullInteractionMask:
     serializedVersion: 2
-    m_Bits: 183
+    m_Bits: 55
   launchRaycastRange: 100
   minPulledObjectSize: 0.11
   maxPulledObjectSize: 0.11

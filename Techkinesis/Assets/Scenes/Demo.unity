@@ -413,10 +413,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8594199899995140317, guid: 5485747fc026dff47a67b265f5831b79, type: 3}
-      propertyPath: launchPullInteractionMask.m_Bits
-      value: 183
-      objectReference: {fileID: 0}
     - target: {fileID: 8900751786762390932, guid: 5485747fc026dff47a67b265f5831b79, type: 3}
       propertyPath: m_Name
       value: Player
@@ -639,7 +635,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3f415e6705e2c040823ea33561a21d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawCustomGizmos: 0
+  drawCustomGizmos: 1
   gizmoIcons:
   - tag: Launchable
     fileName: LaunchableIcon.png
@@ -2104,7 +2100,7 @@ MonoBehaviour:
   crosshair: {fileID: 1617353700}
   lockCursor: 1
   crosshairColour: {r: 0.7755809, g: 0, b: 1, a: 1}
-  outputDebugMessages: 0
+  outputDebugMessages: 1
 --- !u!114 &2082314629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2118,7 +2114,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   npcRespawnTime: 3
-  resetSceneKey: 112
 --- !u!4 &2082314630
 Transform:
   m_ObjectHideFlags: 0

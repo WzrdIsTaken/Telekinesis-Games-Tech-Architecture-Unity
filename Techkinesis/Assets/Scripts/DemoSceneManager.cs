@@ -5,12 +5,8 @@ using System.Collections;
 
 public class DemoSceneManager : MonoBehaviour
 {
-    [Header("NPC")]
     [Tooltip("How long it takes for an NPC to respawn")]
     [SerializeField] float npcRespawnTime;
-
-    [Header("Scene")]
-    [SerializeField] KeyCode resetSceneKey;
 
     NPCInfomation[] npcInfomation;
 
