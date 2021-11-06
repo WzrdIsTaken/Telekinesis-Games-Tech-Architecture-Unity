@@ -66,8 +66,8 @@ public class LaunchAbility : AbilityBase
     [SerializeField] float maxHoverTime;
 
     [Space]
-    [Tooltip("Will the held object use a spring joint to simulate its movement?" +
-             "Note - will really bug out when levitating")]  // See PullObjectToPlayer()
+    [Tooltip("Will the held object use a spring joint to simulate its movement? " +
+             "Note - Cool effect but will really bug out when levitating")]  // See PullObjectToPlayer()
     [SerializeField] bool useSpringJoint = false;
 
     [Tooltip("How fast a held object will 'wobble' in the air (only used while levitating)")]
