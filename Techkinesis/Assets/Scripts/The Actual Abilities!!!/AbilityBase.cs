@@ -94,3 +94,10 @@ public abstract class AbilityBase : MonoBehaviour
         }
     }
 }
+
+/* 
+    NOTE / TODO:
+    There is a bug where if you have 0 energy and holding the shield, if you press any other ability then SetCanRegen will be called again with (true)
+    so energy will begin to regenerate again. So if these scripts are ever used again for anything other than inspiration, then that will need to be fixed.
+    However right now I can't (be asked to..) think of a nice way to fix it and it will probably never happen so :))
+*/

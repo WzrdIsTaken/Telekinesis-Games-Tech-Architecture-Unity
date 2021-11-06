@@ -17,7 +17,7 @@ WOULD BE NICE
 - Could prevent it on the floor with just a tag check. Floor could be dense concrete / steel and you can't pull it?
 - Yeah dude not doing this its a complete rabit hole
 
-- Have git dependencies (Unity Mesh Simplifier) - might need to solve this? ngl which lecturer doesn't have git, but maybe idk. Ask Simon
+- Have git dependencies (Unity Mesh Simplifier) - might need to solve this? ngl what kind of computer science lecturer doesn't have git, but maybe idk. Ask Simon
 
 IMPORTANT
 - shield / launch effect kinda bug out with levitating
@@ -34,6 +34,8 @@ So:
 - Enemies have to deal damage DONE 
 - UI DONE
 - Demo scene DONE
-- Check through code and tidy up project
+- Check through code and tidy up project DONE
 
 For future reference, can do event += () => thing. Here I don't think its clear + we need the SetMovementState anyway, but its cool.
+
+lets go dude

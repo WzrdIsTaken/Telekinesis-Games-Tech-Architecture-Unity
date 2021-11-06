@@ -26,7 +26,7 @@ public static class MeshCutoutCreator
 
         MeshCutoutSettings meshCutoutSettings = ScriptableObject.CreateInstance<MeshCutoutSettings>();
         meshCutoutSettings.meshRadius = 1 * force;        // Mesh radius
-        meshCutoutSettings.meshQualityReduction = 0.9f;   // Mesh quality reduction 
+        meshCutoutSettings.meshQualityReduction = 0.9f;   // Mesh quality reduction (1 = more reduction)
         meshCutoutSettings.noiseLayers = new MeshCutoutSettings.NoiseLayer[]
         {
             new MeshCutoutSettings.NoiseLayer

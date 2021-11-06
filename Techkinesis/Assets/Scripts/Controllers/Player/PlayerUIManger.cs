@@ -1,6 +1,5 @@
 using UnityEngine;
 using TMPro;
-using System.Collections;
 
 // Handles all player UI stuff!
 // (well, apart from the crosshair.. why? because the crosshair is easier to find / adjust in SettingsManager and imo its colour is more of a 'setting') 
