@@ -31,7 +31,9 @@ public class LevitationAbility : AbilityBase
     ThirdPersonCamera cam;
     PlayerController playerController;
     Animator animator;
+
     Rigidbody rb;
+    CapsuleCollider col;
 
     Vector3 levitationForce;
     Vector3 driftForce;
@@ -39,11 +41,13 @@ public class LevitationAbility : AbilityBase
 
     float startCameraFov;
 
-    // Grab the rigid body and disable collisions because these are already handled by the character controller
+    // Grab the rigidbody and collider components
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.detectCollisions = false;
+        col = GetComponent<CapsuleCollider>();
+
+        col.enabled = false;
     }
 
     // Pass LevitationAbility various references that are already 'got' in PlayerController
@@ -60,7 +64,7 @@ public class LevitationAbility : AbilityBase
     protected override void AbilityStart()
     {
         playerController.SetMovementState(PlayerController.MovementState.LEVITATION);
-        rb.isKinematic = false;
+        col.enabled = true;
         rb.AddForce(startBoostForce, ForceMode.Force);
         
         cam.ChangeCameraFov(levitatingFov, levitatingFovChangeTime);
@@ -74,7 +78,7 @@ public class LevitationAbility : AbilityBase
     protected override void AbilityEnd()
     {
         playerController.SetMovementState(PlayerController.MovementState.GROUND);
-        rb.isKinematic = true;
+        col.enabled = false;
 
         StopAllCoroutines();
 
@@ -141,8 +145,8 @@ public class LevitationAbility : AbilityBase
         if (inputState.levitationVerticalState == PlayerInputState.LevitationVerticalState.UP) yForce = upForce;                    
         else if (inputState.levitationVerticalState == PlayerInputState.LevitationVerticalState.DOWN) yForce = downForce;
 
-        // Because the player leans forward when moving, we need to add a bit of force because we are using AddRelativeForce.
-        // Will (maybe) think of a better solution later. 8.815 is just a random number that I got after a few guesses that seems to work well xd.
+        // Because the player leans forward when moving, we need to add a bit of force because we are using AddRelativeForce
+        // Will (maybe) think of a better solution later. 8.815 is just a random number that I got after a few guesses that seems to work well xd
         if (Mathf.Abs(xForce) > 0 || Mathf.Abs(zForce) > 0) yForce += maxTilt * 8.815f;  
 
         levitationForce = new Vector3(xForce, yForce, zForce);

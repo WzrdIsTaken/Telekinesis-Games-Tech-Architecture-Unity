@@ -140,7 +140,7 @@ public class LaunchAbility : AbilityBase
         {
             selectedObject = MeshCutter.CutAndReturnRandomMesh(hit, minPulledObjectSize, maxPulledObjectSize, actuallyCutMesh);
         }
-
+         
         StartCoroutine(PullObject(selectedObject, !launchableObject));
 
         DebugLogManager.Print("Launch pull active! Would make a cool sound or something.", DebugLogManager.OutputType.NOT_MY_JOB);

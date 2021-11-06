@@ -30,13 +30,14 @@ public abstract class AbilityBase : MonoBehaviour
                 if (energyModule.UseEnergy(energyCost))
                 {
                     AbilityStart();
+                    energyModule.SetCanRegen(false);
                 }
                 break;
             case EnergyDrainType.CONTINUOUS:
                 if (energyModule.GetEnergy() >= energyCost)
                 {
-                    energyModule.SetCanRegen(false);
                     useEnergyContinuously = StartCoroutine(UseEnergyContinuously());
+                    energyModule.SetCanRegen(false);
 
                     AbilityStart();
                 }
@@ -58,18 +59,20 @@ public abstract class AbilityBase : MonoBehaviour
         switch (energyDrainType)
         {
             case EnergyDrainType.INSTANT:
-                AbilityEnd();
                 break;
             case EnergyDrainType.CONTINUOUS:
-                energyModule.SetCanRegen(true);
-                StopCoroutine(useEnergyContinuously);
-
-                AbilityEnd();
+                if (useEnergyContinuously != null) 
+                {
+                    StopCoroutine(useEnergyContinuously);
+                }
                 break;
             default:
                 Debug.LogError("Yeah dude I have no idea how you got in this position xd");
                 break;
         }
+
+        energyModule.SetCanRegen(true);
+        AbilityEnd();
     }
 
     // Inherited in the ability and called if the condition required in DoAbilityEnd is met
