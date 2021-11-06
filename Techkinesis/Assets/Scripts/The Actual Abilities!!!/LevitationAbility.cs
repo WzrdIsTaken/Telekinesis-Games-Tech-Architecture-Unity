@@ -129,7 +129,7 @@ public class LevitationAbility : AbilityBase
         if (inputState.movementDirection != Vector2.zero)
         {
             float targetYRotation = Mathf.Atan2(inputState.movementDirection.x, inputState.movementDirection.y) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
-            yRot = Mathf.SmoothDamp(transform.eulerAngles.y, targetYRotation, ref tiltVelocity.y, rotateSmoothTime);
+            yRot = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetYRotation, ref tiltVelocity.y, rotateSmoothTime);
         }
             
         transform.eulerAngles = new Vector3(xRot, yRot, transform.eulerAngles.z);
