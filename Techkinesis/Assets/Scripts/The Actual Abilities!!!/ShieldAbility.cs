@@ -5,12 +5,13 @@ using System.Linq;
 
 // Forms a shield infront of the player
 
-public class ShieldAbility : MonoBehaviour
+public class ShieldAbility : AbilityBase
 {
     public System.Action<int> TakeDamage;  // Used in PlayerController
 
     #region Variables editable in the inspector (for a designer)
 
+    [Space]
     [Tooltip("The ShieldCollider gameobject")]
     [SerializeField] ShieldCollider shieldCollider;
 
@@ -111,13 +112,13 @@ public class ShieldAbility : MonoBehaviour
     }
 
     // Start the shield creation. Called from an event hooked up in PlayerController Start
-    public void ShieldStart()
+    protected override void AbilityStart()
     {
         StartCoroutine(FormShield());
     }
 
     // Stop the shield. Called from an event hooked up in PlayerController Start
-    public void ShieldEnd()
+    protected override void AbilityEnd()
     {
         StopAllCoroutines();
 
@@ -127,6 +128,7 @@ public class ShieldAbility : MonoBehaviour
 
             obj.detectCollisions = true;
             obj.useGravity = true;
+            obj.isKinematic = false;
         }
         shieldObjects.Clear();
 
@@ -236,6 +238,7 @@ public class ShieldAbility : MonoBehaviour
             {
                 debrisObj.detectCollisions = false;
                 debrisObj.useGravity = false;
+                debrisObj.isKinematic = true;
 
                 debris.Add(debrisObj);
             }
@@ -281,7 +284,7 @@ public class ShieldAbility : MonoBehaviour
         if (shieldObjects.Count == 0) return false;
 
         List<Rigidbody> objectsInShield = new List<Rigidbody>(shieldObjects);
-        ShieldEnd();
+        DoAbilityEnd();
 
         foreach (Rigidbody obj in objectsInShield)
         {

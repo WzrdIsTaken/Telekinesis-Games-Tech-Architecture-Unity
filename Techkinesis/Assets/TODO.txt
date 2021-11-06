@@ -12,7 +12,7 @@ RIGHT NOW:
 - gizmos to allow designer to see whats lauchable
 
 WOULD BE NICE
-- Optimise the cutting of mesh - this tutorial could be used to help create some 'holes' where the rocks are pulled out https://www.youtube.com/watch?v=IuP1fUPdxbo&list=PLPAgqhxd1Ib1YYqYnZioGyrSUzOwead17&index=11
+- Optimise the cutting of mesh
 - Catch stack overflow 
 - Could prevent it on the floor with just a tag check. Floor could be dense concrete / steel and you can't pull it?
 - Yeah dude not doing this its a complete rabit hole
@@ -27,14 +27,13 @@ IMPORTANT
 
 So:
 - Levitation optimisation
-- Shield / launch effect bugging out with levitation
-- Hole cut shader / effect
+- Shield / launch effect bugging out with levitation FIXED (badly)
+- Hole cut shader / effect CBA
 - Gizmos on lauchable objects DONE
 - Rocks have to deal damage DONE
 - Enemies have to deal damage DONE 
-- Demo scene
+- UI DONE
+- Demo scene DONE
 - Check through code and tidy up project
 
 For future reference, can do event += () => thing. Here I don't think its clear + we need the SetMovementState anyway, but its cool.
-
-Can use abilities while dead

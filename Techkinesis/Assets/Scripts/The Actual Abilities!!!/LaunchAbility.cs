@@ -3,14 +3,14 @@ using System.Collections;
 
 // Pulls and launches and rock or object
 
-public class LaunchAbility : MonoBehaviour
+public class LaunchAbility : AbilityBase
 {
     #region Variables editable in the inspector (for a designer)
 
+    [Space]
     [Tooltip("The point to which the object is drawn towards")]
     [SerializeField] SpringJoint launchPullPoint;
 
-    [Space]
     [Tooltip("What layers of objects can be pulled")]
     [SerializeField] LayerMask launchPullInteractionMask;
 
@@ -66,6 +66,22 @@ public class LaunchAbility : MonoBehaviour
     [SerializeField] float maxHoverTime;
 
     [Space]
+    [Tooltip("Will the held object use a spring joint to simulate its movement?")]  // See PullObjectToPlayer()
+    [SerializeField] bool useSpringJoint = false;
+
+    [Tooltip("How fast a held object will 'wobble' in the air (only used while levitating)")]
+    [SerializeField] float wobblePosSpeed;
+
+    [Tooltip("The maximum amount a held object can wobble (only used while levitating)")]
+    [SerializeField] float wobblePosAmount;
+
+    [Tooltip("How fast a held object will rotate in the air (only used while levitating)")]
+    [SerializeField] float wobbleRotSpeed;
+
+    [Tooltip("The max amount a held object can rotate (only used while levitating)")]
+    [SerializeField] float wobbleRotAmount;
+
+    [Space]
     [Tooltip("What layers launched objects will perfom special interactions with (eg: damaging enemies)")]
     [SerializeField] LayerMask launchLaunchInteractionMask;
 
@@ -93,7 +109,7 @@ public class LaunchAbility : MonoBehaviour
     }
 
     // Grab an object to be launched
-    public void LaunchStart()
+    protected override void AbilityStart()
     {
         // If the player is holding objects in their shield, then we want to throw those objects instead 
         if (shieldAbility.LaunchShieldObjects(cam.transform.forward)) 
@@ -131,7 +147,7 @@ public class LaunchAbility : MonoBehaviour
     }
 
     // Reset the launch system / the pulled object and launch it using throwForce
-    public void LaunchEnd()
+    protected override void AbilityEnd()
     {
         if (!heldObject) return;
 
@@ -143,8 +159,9 @@ public class LaunchAbility : MonoBehaviour
 
         float launchForce = Random.Range(minLaunchForce, maxLaunchForce);
         int damage = ProjectileManager.CalculateProjectileDamage(heldObject.mass, launchForce, damageMultiplier);
-
         ProjectileManager.SetupProjectile(heldObject.gameObject, launchLaunchInteractionMask, damage, false);
+
+        if (!useSpringJoint) heldObject.isKinematic = false;
         heldObject.velocity = cam.transform.forward * launchForce;
 
         heldObject = null;
@@ -229,16 +246,43 @@ public class LaunchAbility : MonoBehaviour
         }
 
         heldObject.transform.position = launchPullPoint.transform.position;
-
         heldObject.transform.parent = launchPullPoint.transform;
-        launchPullPoint.connectedBody = heldObject;
+
+        /* Ok so here's the thing: Spring joint does not play nice with the levitation stuff because it uses rigidbody movement (at least I think thats the problem..)
+           I really need to move onto other assignments, so my not-very-good-because-im-well-tired solution is just to allow the designer to disable the spring joint movement.
+           With more time I think I could:
+            - 1) Understand why the problem is really happening. If I was better at math I probally could use cap the springs max distance / velocity in a nice way
+            - 2) If rigidbodies really are the problem rewrite the LevitationAbility to use transform movement instead and just mimic forces 'well enough'
+            - 3) Have a nice system for transitioning between spring and sine wave movment
+        */
+
+        if (!useSpringJoint)
+        {
+            heldObject.isKinematic = true;
+            StartCoroutine(MakeObjectWobble());
+        }
+        else
+        {
+            launchPullPoint.connectedBody = heldObject;
+        }
     }
 
     // The downside with using lerp is that whatever the distance, the time of travel is the same. Therefore, we need to change the lerp time to take distance into account 
     float CalculatePulledObjectLerpTime()
     {
         float distance = Vector3.Distance(heldObject.transform.position, launchPullPoint.transform.position);
-        return distance / Random.Range(minPullSpeed, maxPullSpeed);
+        return Mathf.Max(0.1f, distance / Random.Range(minPullSpeed, maxPullSpeed));
+    }
+
+    // Make the object wobble around in the air once it has reached launchPullPoint using a sine wave
+    IEnumerator MakeObjectWobble()
+    {
+        while (true)
+        {
+            ObjectBob.SineWaveBob(heldObject.gameObject, transform, wobblePosSpeed, wobblePosAmount, wobbleRotSpeed, wobbleRotAmount);
+
+            yield return null;
+        }
     }
 }
 
@@ -259,18 +303,6 @@ public class LaunchAbility : MonoBehaviour
 
     [Tooltip("The maximum velocity which an object can be pulled")]
     [SerializeField] float pulledObjectMaxVelocity;
-
-    [Tooltip("How fast a held object will 'wobble' in the air")]
-    [SerializeField] float wobblePosSpeed;
-
-    [Tooltip("The maximum amount a held object can wobble")]
-    [SerializeField] float wobblePosAmount;
-
-    [Tooltip("How fast a held object will rotate in the air")]
-    [SerializeField] float wobbleRotSpeed;
-
-    [Tooltip("The max amount a held object can rotate")]
-    [SerializeField] float wobbleRotAmount;
 
     // Pull the object towards launchPullPoint
     IEnumerator PullObjectToPlayer()
@@ -306,19 +338,6 @@ public class LaunchAbility : MonoBehaviour
             {
                 heldObject.velocity = pullDirection.normalized * pulledObjectMaxVelocity;
             }
-
-            yield return null;
-        }
-    }
-
-    // Make the object wobble around in the air once it has reached launchPullPoint. Combination of a spring joint and sin wave
-    IEnumerator MakeObjectWobble()
-    {
-        launchPullPoint.connectedBody = heldObject;
-
-        while (true)
-        {
-            ObjectBob.SineWaveBob(heldObject.gameObject, transform, wobblePosSpeed, wobblePosAmount, wobbleRotSpeed, wobbleRotAmount);
 
             yield return null;
         }

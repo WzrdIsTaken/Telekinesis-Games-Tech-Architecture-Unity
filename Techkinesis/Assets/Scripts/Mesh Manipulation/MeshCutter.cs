@@ -31,7 +31,9 @@ public static class MeshCutter
         }
         else
         {
-            DebugLogManager.Print("TODO: Cool mesh breaking shader magic would go here!", DebugLogManager.OutputType.TODO);
+            DebugLogManager.Print("TODO: Cool mesh breaking shader magic / particles would go here! " +
+                                  "But.. if someone good at this sort of stuff wanted to do it then the position to create the effect is " + hit.point
+                                  + " :))", DebugLogManager.OutputType.HALF_TODO_HALF_NOT_MY_JOB);
         }
 
         return randomMesh;

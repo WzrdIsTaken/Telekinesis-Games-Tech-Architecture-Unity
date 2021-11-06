@@ -41,6 +41,8 @@ public class PlayerController : MovementController, IProjectileInteraction
     LaunchAbility launchAbility;
     LevitationAbility levitationAbility;
 
+    PlayerUIManger playerUIManger;
+
     float speedSmoothVelocity;
     float currentSpeed;
     float velocityY;
@@ -53,22 +55,26 @@ public class PlayerController : MovementController, IProjectileInteraction
     public override void Start()
     {
         // CharacterController and Animator references grabbed here
-        base.Start();  
+        base.Start();
 
         // Grab the ability components and set them up 
-        shieldAbility = GetComponent<ShieldAbility>();                          shieldAbility.PassReferences(controller);
-        launchAbility = GetComponent<LaunchAbility>();                          launchAbility.PassReferences(cam, shieldAbility);
-        levitationAbility = GetComponent<LevitationAbility>();                  levitationAbility.PassReferences(cam, this, animator);
+        shieldAbility = GetComponent<ShieldAbility>();           shieldAbility.PassReferences(controller);                shieldAbility.Setup(energyModule);
+        launchAbility = GetComponent<LaunchAbility>();           launchAbility.PassReferences(cam, shieldAbility);        launchAbility.Setup(energyModule);
+        levitationAbility = GetComponent<LevitationAbility>();   levitationAbility.PassReferences(cam, this, animator);   levitationAbility.Setup(energyModule);
 
         // Hook up the events
         inputProvider.OnJump += Jump;
         inputProvider.OnSwitchCameraSide += cam.GetComponent<ThirdPersonCamera>().SwitchCameraSide;
 
-        inputProvider.OnLaunchStart += launchAbility.LaunchStart;               inputProvider.OnLaunchEnd += launchAbility.LaunchEnd;
-        inputProvider.OnShieldStart += shieldAbility.ShieldStart;               inputProvider.OnShieldEnd += shieldAbility.ShieldEnd;
-        inputProvider.OnLevitationStart += levitationAbility.LevitationStart;   inputProvider.OnLevitationEnd += levitationAbility.LevitationEnd;
+        inputProvider.OnLaunchStart += launchAbility.DoAbilityStart;           inputProvider.OnLaunchEnd += launchAbility.DoAbilityEnd;
+        inputProvider.OnShieldStart += shieldAbility.DoAbilityStart;           inputProvider.OnShieldEnd += shieldAbility.DoAbilityEnd;
+        inputProvider.OnLevitationStart += levitationAbility.DoAbilityStart;   inputProvider.OnLevitationEnd += levitationAbility.DoAbilityEnd;
 
         shieldAbility.TakeDamage += TakeDamage;
+
+        // Setup UI
+        playerUIManger = GetComponent<PlayerUIManger>();
+        playerUIManger.Setup(healthModule, energyModule);
 
         // Set the first movement state
         movementState = MovementState.GROUND;

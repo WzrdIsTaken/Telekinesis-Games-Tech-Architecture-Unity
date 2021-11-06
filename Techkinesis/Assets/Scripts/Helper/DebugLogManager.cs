@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class DebugLogManager
 {
-    public enum OutputType { NOT_MY_JOB, TODO };
+    public enum OutputType { NOT_MY_JOB, HALF_TODO_HALF_NOT_MY_JOB };
 
     static bool outputMessages;
 
@@ -18,7 +18,7 @@ public static class DebugLogManager
             case OutputType.NOT_MY_JOB:
                 PrintMessage(content, ColorUtility.ToHtmlStringRGBA(Color.cyan));
                 break;
-            case OutputType.TODO:
+            case OutputType.HALF_TODO_HALF_NOT_MY_JOB:
                 PrintMessage(content, ColorUtility.ToHtmlStringRGBA(Color.yellow));
                 break;
             default:

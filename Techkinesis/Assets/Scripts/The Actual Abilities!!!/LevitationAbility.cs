@@ -3,8 +3,9 @@ using System.Collections;
 
 // Allows the player to fly
 
-public class LevitationAbility : MonoBehaviour
+public class LevitationAbility : AbilityBase
 {
+    [Space]
     [SerializeField] float levitationSpeed;    // How fast the player can fly on the x/y axis
     [SerializeField] float upForce;            // How fast the player can move up
     [SerializeField] float downForce;          // How fast the player can move down
@@ -56,12 +57,12 @@ public class LevitationAbility : MonoBehaviour
     }
 
     // Start levitating. Called from an event hooked up in PlayerController Start
-    public void LevitationStart()
+    protected override void AbilityStart()
     {
         playerController.SetMovementState(PlayerController.MovementState.LEVITATION);
         rb.isKinematic = false;
         rb.AddForce(startBoostForce, ForceMode.Force);
-
+        
         cam.ChangeCameraFov(levitatingFov, levitatingFovChangeTime);
         StartCoroutine(Levitate());
         StartCoroutine(Drift());
@@ -70,7 +71,7 @@ public class LevitationAbility : MonoBehaviour
     }
 
     // Stop levitating. Called from an event hooked up in PlayerController Start
-    public void LevitationEnd()
+    protected override void AbilityEnd()
     {
         playerController.SetMovementState(PlayerController.MovementState.GROUND);
         rb.isKinematic = true;
