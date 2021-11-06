@@ -4,7 +4,7 @@ using System;
 
 public class HealthModule
 {
-    public Action UpdateHealthUI;
+    public Action UpdateHealthUI;  // Used in PlayerUIManager
 
     int currentHealth;
     readonly int MAX_HEALTH;

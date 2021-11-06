@@ -16,7 +16,7 @@ public class PlayerUIManger : MonoBehaviour
     HealthModule playerHealthModule;
     EnergyModule playerEnergyModule;
 
-    // Receive the playerHealthModule from PlayerController and set the starting text values
+    // Receive the playerHealthModule from PlayerController, set the starting text values and hook up the events
     public void Setup(HealthModule _playerHealthModule, EnergyModule _playerEnergyModule)
     {
         playerHealthModule = _playerHealthModule;

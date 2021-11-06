@@ -6,7 +6,7 @@ using System.Collections;
 
 public class EnergyModule
 {
-    public Action UpdateEnergyUI;
+    public Action UpdateEnergyUI;  // Used in PlayerUIManager
 
     int currentEnergy;
     readonly int MAX_ENERGY;
