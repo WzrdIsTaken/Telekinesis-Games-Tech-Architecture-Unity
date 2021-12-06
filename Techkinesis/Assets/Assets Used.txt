@@ -9,3 +9,4 @@ Models:
 Code:
 	- CSG Library: https://github.com/karl-/pb_CSG (for the actual operations)
 	- Mesh Simplification Library: https://github.com/Whinarn/UnityMeshSimplifier (so holes remained holelike with my bad algorithm)
+	- Planet Generation: https://github.com/SebLague/Procedural-Planets (base for my sphere cutout generation)

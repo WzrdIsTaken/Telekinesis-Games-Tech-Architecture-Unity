@@ -1813,18 +1813,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b9f36bdb805c754caf5647def9f072c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 100
-  energy: 300
-  energyRegenRate: 0.1
-  mass: -12
-  inputProvider: {fileID: 11400000, guid: 9813155af66caba4cab179d075da0cb7, type: 2}
+  controllerData: {fileID: 11400000, guid: b98f7665e2327b040afc30d288629df0, type: 2}
   cam: {fileID: 8594199898484827962}
-  speedSmoothTime: 0.1
-  turnSmoothTime: 0.2
-  walkSpeed: 2
-  runSpeed: 6
-  jumpHeight: 1
-  airControlPercent: 0.5
 --- !u!114 &2574220102006887709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1851,21 +1841,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fa6319049fe42c4a993511e208fa7cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  energyDrainType: 1
-  energyCost: 3
-  levitationSpeed: 500
-  upForce: 450
-  downForce: -200
-  maxTilt: 10
-  tiltSmoothTime: 0.1
-  rotateSmoothTime: 0.5
-  minDrift: -100
-  maxDrift: 100
-  minDriftTime: 0.1
-  maxDriftTime: 0.25
-  startBoostForce: {x: 0, y: 3000, z: 0}
-  levitatingFov: 80
-  levitatingFovChangeTime: 0.25
+  abilityData: {fileID: 11400000, guid: 80cb36849c257b4439933c12dea9e740, type: 2}
 --- !u!114 &8594199899995140316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1878,32 +1854,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23fc1da782a97d44e94855df4f594199, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  energyDrainType: 0
-  energyCost: 50
+  abilityData: {fileID: 11400000, guid: c733199786ea20f499fd5bbea7095e75, type: 2}
   shieldCollider: {fileID: 8594199899747465347}
-  damageReduction: 0.75
-  shieldPullInteractionMask:
-    serializedVersion: 2
-    m_Bits: 55
-  shieldPullRange: 5
-  launchableBias: 0.5
-  shieldFormTime: 0.5
-  shieldSize: 3
-  minShieldObjects: 15
-  maxShieldObjects: 20
-  minRandomShieldObjectSize: 0.05
-  maxRandomShieldObjectSize: 0.11
-  actuallyCutMesh: 0
-  wobblePosSpeed: 2
-  wobblePosAmount: 0.05
-  wobbleRotSpeed: 2
-  wobbleRotAmount: 2
-  shieldLaunchInteractionMask:
-    serializedVersion: 2
-    m_Bits: 128
-  minShieldObjectLaunchForce: 800
-  maxShieldObjectLaunchForce: 900
-  damageMultiplier: 0.6
 --- !u!114 &8594199899995140317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1916,39 +1868,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4991c51201a87e848b734dd58ef49cd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  energyDrainType: 0
-  energyCost: 10
+  abilityData: {fileID: 11400000, guid: d8661b5c1ed1fe24b8d2a95d481701c0, type: 2}
   launchPullPoint: {fileID: 8594199899084129852}
-  launchPullInteractionMask:
-    serializedVersion: 2
-    m_Bits: 55
-  launchRaycastRange: 100
-  minPulledObjectSize: 0.11
-  maxPulledObjectSize: 0.11
-  minBreakTime: 0.1
-  maxBreakTime: 0.25
-  actuallyCutMesh: 1
-  minPullSpeed: 50
-  maxPullSpeed: 60
-  minFloatUpDistance: 1.5
-  maxFloatUpDistance: 2
-  minFloatUpRotation: -30
-  maxFloatUpRotation: 30
-  minFloatUpTime: 0.15
-  maxFloatUpTime: 0.4
-  minHoverTime: 0.25
-  maxHoverTime: 0.5
-  useSpringJoint: 0
-  wobblePosSpeed: 2
-  wobblePosAmount: 0.05
-  wobbleRotSpeed: 2
-  wobbleRotAmount: 2
-  launchLaunchInteractionMask:
-    serializedVersion: 2
-    m_Bits: 128
-  minLaunchForce: 19
-  maxLaunchForce: 20
-  damageMultiplier: 10
 --- !u!114 &8900751786762390934
 MonoBehaviour:
   m_ObjectHideFlags: 0

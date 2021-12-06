@@ -4,20 +4,10 @@ using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CharacterController))]
-public abstract class MovementController : MonoBehaviour, IProjectileInteraction
+public abstract class MovementController<T> : MonoBehaviour, IProjectileInteraction where T: ControllerDataBase
 {
-    [Header("Attributes")]
-    [Tooltip("How much HP the actor has")]
-    [SerializeField, Min(1)] int hp = 100;
-
-    [Tooltip("How much energy the actor has (used for abilities)")]
-    [SerializeField, Min(1)] int energy = 100;
-
-    [Tooltip("How fast the actor regenerates energy (1 energy per energyRegenRate)")]
-    [SerializeField] float energyRegenRate = 1;
-
-    [Tooltip("How heavy the player is, will affect how fast they fall")]
-    [SerializeField, Min(1)] protected float mass = -12f;
+    [Tooltip("The data for the controller (ie the values it will pull from)")]
+    [SerializeField] protected T controllerData;
 
     protected CharacterController controller;  // I am using a CharacterController because it supports walking up stairs / slopes out of the box 
     protected Animator animator;
@@ -30,8 +20,21 @@ public abstract class MovementController : MonoBehaviour, IProjectileInteraction
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
 
-        healthModule = new HealthModule(hp);
-        energyModule = new EnergyModule(energy, energyRegenRate, this);
+        if (controllerData)
+        {
+            healthModule = new HealthModule(controllerData.hp);
+            energyModule = new EnergyModule(controllerData.energy, controllerData.energyRegenRate, this);
+        }
+        else
+        {
+            // Ok so this is a little ugly but if there is no controller data, then just setup these modules with some really low default values
+            // This is only needed because I don't want to make a DemoNPCControllerData class 
+
+            // Debug.LogError(gameObject.name + "'s controller data is not assigned!");
+
+            healthModule = new HealthModule(1);
+            energyModule = new EnergyModule(1, 1, this);
+        }
     }
 
     // Called from the IProjectileInteraction interface. Called with a projectile collides with the CharacterController

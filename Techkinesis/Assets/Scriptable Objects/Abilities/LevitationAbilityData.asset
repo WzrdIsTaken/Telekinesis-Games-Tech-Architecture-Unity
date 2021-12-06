@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 339e0f7f43a0d4e419d0d1c86508894b, type: 3}
+  m_Name: LevitationAbilityData
+  m_EditorClassIdentifier: 
+  energyDrainType: 1
+  energyCost: 3
+  levitationSpeed: 500
+  upForce: 450
+  downForce: -200
+  maxTilt: 10
+  tiltSmoothTime: 0.1
+  rotateSmoothTime: 0.5
+  minDrift: -100
+  maxDrift: 100
+  minDriftTime: 0.1
+  maxDriftTime: 0.25
+  startBoostForce: {x: 0, y: 3000, z: 0}
+  levitatingFov: 80
+  levitatingFovChangeTime: 0.25

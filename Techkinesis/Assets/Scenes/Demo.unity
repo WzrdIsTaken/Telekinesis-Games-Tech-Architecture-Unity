@@ -639,8 +639,10 @@ MonoBehaviour:
   gizmoIcons:
   - tag: Launchable
     fileName: LaunchableIcon.png
+    showGizmo: 1
   - tag: Cuttable
     fileName: CuttableIcon.png
+    showGizmo: 1
 --- !u!4 &528772615
 Transform:
   m_ObjectHideFlags: 0

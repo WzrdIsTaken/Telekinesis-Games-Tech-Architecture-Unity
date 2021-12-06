@@ -3,18 +3,22 @@ using System.Collections;
 
 // The base class for all abilities. Implements the template method pattern because we only want to execute the ability code if the actor has enough energy
 
-public abstract class AbilityBase : MonoBehaviour
+public abstract class AbilityBase<T> : MonoBehaviour where T: AbilityDataBase
 {
-    [Tooltip("Instant: The energy is used at the start. Continuous: The amount of energy is used every second")]
-    [SerializeField] EnergyDrainType energyDrainType;
-    enum EnergyDrainType { INSTANT, CONTINUOUS };
-
-    [Tooltip("How much energy the ability costs to use")]
-    [SerializeField] int energyCost;
+    [Tooltip("The data for the ability (ie the values it will pull from)")]
+    [SerializeField] protected T abilityData;
     
     EnergyModule energyModule;
 
     Coroutine useEnergyContinuously;
+
+    void Start()
+    {
+        if (!abilityData)
+        {
+            Debug.LogError(gameObject.name + "'s ability data is not assigned!");
+        }
+    }
 
     public void Setup(EnergyModule _energyModule)
     {
@@ -24,17 +28,17 @@ public abstract class AbilityBase : MonoBehaviour
     // Called from the actor. Checks what the EnergyDrainType is and if they have the energy to perform the ability
     public void DoAbilityStart()
     {
-        switch (energyDrainType)
+        switch (abilityData.energyDrainType)
         {
-            case EnergyDrainType.INSTANT:
-                if (energyModule.UseEnergy(energyCost))
+            case AbilityDataBase.EnergyDrainType.INSTANT:
+                if (energyModule.UseEnergy(abilityData.energyCost))
                 {
                     AbilityStart();
                     energyModule.SetCanRegen(false);
                 }
                 break;
-            case EnergyDrainType.CONTINUOUS:
-                if (energyModule.GetEnergy() >= energyCost)
+            case AbilityDataBase.EnergyDrainType.CONTINUOUS:
+                if (energyModule.GetEnergy() >= abilityData.energyCost)
                 {
                     useEnergyContinuously = StartCoroutine(UseEnergyContinuously());
                     energyModule.SetCanRegen(false);
@@ -43,7 +47,7 @@ public abstract class AbilityBase : MonoBehaviour
                 }
                 break;
             default:
-                Debug.LogError("The EnergyDrainType of type " + energyDrainType.ToString() + " does not exist!");
+                Debug.LogError("The EnergyDrainType of type " + abilityData.energyDrainType.ToString() + " does not exist!");
                 break;
         }
     }
@@ -56,11 +60,11 @@ public abstract class AbilityBase : MonoBehaviour
     // Called from the actor. Checks what the EnergyDrainType is and performs the relevant cleanup
     public void DoAbilityEnd()
     {
-        switch (energyDrainType)
+        switch (abilityData.energyDrainType)
         {
-            case EnergyDrainType.INSTANT:
+            case AbilityDataBase.EnergyDrainType.INSTANT:
                 break;
-            case EnergyDrainType.CONTINUOUS:
+            case AbilityDataBase.EnergyDrainType.CONTINUOUS:
                 if (useEnergyContinuously != null) 
                 {
                     StopCoroutine(useEnergyContinuously);
@@ -84,7 +88,7 @@ public abstract class AbilityBase : MonoBehaviour
     {
         while (true)
         {
-            if (!energyModule.UseEnergy(energyCost))
+            if (!energyModule.UseEnergy(abilityData.energyCost))
             {
                 DoAbilityEnd();
                 yield break;

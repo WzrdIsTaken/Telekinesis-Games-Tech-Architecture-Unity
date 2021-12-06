@@ -5,7 +5,7 @@ using System.Linq;
 
 // A very !(generic / powerful / well done) class but its out of scope / only needed to aid in a visual showcase of the abilities in the demo scene
 
-public class DemoNPCController : MovementController, IProjectileInteraction
+public class DemoNPCController : MovementController<ControllerDataBase>, IProjectileInteraction  // Can just use ControllerDataBase here. No need to make a DemoNPCController data class
 {
     [Header("Behavior")]
     [Tooltip("What the NPC will do in the demo scene")] 

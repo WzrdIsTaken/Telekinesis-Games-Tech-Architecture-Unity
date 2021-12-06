@@ -3,99 +3,11 @@ using System.Collections;
 
 // Pulls and launches and rock or object
 
-public class LaunchAbility : AbilityBase
+public class LaunchAbility : AbilityBase<LaunchAbilityData>
 {
-    #region Variables editable in the inspector (for a designer)
-
     [Space]
     [Tooltip("The point to which the object is drawn towards")]
     [SerializeField] SpringJoint launchPullPoint;
-
-    [Tooltip("What layers of objects can be pulled")]
-    [SerializeField] LayerMask launchPullInteractionMask;
-
-    [Tooltip("How far away objects can be")]
-    [SerializeField] float launchRaycastRange;
-
-    [Space]
-    [Tooltip("The minimum size objects that are cut from the mesh will be")]
-    [SerializeField] float minPulledObjectSize = 0.11f;  // WARNING! If actuallyCutMesh is enabled, having to big of an object size can cause.. interesting.. mesh slices! 
-
-    [Tooltip("The maximum size objects that are cut from the mesh will be")]
-    [SerializeField] float maxPulledObjectSize = 0.11f;  // 0.11 seems to be kinda a magic number lol. If actuallyCutMesh is enabled don't change unless the algorithm is optimised!
-
-    [Tooltip("The minimum time it will take to pull an object out of a mesh")]
-    [SerializeField] float minBreakTime;
-
-    [Tooltip("The maximum time it will take to pull an object out of a mesh")]
-    [SerializeField] float maxBreakTime;
-
-    [Tooltip("[WARNING - EXPENSIVE] Determines whether the mesh will be cut when a random object is created to be launched")]
-    [SerializeField] bool actuallyCutMesh;
-
-    [Space]
-    [Tooltip("How minimum speed an object will be pulled")]
-    [SerializeField] float minPullSpeed;
-
-    [Tooltip("How maximum speed an object will be pulled")]
-    [SerializeField] float maxPullSpeed;
-
-    [Space]
-    [Tooltip("The minimum distance an object will float up before being pulled to the player")]
-    [SerializeField] float minFloatUpDistance;
-
-    [Tooltip("The maximum distance an object will float up before being pulled to the player")]
-    [SerializeField] float maxFloatUpDistance;
-
-    [Tooltip("The minimum amount an object will rotate before being pulled to the player")]
-    [SerializeField] float minFloatUpRotation;
-
-    [Tooltip("The maximum amount an object will rotate before being pulled to the player")]
-    [SerializeField] float maxFloatUpRotation;
-
-    [Tooltip("The minimum time an object will float up before being pulled to the player")]
-    [SerializeField] float minFloatUpTime;
-
-    [Tooltip("The maximum time an object will float up before being pulled to the player")]
-    [SerializeField] float maxFloatUpTime;
-
-    [Tooltip("The minimum time an object will just hover in the air before being pulled to the player")]
-    [SerializeField] float minHoverTime;
-
-    [Tooltip("The maximum time an object will just hover in the air before being pulled to the player")]
-    [SerializeField] float maxHoverTime;
-
-    [Space]
-    [Tooltip("Will the held object use a spring joint to simulate its movement? " +
-             "Note - Cool effect but will really bug out when levitating")]  // See PullObjectToPlayer()
-    [SerializeField] bool useSpringJoint = false;
-
-    [Tooltip("How fast a held object will 'wobble' in the air (only used while levitating)")]
-    [SerializeField] float wobblePosSpeed;
-
-    [Tooltip("The maximum amount a held object can wobble (only used while levitating)")]
-    [SerializeField] float wobblePosAmount;
-
-    [Tooltip("How fast a held object will rotate in the air (only used while levitating)")]
-    [SerializeField] float wobbleRotSpeed;
-
-    [Tooltip("The max amount a held object can rotate (only used while levitating)")]
-    [SerializeField] float wobbleRotAmount;
-
-    [Space]
-    [Tooltip("What layers launched objects will perfom special interactions with (eg: damaging enemies)")]
-    [SerializeField] LayerMask launchLaunchInteractionMask;
-
-    [Tooltip("How minimum force the object will be launched with")]
-    [SerializeField] float minLaunchForce;
-
-    [Tooltip("The maximum force the object will be launched with")]
-    [SerializeField] float maxLaunchForce;
-
-    [Tooltip("A multiplier for damage applied to the damage = force * mass calculation")]
-    [SerializeField] float damageMultiplier;
-
-    #endregion
 
     Rigidbody heldObject;
 
@@ -120,7 +32,7 @@ public class LaunchAbility : AbilityBase
             return;
         }
 
-        RaycastHit hit = RaycastSystem.Raycast(cam.transform.position, cam.transform.forward, launchRaycastRange, launchPullInteractionMask);
+        RaycastHit hit = RaycastSystem.Raycast(cam.transform.position, cam.transform.forward, abilityData.launchRaycastRange, abilityData.launchPullInteractionMask);
         Rigidbody selectedObject = null;
 
         // We didn't hit an object
@@ -139,7 +51,7 @@ public class LaunchAbility : AbilityBase
         // Hit an object, but not once that can be launched so need to cut the mesh
         else if (hit.collider.CompareTag(TagNameManager.CUTTABLE))
         {
-            selectedObject = MeshCutter.CutAndReturnRandomMesh(hit, minPulledObjectSize, maxPulledObjectSize, actuallyCutMesh);
+            selectedObject = MeshCutter.CutAndReturnRandomMesh(hit, abilityData.minPulledObjectSize, abilityData.maxPulledObjectSize, abilityData.actuallyCutMesh);
         }
         
         StartCoroutine(PullObject(selectedObject, !launchableObject));
@@ -158,11 +70,11 @@ public class LaunchAbility : AbilityBase
         launchPullPoint.connectedBody = null;
         heldObject.useGravity = true;
 
-        float launchForce = Random.Range(minLaunchForce, maxLaunchForce);
-        int damage = ProjectileManager.CalculateProjectileDamage(heldObject.mass, launchForce, damageMultiplier);
-        ProjectileManager.SetupProjectile(heldObject.gameObject, launchLaunchInteractionMask, damage, false);
+        float launchForce = Random.Range(abilityData.minLaunchForce, abilityData.maxLaunchForce);
+        int damage = ProjectileManager.CalculateProjectileDamage(heldObject.mass, launchForce, abilityData.damageMultiplier);
+        ProjectileManager.SetupProjectile(heldObject.gameObject, abilityData.launchLaunchInteractionMask, damage, false);
 
-        if (!useSpringJoint) heldObject.isKinematic = false;
+        if (!abilityData.useSpringJoint) heldObject.isKinematic = false;
         heldObject.velocity = cam.transform.forward * launchForce;
 
         heldObject = null;
@@ -183,7 +95,7 @@ public class LaunchAbility : AbilityBase
             yield return MoveObjectUp();
 
             // Wait x seconds before pulling it to the player
-            yield return new WaitForSeconds(Random.Range(minHoverTime, maxHoverTime));
+            yield return new WaitForSeconds(Random.Range(abilityData.minHoverTime, abilityData.maxHoverTime));
         }
         else
         {
@@ -198,14 +110,16 @@ public class LaunchAbility : AbilityBase
     IEnumerator MoveObjectUp()
     {
         Vector3 startPosition = heldObject.transform.position;
-        Vector3 targetPosition = new Vector3(startPosition.x, startPosition.y + Random.Range(minFloatUpDistance, maxFloatUpDistance), startPosition.z);
+        Vector3 targetPosition = new Vector3(startPosition.x, startPosition.y + Random.Range(abilityData.minFloatUpDistance, abilityData.maxFloatUpDistance), startPosition.z);
 
         Quaternion startRotation = heldObject.transform.rotation;
-        Quaternion targetRotation = new Quaternion(Random.Range(minFloatUpRotation, maxFloatUpRotation), Random.Range(minFloatUpRotation, maxFloatUpRotation),
-                                                   Random.Range(minFloatUpRotation, maxFloatUpRotation), Random.Range(minFloatUpRotation, maxFloatUpRotation));
+        Quaternion targetRotation = new Quaternion(Random.Range(abilityData.minFloatUpRotation, abilityData.maxFloatUpRotation), 
+                                                   Random.Range(abilityData.minFloatUpRotation, abilityData.maxFloatUpRotation),
+                                                   Random.Range(abilityData.minFloatUpRotation, abilityData.maxFloatUpRotation),
+                                                   Random.Range(abilityData.minFloatUpRotation, abilityData.maxFloatUpRotation));
 
         float floatUpTimer = 0;
-        float floatUpDuration = Random.Range(minFloatUpTime, maxFloatUpTime);
+        float floatUpDuration = Random.Range(abilityData.minFloatUpTime, abilityData.maxFloatUpTime);
         while (floatUpTimer < floatUpDuration)
         {
             heldObject.transform.position = Vector3.Lerp(startPosition, targetPosition, floatUpTimer / floatUpDuration);
@@ -224,7 +138,7 @@ public class LaunchAbility : AbilityBase
     {
         // Effect would actually take place in MeshCutter -> CutAndReturnRandomMesh
 
-        yield return new WaitForSeconds(Random.Range(minBreakTime, maxBreakTime));
+        yield return new WaitForSeconds(Random.Range(abilityData.minBreakTime, abilityData.maxBreakTime));
     }
 
     // Move the object towards launchPullPoint via a lerp, then setup the object for 'carrying'
@@ -257,7 +171,7 @@ public class LaunchAbility : AbilityBase
             - 3) Have a nice system for transitioning between spring and sine wave movment
         */
 
-        if (!useSpringJoint)
+        if (!abilityData.useSpringJoint)
         {
             heldObject.isKinematic = true;
             StartCoroutine(MakeObjectWobble());
@@ -272,7 +186,7 @@ public class LaunchAbility : AbilityBase
     float CalculatePulledObjectLerpTime()
     {
         float distance = Vector3.Distance(heldObject.transform.position, launchPullPoint.transform.position);
-        return Mathf.Max(0.1f, distance / Random.Range(minPullSpeed, maxPullSpeed));
+        return Mathf.Max(0.1f, distance / Random.Range(abilityData.minPullSpeed, abilityData.maxPullSpeed));
     }
 
     // Make the object wobble around in the air once it has reached launchPullPoint using a sine wave
@@ -280,7 +194,7 @@ public class LaunchAbility : AbilityBase
     {
         while (true)
         {
-            ObjectBob.SineWaveBob(heldObject.gameObject, transform, wobblePosSpeed, wobblePosAmount, wobbleRotSpeed, wobbleRotAmount);
+            ObjectBob.SineWaveBob(heldObject.gameObject, transform, abilityData.wobblePosSpeed, abilityData.wobblePosAmount, abilityData.wobbleRotSpeed, abilityData.wobbleRotAmount);
 
             yield return null;
         }

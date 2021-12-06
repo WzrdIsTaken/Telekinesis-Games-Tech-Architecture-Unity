@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17936fa0ed716e6418301c0ea37adfdb, type: 3}
+  m_Name: ShieldAbilityData
+  m_EditorClassIdentifier: 
+  energyDrainType: 0
+  energyCost: 50
+  damageReduction: 0.75
+  shieldPullInteractionMask:
+    serializedVersion: 2
+    m_Bits: 1
+  shieldPullRange: 5
+  launchableBias: 0.5
+  shieldFormTime: 0.5
+  shieldSize: 3
+  minShieldObjects: 15
+  maxShieldObjects: 20
+  minRandomShieldObjectSize: 0.05
+  maxRandomShieldObjectSize: 0.11
+  actuallyCutMesh: 0
+  wobblePosSpeed: 2
+  wobblePosAmount: 0.05
+  wobbleRotSpeed: 2
+  wobbleRotAmount: 2
+  shieldLaunchInteractionMask:
+    serializedVersion: 2
+    m_Bits: 128
+  minShieldObjectLaunchForce: 800
+  maxShieldObjectLaunchForce: 900
+  damageMultiplier: 0.6

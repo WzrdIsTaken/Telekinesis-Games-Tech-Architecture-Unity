@@ -10,28 +10,37 @@ public class GizmoManager : MonoBehaviour
     [Space]
     [Tooltip("Enter the tag and filepath of any custom gizmos you want to draw. " +  // Tag of the gameobject(s), filepath of the image (including the extension)
              "Gizmo images must be put in Assets/Gizmos")]
-    [SerializeField] TagToFile[] gizmoIcons;
+    [SerializeField] GizmoData[] gizmoIcons;
 
     void OnDrawGizmos()
     {
         if (!drawCustomGizmos) return;
 
         // This is well slow but idk a better way to do it right now
-        foreach (TagToFile tagToFile in gizmoIcons)
+        foreach (GizmoData gizmoData in gizmoIcons)
         {
-            GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag(tagToFile.tag);
+            if (!gizmoData.showGizmo) return;
+
+            GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag(gizmoData.tag);
             foreach (GameObject gO in objectsWithTag)
             {
-                Gizmos.DrawIcon(gO.transform.position, tagToFile.fileName, true);
+                Gizmos.DrawIcon(gO.transform.position, gizmoData.fileName, true);
             }
         }
     }
 
-    // Using a struct over a dictionary because we want this to be accessible in the inspector for a designer
+    // Using a struct over a dictionary because we want this to be accessible in the inspector for a designer. And now because we have more than 2 variables!
     [System.Serializable]
-    struct TagToFile
+    struct GizmoData
     {
+        [Tooltip("The tag that gameobjects have to have for the gizmo to display on")]
         public string tag;
+
+        [Tooltip("The filepath of the gizmo icon. Must be in the gizmos folder. You don't need the root directory. " +
+                 "Eg: Gizmos/CoolGizmoIcon.png -> CoolGizmoIcon.png ")]
         public string fileName;
+
+        [Tooltip("Allows you to toggle on / off specific gizmos")]
+        public bool showGizmo;
     }
 }

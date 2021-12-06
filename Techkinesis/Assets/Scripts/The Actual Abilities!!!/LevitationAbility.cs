@@ -3,56 +3,8 @@ using System.Collections;
 
 // Allows the player to fly
 
-public class LevitationAbility : AbilityBase
+public class LevitationAbility : AbilityBase<LevitationAbilityData>
 {
-    #region Variables editable in the inspector (for a designer)
-
-    [Space]
-    [Tooltip("How fast the player can fly on the x/y axis")]
-    [SerializeField] float levitationSpeed;
-
-    [Tooltip("How fast the player can move up")]
-    [SerializeField] float upForce;
-
-    [Tooltip("How fast the player can move down")]
-    [SerializeField] float downForce;
-
-    [Space]
-    [Tooltip("How far the player tilts forward when levitating")]
-    [SerializeField] float maxTilt;
-
-    [Tooltip("How long it takes from the player to go from upright to tilted")]
-    [SerializeField] float tiltSmoothTime;
-
-    [Tooltip("How long it takes the player to rotate ")]
-    [SerializeField] float rotateSmoothTime;
-
-    [Space]
-    [Tooltip("The minimum amount that the player will be buffeted around while levitating ")]
-    [SerializeField] float minDrift;
-
-    [Tooltip("The maximum amount that the player will be buffeted around while levitating")]
-    [SerializeField] float maxDrift;
-
-    [Tooltip("The minimum time that the player will move in a certain 'buffet direction'")]
-    [SerializeField] float minDriftTime;
-
-    [Tooltip("The maximum time that the player will move in a certain 'buffet direction'")]
-    [SerializeField] float maxDriftTime;
-
-    [Space]
-    [Tooltip("How much the player will boosted off the ground when they start levitating")]
-    [SerializeField] Vector3 startBoostForce;
-
-    [Space]
-    [Tooltip("The cameras FoV when levitating")]
-    [SerializeField] float levitatingFov;
-
-    [Tooltip("How long it will take the cameras FoV to change when the player starts / stops levitating")]
-    [SerializeField] float levitatingFovChangeTime;
-
-    #endregion
-
     ThirdPersonCamera cam;
     PlayerController playerController;
     Animator animator;
@@ -90,9 +42,9 @@ public class LevitationAbility : AbilityBase
     {
         playerController.SetMovementState(PlayerController.MovementState.LEVITATION);
         col.enabled = true;
-        rb.AddForce(startBoostForce, ForceMode.Force);
+        rb.AddForce(abilityData.startBoostForce, ForceMode.Force);
         
-        cam.ChangeCameraFov(levitatingFov, levitatingFovChangeTime);
+        cam.ChangeCameraFov(abilityData.levitatingFov, abilityData.levitatingFovChangeTime);
         StartCoroutine(Levitate());
         StartCoroutine(Drift());
 
@@ -107,7 +59,7 @@ public class LevitationAbility : AbilityBase
 
         StopAllCoroutines();
 
-        cam.ChangeCameraFov(startCameraFov, levitatingFovChangeTime);
+        cam.ChangeCameraFov(startCameraFov, abilityData.levitatingFovChangeTime);
 
         DebugLogManager.Print("Levitation end! Would make a cool sound or something.", DebugLogManager.OutputType.NOT_MY_JOB);
     }
@@ -126,9 +78,11 @@ public class LevitationAbility : AbilityBase
     IEnumerator Drift()
     {
         Vector3 currentDrift = driftForce;
-        Vector3 targetDrift = new Vector3(Random.Range(minDrift, maxDrift), Random.Range(minDrift, maxDrift), Random.Range(minDrift, maxDrift));
+        Vector3 targetDrift = new Vector3(Random.Range(abilityData.minDrift, abilityData.maxDrift), 
+                                          Random.Range(abilityData.minDrift, abilityData.maxDrift), 
+                                          Random.Range(abilityData.minDrift, abilityData.maxDrift));
 
-        float driftTime = Random.Range(minDriftTime, maxDriftTime);
+        float driftTime = Random.Range(abilityData.minDriftTime, abilityData.maxDriftTime);
         float time = 0;
 
         while (time < driftTime)
@@ -148,13 +102,13 @@ public class LevitationAbility : AbilityBase
     {
         // We always want to calculate the x rotation (tilting back / forth), but if the player is standing still then we don't calulate the y so they can look around
 
-        float xRot = Mathf.SmoothDamp(transform.eulerAngles.x, maxTilt * inputState.movementDirection.magnitude, ref tiltVelocity.x, tiltSmoothTime);
+        float xRot = Mathf.SmoothDamp(transform.eulerAngles.x, abilityData.maxTilt * inputState.movementDirection.magnitude, ref tiltVelocity.x, abilityData.tiltSmoothTime);
         float yRot = transform.eulerAngles.y;
 
         if (inputState.movementDirection != Vector2.zero)
         {
             float targetYRotation = Mathf.Atan2(inputState.movementDirection.x, inputState.movementDirection.y) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
-            yRot = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetYRotation, ref tiltVelocity.y, rotateSmoothTime);
+            yRot = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetYRotation, ref tiltVelocity.y, abilityData.rotateSmoothTime);
         }
             
         transform.eulerAngles = new Vector3(xRot, yRot, transform.eulerAngles.z);
@@ -163,16 +117,16 @@ public class LevitationAbility : AbilityBase
     // Sets levitationForce. Called from PlayerController Update
     public void HandleLevitationMovement(PlayerInputState inputState)
     {
-        float xForce = inputState.movementDirection.x * levitationSpeed;
-        float zForce = inputState.movementDirection.y * levitationSpeed;
+        float xForce = inputState.movementDirection.x * abilityData.levitationSpeed;
+        float zForce = inputState.movementDirection.y * abilityData.levitationSpeed;
         float yForce = 0;
 
-        if (inputState.levitationVerticalState == PlayerInputState.LevitationVerticalState.UP) yForce = upForce;                    
-        else if (inputState.levitationVerticalState == PlayerInputState.LevitationVerticalState.DOWN) yForce = downForce;
+        if (inputState.levitationVerticalState == PlayerInputState.LevitationVerticalState.UP) yForce = abilityData.upForce;                    
+        else if (inputState.levitationVerticalState == PlayerInputState.LevitationVerticalState.DOWN) yForce = abilityData.downForce;
 
         // Because the player leans forward when moving, we need to add a bit of force because we are using AddRelativeForce
         // Will (maybe) think of a better solution later. 8.815 is just a random number that I got after a few guesses that seems to work well xd
-        if (Mathf.Abs(xForce) > 0 || Mathf.Abs(zForce) > 0) yForce += maxTilt * 8.815f;  
+        if (Mathf.Abs(xForce) > 0 || Mathf.Abs(zForce) > 0) yForce += abilityData.maxTilt * 8.815f;  
 
         levitationForce = new Vector3(xForce, yForce, zForce);
     }

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b75fd57966ac2ad488df5e26d7e19dab, type: 3}
+  m_Name: PlayerData
+  m_EditorClassIdentifier: 
+  hp: 100
+  energy: 300
+  energyRegenRate: 0.1
+  mass: -12
+  inputProvider: {fileID: 11400000, guid: 9813155af66caba4cab179d075da0cb7, type: 2}
+  speedSmoothTime: 0.1
+  turnSmoothTime: 0.2
+  walkSpeed: 2
+  runSpeed: 6
+  jumpHeight: 1
+  airControlPercent: 0.5

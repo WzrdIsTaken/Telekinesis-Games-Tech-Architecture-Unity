@@ -5,37 +5,11 @@ using UnityEngine;
 [RequireComponent(typeof(ShieldAbility))]
 [RequireComponent(typeof(LaunchAbility))]
 [RequireComponent(typeof(LevitationAbility))]
-public class PlayerController : MovementController, IProjectileInteraction
+public class PlayerController : MovementController<PlayerData>, IProjectileInteraction
 {
-    #region Variables editable in the inspector (for a designer)
-
-    [Header("References")]
-    [Tooltip("The players InputProvider")]
-    [SerializeField] PlayerInput inputProvider;
-
+    [Space]
     [Tooltip("The players camera")]
     [SerializeField] ThirdPersonCamera cam;
-
-    [Header("Movement")]
-    [Tooltip("How long it will take for the player to go between stopping / walking / running")]
-    [SerializeField] float speedSmoothTime = 0.1f;
-
-    [Tooltip("How long it will take for the player to turn")]
-    [SerializeField] float turnSmoothTime = 0.2f;
-
-    [Tooltip("How fast the player will walk")]
-    [SerializeField] float walkSpeed = 2;
-
-    [Tooltip("How fast the player will run")]
-    [SerializeField] float runSpeed = 6;
-
-    [Tooltip("How high the player will jump")]
-    [SerializeField] float jumpHeight = 1;
-
-    [Tooltip("How much control the player has while jumping. 1 = more control, 0 = less control")]
-    [SerializeField, Range(0, 1)] float airControlPercent = 0.5f;
-
-    #endregion
 
     ShieldAbility shieldAbility;
     LaunchAbility launchAbility;
@@ -63,12 +37,12 @@ public class PlayerController : MovementController, IProjectileInteraction
         levitationAbility = GetComponent<LevitationAbility>();   levitationAbility.PassReferences(cam, this, animator);   levitationAbility.Setup(energyModule);
 
         // Hook up the events
-        inputProvider.OnJump += Jump;
-        inputProvider.OnSwitchCameraSide += cam.GetComponent<ThirdPersonCamera>().SwitchCameraSide;
+        controllerData.inputProvider.OnJump += Jump;
+        controllerData.inputProvider.OnSwitchCameraSide += cam.GetComponent<ThirdPersonCamera>().SwitchCameraSide;
 
-        inputProvider.OnLaunchStart += launchAbility.DoAbilityStart;           inputProvider.OnLaunchEnd += launchAbility.DoAbilityEnd;
-        inputProvider.OnShieldStart += shieldAbility.DoAbilityStart;           inputProvider.OnShieldEnd += shieldAbility.DoAbilityEnd;
-        inputProvider.OnLevitationStart += levitationAbility.DoAbilityStart;   inputProvider.OnLevitationEnd += levitationAbility.DoAbilityEnd;
+        controllerData.inputProvider.OnLaunchStart += launchAbility.DoAbilityStart;           controllerData.inputProvider.OnLaunchEnd += launchAbility.DoAbilityEnd;
+        controllerData.inputProvider.OnShieldStart += shieldAbility.DoAbilityStart;           controllerData.inputProvider.OnShieldEnd += shieldAbility.DoAbilityEnd;
+        controllerData.inputProvider.OnLevitationStart += levitationAbility.DoAbilityStart;   controllerData.inputProvider.OnLevitationEnd += levitationAbility.DoAbilityEnd;
 
         shieldAbility.TakeDamage += TakeDamage;
 
@@ -88,14 +62,14 @@ public class PlayerController : MovementController, IProjectileInteraction
         switch (movementState)
         {
             case MovementState.GROUND:
-                inputState = inputProvider.GetState();
+                inputState = controllerData.inputProvider.GetState();
 
                 HandleGroundRotation(inputState);
                 HandleGroundMovement(inputState);
                 HandleGroundAnimation(inputState);
                 break;
             case MovementState.LEVITATION:
-                inputState = inputProvider.GetState();
+                inputState = controllerData.inputProvider.GetState();
 
                 levitationAbility.HandleLevitationRotation(inputState);
                 levitationAbility.HandleLevitationMovement(inputState);
@@ -121,17 +95,17 @@ public class PlayerController : MovementController, IProjectileInteraction
         if (inputState.movementDirection != Vector2.zero)
         {
             float targetYRotation = Mathf.Atan2(inputState.movementDirection.x, inputState.movementDirection.y) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
-            transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetYRotation, ref turnSmoothVelocity, GetModifiedSmoothTime(turnSmoothTime));
+            transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetYRotation, ref turnSmoothVelocity, GetModifiedSmoothTime(controllerData.turnSmoothTime));
         }
     }
 
     // Move the player. Handles x/z and y explicitly (gravity) because we are using a CharacterController
     void HandleGroundMovement(InputState inputState)
     {
-        float targetSpeed = (inputState.running ? runSpeed : walkSpeed) * inputState.movementDirection.magnitude;
-        currentSpeed = Mathf.SmoothDamp(currentSpeed, targetSpeed, ref speedSmoothVelocity, GetModifiedSmoothTime(speedSmoothTime));
+        float targetSpeed = (inputState.running ? controllerData.runSpeed : controllerData.walkSpeed) * inputState.movementDirection.magnitude;
+        currentSpeed = Mathf.SmoothDamp(currentSpeed, targetSpeed, ref speedSmoothVelocity, GetModifiedSmoothTime(controllerData.speedSmoothTime));
 
-        velocityY += mass * Time.deltaTime;
+        velocityY += controllerData.mass * Time.deltaTime;
         Vector3 velocity = transform.forward * currentSpeed + Vector3.up * velocityY;
 
         controller.Move(velocity * Time.deltaTime);
@@ -143,8 +117,8 @@ public class PlayerController : MovementController, IProjectileInteraction
     void HandleGroundAnimation(InputState inputState)
     {
         float currentControllerSpeed = new Vector2(controller.velocity.x, controller.velocity.z).magnitude;
-        float animationSpeedPercent = inputState.running ? currentControllerSpeed / runSpeed : currentControllerSpeed / walkSpeed * 0.5f;
-        animator.SetFloat("speedPercent", animationSpeedPercent, speedSmoothTime, Time.deltaTime);
+        float animationSpeedPercent = inputState.running ? currentControllerSpeed / controllerData.runSpeed : currentControllerSpeed / controllerData.walkSpeed * 0.5f;
+        animator.SetFloat("speedPercent", animationSpeedPercent, controllerData.speedSmoothTime, Time.deltaTime);
     }
 
     // Adds y velocity when the player jumps
@@ -152,7 +126,7 @@ public class PlayerController : MovementController, IProjectileInteraction
     {
         if (!controller.isGrounded) return;
 
-        float jumpVelocity = Mathf.Sqrt(-2 * mass * jumpHeight);
+        float jumpVelocity = Mathf.Sqrt(-2 * controllerData.mass * controllerData.jumpHeight);
         velocityY = jumpVelocity;
     }
 
@@ -160,9 +134,9 @@ public class PlayerController : MovementController, IProjectileInteraction
     float GetModifiedSmoothTime(float smoothTime)
     {
         if (controller.isGrounded)  return smoothTime;
-        if (airControlPercent == 0) return float.MaxValue;  // Prevents any divide by 0 errors
+        if (controllerData.airControlPercent == 0) return float.MaxValue;  // Prevents any divide by 0 errors
 
-        return smoothTime / airControlPercent;
+        return smoothTime / controllerData.airControlPercent;
     }
 
     // Set the players movementState
