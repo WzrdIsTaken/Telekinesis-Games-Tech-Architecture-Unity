@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Shape Settings [For Testing]
   m_EditorClassIdentifier: 
   meshRadius: 0.5
+  meshQualityReduction: 0
   noiseLayers:
   - enabled: 1
     useFirstLayerAsMask: 0
